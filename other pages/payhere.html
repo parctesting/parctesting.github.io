@@ -17,8 +17,8 @@
 <div class="container">
   <header>
     <div class="primary_header">
-    <center><img src="../images/PARC2.png" width="920" height="300" alt=""/></center> </div><CENTER>
-    <center><nav class="secondary_header" id="menu">
+    <center><img src="../images/PARC2.png" width="920" height="300" alt=""/></center> </div>
+	<center><nav class="secondary_header" id="menu">
       <ul>
         <a href="../index.html"><li>HOME</li></a>
         <a href="online.html"><li>ONLINE VE TESTING</li></a>
@@ -26,55 +26,43 @@
         <a href="faq.html"><li>FAQ</li></a>
 		<a href="payhere.html"><li>PAY HERE</li></a>
       </ul>
-</nav></CENTER>
-  </header>
+</nav>
+		</header></center>
   <section>
     <h2 class="noDisplay">Main Content</h2>
-      <h3><center>Pay Here</center></h3>
-		<p><center>
+      <h2><center>Pay Here</center></h2>
+		<p>
+			
+			<center>
 <div id="paypal-button-container"></div>
-<div id="paypal-button"></div>
-<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AZlHVoQU9jTArJuxtemL96vNsa-VpaPh0z-drVLXsANegsL6Ul1qntgQndtk8elRBp9rc2dQ3zZgrylH&currency=USD" data-sdk-integration-source="button-factory"></script>
 <script>
-  paypal.Button.render({
-    // Configure environment
-env: 'production',
-  client:
-    {
-      production: 'AZlHVoQU9jTArJuxtemL96vNsa-VpaPh0z-drVLXsANegsL6Ul1qntgQndtk8elRBp9rc2dQ3zZgrylH' //Enter your live client ID here
-    },
-    // Customize button (optional)
-    locale: 'en_US',
-    style: {
-      size: 'small',
-      color: 'gold',
-      shape: 'pill',
-    },
-
-    // Enable Pay Now checkout flow (optional)
-    commit: true,
-
-    // Set up a payment
-    payment: function(data, actions) {
-      return actions.payment.create({
-        transactions: [{
-          amount: {
-            total: '15',
-            currency: 'USD'
-          }
-        }]
-      });
-    },
-    // Execute the payment
-    onAuthorize: function(data, actions) {
-      return actions.payment.execute().then(function() {
-        // Show a confirmation message to the buyer
-        window.alert('Thank you for your purchase!');
-      });
-    }
-  }, '#paypal-button');
-
-</script></center></p>
+  paypal.Buttons({
+      style: {
+          shape: 'pill',
+          color: 'gold',
+          layout: 'vertical',
+          label: 'paypal',
+          
+      },
+      createOrder: function(data, actions) {
+          return actions.order.create({
+              purchase_units: [{
+                  amount: {
+                      value: '12'
+                  }
+              }]
+          });
+      },
+      onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+              alert('Transaction completed by ' + details.payer.name.given_name + '!');
+          });
+      }
+  }).render('#paypal-button-container');
+</script>
+			</center></p>
+	  
   </section>
   <div class="row">
 
