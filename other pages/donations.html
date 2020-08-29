@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Waitlist</title>
+<title>Pay Here</title>
 <link href="../css/multiColumnTemplate.css" rel="stylesheet" type="text/css">
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -17,27 +17,55 @@
 <div class="container">
   <header>
     <div class="primary_header">
-    <center><img src="../images/PARC2.png" width="920" height="300" alt=""/></center> </div><CENTER>
-    <center><nav class="secondary_header" id="menu">
+    <center><img src="../images/PARC2.png" width="920" height="300" alt=""/></center> </div>
+	<center><nav class="secondary_header" id="menu">
       <ul>
         <a href="../index.html"><li>HOME</li></a>
         <a href="online.html"><li>ONLINE VE TESTING</li></a>
         <a href="inperson.html"><li>IN-PERSON VE TESTING</li></a>
-		<a href="faq.html"><li>FAQ</li></a>
+        <a href="faq.html"><li>FAQ</li></a>
 		<a href="payhere.html"><li>PAY HERE</li></a>
 		<a href="donations.html"><li>DONATIONS</li></a>
       </ul>
-    </nav></CENTER>
-  </header>
+</nav>
+		</header></center>
   <section>
     <h2 class="noDisplay">Main Content</h2>
-
-      <h2>The waitlist is disabled at this time.</h2>
-
-
-      <p>Please contact us by email at <a href="vetesting@yahoo.com">VETESTING@YAHOO.COM</a>
-To schedule your exam. Please include the date you would like and whether you want morning or afternoon. Please try to provide multiple options if possible to minimize time required to find you a test session. Thanks.</p>
-
+      <h2><center>
+        Donations
+    </center></h2>
+		<p>
+			
+			<center>
+<div id="paypal-button-container"></div>
+<script src="https://www.paypal.com/sdk/js?client-id=AZlHVoQU9jTArJuxtemL96vNsa-VpaPh0z-drVLXsANegsL6Ul1qntgQndtk8elRBp9rc2dQ3zZgrylH&currency=USD" data-sdk-integration-source="button-factory"></script>
+<script>
+  paypal.Buttons({
+      style: {
+          shape: 'pill',
+          color: 'gold',
+          layout: 'vertical',
+          label: 'paypal',
+          
+      },
+      createOrder: function(data, actions) {
+          return actions.order.create({
+              purchase_units: [{
+                  amount: {
+                      value: ''
+                  }
+              }]
+          });
+      },
+      onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+              alert('Transaction completed by ' + details.payer.name.given_name + '!');
+          });
+      }
+  }).render('#paypal-button-container');
+</script>
+			</center></p>
+	  
   </section>
   <div class="row">
 
