@@ -249,20 +249,14 @@ p {
 }
 
 p2 {
-    margin-top: 0px;
-    margin-right: 50px;
-    margin-bottom: 0px;
-    margin-left: 50px;
+
     text-align: left;
     color: #D30505;
     font-family: Arial;
 }
 
 p3 {
-    margin-top: 0px;
-    margin-right: 50px;
-    margin-bottom: 0px;
-    margin-left: 50px;
+
     text-align: left;
     color: #000000;
     font-family: Arial;
@@ -320,6 +314,14 @@ h2 {
     margin-right: 50px;
     margin-bottom: 0px;
     margin-left: 50px;
+    text-align: center;
+    color: #000000;
+    font-family: Arial;
+    font-weight: bold;
+    font-size: xx-large;
+}
+
+h7 {
     text-align: center;
     color: #000000;
     font-family: Arial;
