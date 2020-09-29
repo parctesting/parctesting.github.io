@@ -265,6 +265,13 @@ p3 {
     font-weight: bold;
 }
 
+#example2 {
+  box-sizing: border-box;
+  width: 800px;
+  padding: 30px;  
+  border: 10px solid grey;
+}
+
 p4 {
     margin-top: 0px;
     margin-right: 50px;
@@ -273,6 +280,15 @@ p4 {
     color: #000000;
     font-family: Arial;
     font-size: large;
+}
+
+
+div1 {
+  width: 320px;
+  padding: 10px;
+  border: 5px solid gray;
+  margin: 0; 
+}
 }
 
 h6 {
