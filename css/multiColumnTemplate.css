@@ -272,6 +272,13 @@ p3 {
   border: 10px solid grey;
 }
 
+#example3 {
+  box-sizing: border-box;
+  width: 800px;
+  padding: 30px;  
+  border: 10px solid red;
+}
+
 p4 {
     margin-top: 0px;
     margin-right: 50px;
