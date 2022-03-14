@@ -69,7 +69,7 @@
 }
 .secondary_header {
     width: 100%;
-    padding-top: 50px;
+    padding-top: 20px;
     padding-bottom: 50px;
     background-color: #B3B3B3;
     clear: left;
@@ -83,7 +83,7 @@
 	margin-left: auto;
 	padding-top: 0px;
 	padding-right: 0px;
-	padding-bottom: 15px;
+	padding-bottom: 0px;
 	padding-left: 0px;
 	width: 100%;
 }
@@ -642,6 +642,6 @@ h8 {
 	opacity: 0.5;
 }
 #menu {
-    border-radius: 1px;
+    border-radius: 0px;
     border: 1px  #000000;
 }
