@@ -64,7 +64,6 @@
 	width: 100%;
 	background-color: #52bad5;
 	padding-top: 10px;
-	padding-bottom: 10px;
 	clear: left;
 	border-bottom: 2px solid #2C9AB7;
 }
@@ -229,9 +228,9 @@
 }
 body {
     margin-top: 0px;
-    margin-right: 50px;
+    margin-right: 0px;
     margin-bottom: 0px;
-    margin-left: 50px;
+    margin-left: 0px;
     background-color: #52bad5;
     font-size: 20px;
 }
@@ -306,7 +305,7 @@ div1 {
   border: 5px solid gray;
   margin: 0; 
 }
-}
+
 
 h6 {
     margin-top: 0px;
