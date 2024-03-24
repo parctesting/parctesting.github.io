@@ -106,7 +106,6 @@
 	cursor: pointer;
 }
 .left_article {
-    background-color: #F4F6F5;
     width: 60%;
     float: left;
     font-family: "Source Sans Pro";
@@ -140,7 +139,6 @@
 .right_article {
 	width: 40%;
 	float: left;
-	background-color: #F4F6F5;
 }
 .container .right_article ul {
 	margin-top: 0px;
@@ -156,7 +154,6 @@
 	font-family: "Source Sans Pro";
 	list-style: none;
 	text-align: center;
-	background-color: #F4F6F5;
 	width: 90%;
 	margin-left: auto;
 	margin-right: auto;
@@ -164,7 +161,6 @@
 	margin-bottom: 10px;
 	padding-top: 15px;
 	padding-bottom: 15px;
-	color: #F4F6F5;
 	font-weight: bold;
 	border-radius: 0px;
 	transition: all 0.3s linear;
