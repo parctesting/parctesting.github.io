@@ -63,7 +63,7 @@
 .primary_header {
 	width: 100%;
 	background-color: #808080;
-	padding-top: 10px;
+	padding-top: 30px;
 	clear: left;
 	border-bottom: 0px solid #4070CC;
 }
@@ -113,6 +113,12 @@
     padding-bottom: 15px;
     text-indent: 20px;
 }
+.left_article2 {
+    width: 50%;
+    float: left;
+	background-color: #808080;	
+    padding-bottom: 18px;
+}
 .noDisplay {
 	display: none;
 }
@@ -139,6 +145,13 @@
 .right_article {
 	width: 40%;
 	float: left;
+}
+.right_article2 {
+    width: 50%;
+    float: right;
+	background-color: #808080;	
+    padding-bottom: 15px;
+}
 }
 .container .right_article ul {
 	margin-top: 0px;
