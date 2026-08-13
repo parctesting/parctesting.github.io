@@ -351,6 +351,13 @@ p6 {
     font-family: Arial;
 }
 
+p7 {
+    font-size: small;
+    text-align: center;
+    color: #000000;
+    font-family: Arial;
+}
+
 div1 {
   width: 320px;
   padding: 10px;
