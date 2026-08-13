@@ -313,15 +313,16 @@ p3 {
 
 #example2 {
   box-sizing: border-box;
-  padding: 30px;  
-  border: 10px solid grey;
-  font-size: 16
+  padding: 10px;  
+  border: 5px solid grey;
+  margin: 10px
 }
 
 #example3 {
   box-sizing: border-box;
-  padding: 30px;  
-  border: 10px solid red;
+  padding: 10px;  
+  border: 5px solid red;
+  margin: 10px
 }
 
 p4 {
@@ -352,7 +353,7 @@ p6 {
 }
 
 p7 {
-    font-size: small;
+    font-size: 6pt;
     text-align: center;
     color: #000000;
     font-family: Arial;
