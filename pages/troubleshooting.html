@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>If Something Goes Wrong — Exam Day Troubleshooting | PARC</title>
+<meta name="description" content="The problems candidates hit most often before and during an online amateur radio exam, and what to do about each one.">
+<link rel="canonical" href="https://parcradio.org/pages/troubleshooting.html">
+<meta name="robots" content="index, follow, max-image-preview:large">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PARC Radio &amp; Technology">
+<meta property="og:title" content="If Something Goes Wrong — Exam Day Troubleshooting">
+<meta property="og:description" content="The problems candidates hit most often before and during an online amateur radio exam, and what to do about each one.">
+<meta property="og:url" content="https://parcradio.org/pages/troubleshooting.html">
+<meta property="og:image" content="https://parcradio.org/images/og-parc.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<meta name="theme-color" content="#BA0005">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="preload" as="image" href="../images/banner-1600.jpg" fetchpriority="high">
+
+<!-- Cloudflare Web Analytics -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86375f5cd0ea45a9a9083404b92011b6"}'></script>
+<!-- End Cloudflare Web Analytics -->
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <a class="site-banner" href="../index.html" aria-label="PARC Radio &amp; Technology home">
+    <picture>
+      <source media="(max-width: 700px)" srcset="../images/banner-900.jpg">
+      <img src="../images/banner-1600.jpg" width="1600" height="192" fetchpriority="high"
+           alt="PARC Radio &amp; Technology">
+    </picture>
+  </a>
+
+  <nav class="site-nav" id="menu" aria-label="Main">
+    <div class="site-nav__inner">
+      <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">
+        <span class="nav-toggle__bars" aria-hidden="true"></span> Menu
+      </button>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li class="has-sub">
+          <button type="button" class="nav-sub-toggle" aria-expanded="false">Helpful Links</button>
+          <ul class="nav-sub">
+            <li><a href="../pages/whatnext.html">What's Next</a></li>
+            <li><a href="../pages/handiham.html">Accessible Testing / HandiHam</a></li>
+            <li><a href="../pages/govshutdown.html">Government Shutdown</a></li>
+            <li><a href="https://www.arrl.org" target="_blank" rel="noopener">ARRL</a></li>
+            <li><a href="https://www.eham.net" target="_blank" rel="noopener">eHam</a></li>
+            <li><a href="https://wireless2.fcc.gov" target="_blank" rel="noopener">FCC License Search</a></li>
+            <li><a href="https://hamradioprep.com" target="_blank" rel="noopener">Ham Radio Prep</a></li>
+            <li><a href="https://www.handiham.org" target="_blank" rel="noopener">HandiHam.org</a></li>
+            <li><a href="https://www.qrz.com" target="_blank" rel="noopener">QRZ</a></li>
+            <li><a href="https://www.ylrl.net" target="_blank" rel="noopener">Young Ladies Radio League</a></li>
+          </ul>
+        </li>
+        <li><a href="../pages/Online_InstructionSeparation.html">Online Testing</a></li>
+        <li><a href="../pages/inperson.html">In-Person Testing</a></li>
+        <li><a href="../pages/faq.html">FAQ</a></li>
+        <li><a href="../pages/calendar.html">Schedule</a></li>
+        <li><a href="../pages/reviews.html">Reviews</a></li>
+        <li><a href="../pages/team.html">Our Team</a></li>
+      </ul>
+      <button type="button" class="nav-search-toggle" id="site-search-toggle"
+              aria-expanded="false" aria-controls="site-search-panel" aria-label="Search this site">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" focusable="false">
+          <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/>
+          <line x1="12.8" y1="12.8" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-search-toggle__label">Search</span>
+      </button>
+
+      <form class="nav-donate-form" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="hosted_button_id" value="FG837WNAHF4P4">
+        <button type="submit" class="nav-donate">Donate</button>
+      </form>
+    </div>
+
+    <div class="search-panel" id="site-search-panel" hidden>
+      <form class="search-panel__inner" id="site-search" role="search" autocomplete="off">
+        <label class="sr-only" for="site-search-input">Search this site</label>
+        <input id="site-search-input" type="search" name="q"
+               placeholder="Search for fees, ID, scheduling, what to expect…"
+               aria-controls="site-search-results" aria-expanded="false"
+               aria-autocomplete="list" role="combobox">
+        <button type="button" class="search-panel__close" id="site-search-close"
+                aria-label="Close search">&times;</button>
+        <div class="nav-search__results" id="site-search-results" hidden></div>
+      </form>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+
+<div class="container">
+<section>
+
+  <h1>If something goes wrong</h1>
+
+  <p class="lede">The problems that come up most often, and what to do about each
+    one. If yours is not here, email
+    <a href="mailto:vetesting@yahoo.com">vetesting@yahoo.com</a> &mdash; our examiners
+    are volunteers, so please allow up to 24 hours.</p>
+
+  <h2 id="before">Before your session</h2>
+
+  <div class="trouble">
+    <h3>My Zoom link has not arrived</h3>
+    <p>Links are emailed within 48 hours of booking, and registrations are processed
+      once a day. If you booked for tomorrow, keep checking &mdash; including your spam
+      and junk folders. If your session is close and nothing has arrived, email us.</p>
+  </div>
+
+  <div class="trouble">
+    <h3>I paid, but I have a non-payment notice</h3>
+    <p>Either the card payment did not go through, or the name and email on the payment
+      do not match the name and email on your exam registration. Email us and we will
+      send an invoice with your name on the subject line.</p>
+  </div>
+
+  <div class="trouble">
+    <h3>I cannot rename my devices in Zoom</h3>
+    <p>You cannot rename them from the waiting room, which is where most people try.
+      Sign in on the Zoom website beforehand and set your first and last name, then add
+      &ldquo;computer&rdquo; or &ldquo;phone&rdquo; so the team can tell your two
+      devices apart.</p>
+  </div>
+
+  <div class="trouble">
+    <h3>I need to reschedule</h3>
+    <p>Email us as soon as you know. Someone else can almost always use the slot, and
+      volunteers have set aside that time for you.</p>
+  </div>
+
+  <h2 id="equipment">Equipment</h2>
+
+  <div class="trouble">
+    <h3>All I have is an iPad or a Chromebook</h3>
+    <p>Neither will work as your exam computer. These devices switch the camera off
+      when sharing a screen, and we need to see your face throughout. You need a
+      Windows or Mac laptop or desktop. An iPad or phone is fine as your
+      <em>second</em> device.</p>
+  </div>
+
+  <div class="trouble">
+    <h3>I have two monitors</h3>
+    <p>Only one screen may be working in the room. Turn the others off, turn them
+      around, or cover them. A laptop cannot be docked to anything.</p>
+  </div>
+
+  <div class="trouble">
+    <h3>Zoom will not open, or only works in my browser</h3>
+    <p>The Zoom application has to be installed and running. Zoom in a browser will not
+      work for the exam. Install it in advance and test your camera and microphone
+      before the day &mdash; not while the team is waiting.</p>
+  </div>
+
+  <div class="trouble">
+    <h3>My laptop needs an external mouse or keyboard</h3>
+    <p>Neither is allowed, and you will not need one. You answer with the A, B, C and D
+      keys only, and questions advance on their own. Do not scroll or use the
+      trackpad during the exam.</p>
+  </div>
+
+  <h2 id="during">On the day</h2>
+
+  <div class="trouble">
+    <h3>My session time has passed and I am still in the waiting room</h3>
+    <p>Wait. Being in the waiting room means you have a link and you are on the
+      schedule. Some candidates take longer than others, so sessions run behind. You
+      have not been forgotten.</p>
+  </div>
+
+  <div class="trouble">
+    <h3>Can I check my screen share works while I wait?</h3>
+    <p>No. Testing screen share or other Zoom functions in the waiting room will get
+      you removed from the session. Wait for the team to bring you in.</p>
+  </div>
+
+  <div class="trouble">
+    <h3>Do I have to take my watch off?</h3>
+    <p>Yes &mdash; watches, earbuds, headphones and smart glasses all come off for the
+      exam itself. Keep them on during setup; the team will tell you when.</p>
+  </div>
+
+  <div class="trouble">
+    <h3>My phone keeps making noise when it joins</h3>
+    <p>When we bring your phone into the session, put it down and leave it alone. Do
+      not touch it whatever appears on screen. On an iPhone choose
+      &ldquo;Cancel&rdquo; at the audio prompt; on other devices choose
+      &ldquo;Deny&rdquo; or &ldquo;Dial by phone&rdquo;, or simply do not pick an
+      option.</p>
+  </div>
+
+  <h2 id="after">After you pass</h2>
+
+  <div class="trouble">
+    <h3>Where is my CSCE?</h3>
+    <p>Emailed within 48 hours of an online session. It is your proof of what you
+      passed until the FCC catches up.</p>
+  </div>
+
+  <div class="trouble">
+    <h3>Where is my call sign?</h3>
+    <p>We file electronically, so most licenses and upgrades come through in 5 to 7
+      business days &mdash; the standard FCC process takes three to four weeks. Please
+      wait ten business days before asking us or the FCC, and watch for the FCC
+      application-fee email: you have only 10 days to pay it, and Gmail accounts often
+      do not receive it. See <a href="whatnext.html">what happens next</a>.</p>
+  </div>
+
+  <p><a class="btn btn--primary" href="faq.html">Read the full FAQ</a>
+     <a class="btn" href="Online_Preparation.html">Pre-exam checklist</a></p>
+
+</section>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <h2>Contact Us</h2>
+      <p>PARC Radio &amp; Technology<br>
+         PO Box 926<br>
+         Roanoke, AL 36274-0926<br>
+         USA</p>
+      <p><a href="mailto:vetesting@yahoo.com">vetesting@yahoo.com</a></p>
+      <p>Our examiners are volunteers. Please allow up to 24 hours for a reply.</p>
+    </div>
+    <div>
+      <h2>Exams</h2>
+      <ul>
+        <li><a href="../pages/calendar.html">Schedule an exam</a></li>
+        <li><a href="../pages/Online_InstructionSeparation.html">Online testing</a></li>
+        <li><a href="../pages/inperson.html">In-person testing</a></li>
+        <li><a href="../pages/faq.html">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>More</h2>
+      <ul>
+        <li><a href="../pages/whatnext.html">What's next after passing</a></li>
+        <li><a href="../pages/handiham.html">Accessible testing</a></li>
+        <li><a href="../pages/donations.html">Support PARC</a></li>
+        <li><a href="https://www.facebook.com/groups/833919518104689" target="_blank" rel="noopener">Facebook group</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="site-footer__bottom">
+    <span>&copy; 2020&ndash;2026 PARC Radio &amp; Technology</span>
+    <a class="site-footer__ve" href="../pages/script.html" rel="nofollow">VE Access</a>
+  </div>
+</footer>
+
+<script src="../js/site.js" defer></script>
+<script src="../js/search.js" defer></script>
+
+</body>
+</html>

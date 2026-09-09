@@ -1,0 +1,1815 @@
+@charset "UTF-8";
+/* ===========================================================================
+   PARC Radio & Technology — site stylesheet
+   Replaces css/multiColumnTemplate.css (Dreamweaver "multi-column template").
+
+   Two rules govern edits to this file:
+
+   1. The legacy class names (.container, .left_article, .right_article,
+      .secondary_header, .placeholder, .copyright, .row, .columns …) are kept
+      deliberately. 51 pages of hand-written markup use them. They are
+      re-implemented here on Grid/Flexbox; do not rename them.
+
+   2. The invented element names (p2, p4, p5, p6, p7, h7, h8) are NOT typos.
+      They appear 500+ times across 38 pages and carry meaning in the exam
+      scripts — <p5> alone is 146 bracketed VE-only instructions. Browsers
+      treat unknown elements as inline with no default styling, so every one
+      of them must be styled explicitly below or the colour code that VEs read
+      during a live exam silently disappears.
+   =========================================================================== */
+
+/* ---------- design tokens ------------------------------------------------ */
+:root {
+  /* Paired with the color-scheme meta tag. Tells the browser the page has an
+     intentional scheme, so form controls and scrollbars are rendered light and
+     Chrome's Android auto-dark inversion leaves the page alone. */
+  color-scheme: light;
+
+  /* Brand red sampled from Banner.jpg, behind the PARC wordmark. */
+  --parc-red:   #BA0005;
+  --parc-700:   #8E0004;
+  --parc-600:   #A00105;
+  --parc-50:    #FDF2F2;
+
+  /* Softened for long reading. Pure #FFF against near-black was 18:1 — far past
+     any requirement and harsh on a bright screen. These still clear AAA (7:1)
+     with room to spare at ~15:1. */
+  --ink:        #1F2328;
+  --ink-2:      #4A5158;
+  --muted:      #677079;   /* clears 4.5:1 on surface AND the card tone */
+  --muted-dark: #8A939C;   /* muted, but against the dark footer */
+  --surface:    #FCFCFB;
+  --surface-2:  #F6F7F8;
+  --page:       #F1F3F5;
+  --line:       #DFE4E9;
+  --line-2:     #C9D1D8;
+
+  /* Navigation sits directly beneath an already-red banner. A second
+     full-width red band doubled the amount of saturated red on every page.
+     Charcoal separates the two, and lets red mean "act on this" instead of
+     "this is a surface". */
+  --nav-bg:     #23272C;
+  --nav-bg-2:   #313740;
+
+  --focus:      #1F5FBF;
+  --ok:         #0E7C2A;
+  --warn:       #9A6700;
+
+  /* ---- exam-script colour code — LEFT AS IT WAS, ON PURPOSE ---------------
+     VEs read these live during exams and the site owner asked that the scripts
+     not change. Used by <p2> (a question to ask), <p5>/<h8> (do not read
+     aloud) and <p6> (applies to some candidates only).
+
+     KNOWN LIMITATION, not an oversight: simulating protanopia puts the red and
+     green only dE 12 apart, so a red-green colour-blind VE cannot reliably tell
+     "do not read aloud" from "applies to some candidates". 89% of <p5> blocks
+     also carry a bracketed or asterisked marker, which is what those VEs
+     have to rely on. Changing <p6> from green to plum would fix it
+     (dE 46 worst case) and breaks no written instruction, since no script text
+     names any colour except red. Offered and deferred. */
+  --ve-note:    #C40606;
+  --ve-blue:    #1F5FBF;
+  --ve-green:   #0E7C2A;
+  --ve-subset:  var(--ve-green);
+
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+          Arial, "Noto Sans", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --step--1: clamp(0.83rem, 0.80rem + 0.16vw, 0.92rem);
+  --step-0:  clamp(1.00rem, 0.95rem + 0.24vw, 1.14rem);
+  --step-1:  clamp(1.20rem, 1.12rem + 0.40vw, 1.44rem);
+  --step-2:  clamp(1.44rem, 1.31rem + 0.64vw, 1.82rem);
+  --step-3:  clamp(1.73rem, 1.53rem + 1.00vw, 2.30rem);
+  --step-4:  clamp(2.07rem, 1.77rem + 1.50vw, 2.90rem);
+
+  --sp-1: 0.25rem; --sp-2: 0.5rem;  --sp-3: 0.75rem; --sp-4: 1rem;
+  --sp-5: 1.5rem; --sp-6: 2rem;     --sp-7: 3rem;    --sp-8: 4rem;
+
+  --radius:    10px;
+  --radius-sm: 6px;
+  --shadow-1:  0 1px 2px rgba(20,23,26,.06), 0 1px 3px rgba(20,23,26,.08);
+  --shadow-2:  0 4px 12px rgba(20,23,26,.08), 0 2px 4px rgba(20,23,26,.06);
+  --shadow-3:  0 12px 32px rgba(20,23,26,.14);
+
+  --measure: 74ch;
+  --wrap: 78rem;
+}
+
+/* ---------- reset -------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* The hidden attribute maps to display:none through a low-specificity UA
+   rule, so ANY author `display` beats it. .cal-filter{display:flex} silently
+   defeated it on the Youth filter, which then rendered for every visitor
+   regardless of the age gate. Four other elements had the same latent bug. */
+[hidden] { display: none !important; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, picture, video { max-width: 100%; height: auto; }
+
+/* Page bodies contain long unbroken strings a phone cannot fit: bare URLs used
+   as their own link text, and ASCII rules like "=====…" 74 characters long.
+   Without this they force the whole page wider than the viewport and it scrolls
+   sideways. Only breaks a word that would otherwise overflow. */
+body { overflow-wrap: break-word; }
+.container a, .container p, .container li, .container td, .container th { overflow-wrap: break-word; }
+:target { scroll-margin-top: 6rem; }
+
+:where(a):focus-visible,
+:where(button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+.skip-link {
+  position: absolute; left: -9999px;
+  background: var(--parc-red); color: #fff;
+  padding: var(--sp-3) var(--sp-4); z-index: 200; border-radius: 0 0 var(--radius) 0;
+}
+.skip-link:focus { left: 0; top: 0; }
+
+/* ---------- site header & banner ---------------------------------------- */
+.site-header { background: var(--surface); box-shadow: var(--shadow-1); }
+
+.site-banner { display: block; line-height: 0; background: var(--parc-red); }
+.site-banner img { width: 100%; display: block; object-fit: cover; }
+
+/* ---------- navigation --------------------------------------------------- */
+.site-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--nav-bg);
+  box-shadow: var(--shadow-1);
+}
+.site-nav__inner {
+  max-width: var(--wrap); margin-inline: auto;
+  display: flex; align-items: stretch; gap: var(--sp-2);
+  padding-inline: var(--sp-4);
+  /* Donate sits hard against this edge; without the extra breathing room it
+     looks like it is falling off the bar on a narrow desktop window. */
+  padding-right: var(--sp-5);
+}
+
+.nav-toggle {
+  display: none;
+  align-items: center; gap: var(--sp-3);
+  background: none; border: 0; cursor: pointer;
+  color: #fff; font: inherit; font-weight: 600;
+  padding: var(--sp-4) var(--sp-2);
+}
+.nav-toggle__bars { display: block; width: 22px; height: 2px; background: #fff; position: relative; }
+.nav-toggle__bars::before,
+.nav-toggle__bars::after {
+  content: ""; position: absolute; left: 0; width: 22px; height: 2px; background: #fff;
+  transition: transform .2s ease, top .2s ease;
+}
+.nav-toggle__bars::before { top: -7px; }
+.nav-toggle__bars::after  { top: 7px; }
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars { background: transparent; }
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars::before { top: 0; transform: rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars::after  { top: 0; transform: rotate(-45deg); }
+
+.nav-menu {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex: 1 1 auto; flex-wrap: wrap; align-items: stretch;
+}
+.nav-menu > li { position: relative; display: flex; }
+
+.nav-menu > li > a,
+.nav-sub-toggle {
+  /* Horizontal padding is tighter than the vertical to keep eight items on one
+     row. It holds down to about 1200px; below that the bar wraps to two rows,
+     which is tidy and only affects the 900-1200px band since the mobile menu
+     takes over at 900. Trimming the tracking as well was measured and bought
+     nothing — the fixed Search and Donate block is what sets the limit — so the
+     uppercase labels keep the tracking they need to stay readable. */
+  display: flex; align-items: center; gap: var(--sp-2);
+  padding: var(--sp-4) var(--sp-3);
+  color: #fff; text-decoration: none;
+  font: inherit; font-weight: 600; font-size: var(--step--1);
+  letter-spacing: .04em; text-transform: uppercase;
+  background: none; border: 0; cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: background-color .15s ease, border-color .15s ease;
+  white-space: nowrap;
+}
+.nav-menu > li > a:hover,
+.nav-sub-toggle:hover,
+.nav-menu > li > a:focus-visible,
+.nav-sub-toggle:focus-visible { background: var(--nav-bg-2); }
+
+.nav-menu > li > a[aria-current="page"] {
+  border-bottom-color: var(--parc-red);      /* red earns its place here */
+  background: var(--nav-bg-2);
+}
+
+.nav-sub-toggle::after {
+  content: ""; width: 0; height: 0; margin-top: 1px;
+  border: 4px solid transparent; border-top-color: currentColor;
+}
+
+.nav-sub {
+  list-style: none; margin: 0; padding: var(--sp-2) 0;
+  position: absolute; top: 100%; left: 0; min-width: 15rem;
+  background: var(--surface); border-radius: 0 0 var(--radius) var(--radius);
+  box-shadow: var(--shadow-3); z-index: 110;
+  display: none;
+}
+.nav-menu > li.is-open > .nav-sub { display: block; }
+.nav-sub a {
+  display: block; padding: var(--sp-3) var(--sp-4);
+  color: var(--ink); text-decoration: none; font-size: var(--step--1);
+}
+.nav-sub a:hover, .nav-sub a:focus-visible { background: var(--parc-50); color: var(--parc-700); }
+
+/* Desktop hover as a no-JS fallback: without site.js the menus still open. */
+@media (min-width: 901px) and (hover: hover) {
+  .nav-menu > li:hover > .nav-sub { display: block; }
+}
+
+/* The form wrapping the button is a flex child of .site-nav__inner, which sets
+   align-items: stretch — so it grew to the full 67px bar height while the button
+   sat at its top edge, 0px above and 30px below. The button's own
+   align-self: center did nothing, because the form was not a flex container on
+   desktop (only inside the mobile media query). Making it one centres it. */
+.nav-donate-form {
+  display: flex; align-items: center;
+  margin-left: auto;
+}
+
+.nav-donate {
+  /* Matched to the nav's own type: the items around it are uppercase and
+     letterspaced, so a title-case rounded pill read as bolted on. Square
+     corners and the same type treatment make it part of the bar. */
+  align-self: center;
+  display: inline-flex; align-items: center; gap: .5em;
+  background: var(--parc-red); color: #fff;
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--radius-sm);
+  border: 0; cursor: pointer; white-space: nowrap;
+  font: inherit; font-weight: 700; font-size: var(--step--1);
+  letter-spacing: .04em; text-transform: uppercase;
+  text-decoration: none; line-height: 1.4;
+  box-shadow: 0 1px 2px rgba(0,0,0,.28);
+  transition: background-color .15s ease, transform .06s ease;
+}
+.nav-donate::before {
+  /* A heart reads instantly and stops it being a generic red rectangle. */
+  content: "\2665"; font-size: 1.05em; line-height: 1;
+  transform: translateY(-.04em);
+}
+.nav-donate:hover { background: var(--parc-700); }
+.nav-donate:active { transform: translateY(1px); }
+
+@media (max-width: 900px) {
+  .site-nav__inner {
+    flex-wrap: wrap;
+    padding-inline: var(--sp-3);
+    /* padding-inline resets the desktop padding-right, so restate it or
+       Donate sits flush against the screen edge on a phone. */
+    padding-right: var(--sp-4);
+  }
+  .nav-toggle { display: inline-flex; }
+  .nav-menu {
+    flex: 1 0 100%; flex-direction: column;
+    /* flex-wrap:wrap is inherited from the desktop rule. Combined with
+       flex-direction:column and a bounded max-height it makes items that don't
+       fit wrap into a SECOND COLUMN, which then runs off the right edge — that
+       is what hid ONLINE TESTING and clipped IN-PERSON TESTING once the
+       Helpful Links submenu was expanded. A vertical menu must never wrap. */
+    flex-wrap: nowrap;
+    max-height: 0; overflow: hidden;
+    transition: max-height .25s ease;
+  }
+  .site-nav.is-open .nav-menu {
+    /* Leave room for the banner and the nav bar above, so the list scrolls
+       inside itself rather than running off the bottom of the screen. */
+    max-height: calc(100vh - 9rem);
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+    padding-bottom: var(--sp-3);
+  }
+  .nav-menu > li { flex-direction: column; }
+  .nav-menu > li > a, .nav-sub-toggle {
+    /* <button> centres its content by default while <a> does not, so the
+       dropdown labels sat centred while the plain links sat left. */
+    width: 100%; padding-block: var(--sp-3);
+    justify-content: flex-start; text-align: left;
+    min-height: 3rem;
+  }
+  .nav-sub-toggle::after { margin-left: auto; }
+  .nav-sub {
+    position: static; display: none; box-shadow: none; border-radius: 0;
+    background: var(--nav-bg-2); min-width: 0; padding: var(--sp-1) 0;
+    border-left: 3px solid rgba(255,255,255,.35);
+    margin-left: var(--sp-4);
+  }
+  .nav-sub a, .nav-sub a:link, .nav-sub a:visited {
+    color: #fff; font-size: var(--step-0);
+    padding: var(--sp-3) var(--sp-4);
+    min-height: 2.75rem; display: flex; align-items: center;
+  }
+  .nav-sub a:hover, .nav-sub a:focus-visible { background: rgba(255,255,255,.12); color: #fff; }
+  /* Keep Donate on the same row as the Menu button; the menu itself wraps
+     underneath. Without the explicit order it lands on a third row. */
+  .nav-toggle { order: 1; }
+  .nav-donate-form { order: 2; margin-left: auto; align-self: center; display: flex; }
+  .nav-menu { order: 3; }
+  .nav-donate { margin: 0; }
+}
+
+
+/* ---------------------------------------------------------------------------
+   Submenu link colours - every state stated explicitly.
+
+   These had been split across a general rule, the :link/:visited pins added for
+   the visited-link fix, and a mobile override. All three sat at the same
+   specificity, so which one won came down to source order - and the answer
+   differed between the light desktop panel and the dark mobile one. Measured
+   with hover forced: 1.05:1 at desktop width, 1.00:1 on a phone. A menu you
+   could hover and not read.
+
+   The .site-nav prefix lifts these above the generic a:link / a:visited /
+   a:hover rules so nothing else can reach in.
+   --------------------------------------------------------------------------- */
+.site-nav .nav-sub a,
+.site-nav .nav-sub a:link,
+.site-nav .nav-sub a:visited { color: var(--ink); background: transparent; }
+
+.site-nav .nav-sub a:hover,
+.site-nav .nav-sub a:focus-visible { background: var(--parc-50); color: var(--parc-700); }
+
+@media (max-width: 900px) {
+  /* The mobile panel sits on the dark nav, so the polarity flips. */
+  .site-nav .nav-sub a,
+  .site-nav .nav-sub a:link,
+  .site-nav .nav-sub a:visited { color: #fff; background: transparent; }
+
+  .site-nav .nav-sub a:hover,
+  .site-nav .nav-sub a:focus-visible { background: rgba(255,255,255,.16); color: #fff; }
+}
+
+/* ---------- layout ------------------------------------------------------- */
+main { display: block; }
+
+.container {
+  max-width: var(--wrap);
+  margin: var(--sp-6) auto var(--sp-7);
+  padding: clamp(var(--sp-4), 3vw, var(--sp-7));
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+  color: var(--ink);
+  font-size: var(--step-0);
+  text-align: left;
+}
+
+/* Text-only pages (the exam scripts, FAQ, procedure pages) read at a measure.
+   Pages that use the article/aside split opt out and go full width. */
+.container > section { max-width: min(100%, var(--measure)); margin-inline: auto; }
+.container > section:has(.left_article),
+.container > section:has(.columns),
+.container > section.wide { max-width: none; }
+
+.row { width: 100%; }
+.noDisplay { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.left_article  { flex: 3 1 30rem; min-width: 0; }
+.right_article { flex: 1 1 17rem; min-width: 0; }
+.container > section:has(.left_article) {
+  display: flex; flex-wrap: wrap; align-items: flex-start;
+  gap: clamp(var(--sp-5), 3vw, var(--sp-7));
+}
+.left_article2, .right_article2 { flex: 1 1 18rem; min-width: 0; }
+
+.columns { flex: 1 1 16rem; min-width: 0; }
+.container > section:has(.columns) { display: flex; flex-wrap: wrap; gap: var(--sp-5); }
+.column_half { flex: 1 1 20rem; min-width: 0; }
+.left_half  { background: var(--surface-2); border-radius: var(--radius); padding: var(--sp-5); }
+.right_half { background: var(--ink); color: #fff; border-radius: var(--radius); padding: var(--sp-5); text-align: center; }
+.column_title { padding-block: var(--sp-5); }
+
+.placeholder { width: 100%; height: auto; border-radius: var(--radius); margin-block: var(--sp-4); }
+
+/* ---------- typography --------------------------------------------------- */
+h1, h2, h3, h4, h5, h6, h7, h8 {
+  margin: 0 0 var(--sp-3); line-height: 1.25; text-wrap: balance; font-weight: 700;
+}
+:is(h2, h3, h4, h5, h6, h7, h8):not(:first-child) { margin-top: var(--sp-6); }
+
+h1 { font-size: var(--step-4); color: var(--ink); text-align: center; }
+/* A short rule carries the brand instead of colouring the whole headline. */
+.container > section > h1::after,
+.hero h1::after,
+main > h1::after {
+  content: ""; display: block; width: 3.5rem; height: 3px;
+  background: var(--parc-red); border-radius: 2px;
+  margin: var(--sp-3) auto 0;
+}
+h2 { font-size: var(--step-3); color: var(--ink); }
+h3 { font-size: var(--step-2); color: var(--ink); }
+h4 { font-size: var(--step-1); color: var(--ink-2); }
+h5 { font-size: var(--step-1); color: var(--ve-note); font-weight: 600; }
+h6 { font-size: var(--step-0); color: var(--ve-note); font-weight: 600; }
+
+/* Invented elements — see the header note. Unknown tags default to inline. */
+h7 { display: block; font-size: var(--step-3); color: var(--ink); text-align: center; }
+h8 { display: block; font-size: var(--step-1); color: var(--ve-note); }
+
+p  { margin: 0 0 var(--sp-4); }
+p1 { display: block; }
+p2 { color: var(--ve-blue); }
+p3 { display: block; font-weight: 700; text-decoration: underline; }
+p4 { color: var(--ink-2); }
+p5 { color: var(--ve-note); font-weight: 600; }        /* VE instruction, not read aloud */
+p6 { color: var(--ve-green); font-weight: 600; }
+p7 { display: block; font-size: var(--step--1); color: var(--ink-2); }
+
+strong, b { font-weight: 700; }
+em, i { font-style: italic; }
+small { font-size: var(--step--1); color: var(--muted); }
+hr { border: 0; border-top: 1px solid var(--line); margin: var(--sp-6) 0; }
+
+ul, ol { margin: 0 0 var(--sp-4); padding-left: 1.5em; }
+li { margin-bottom: var(--sp-2); }
+li::marker { color: var(--parc-red); }
+
+a {
+  color: var(--parc-red);
+  /* Always underlined. Brand red and the VE "do not read aloud" red are only
+     dE 3.7 apart for normal vision and effectively identical under
+     deuteranopia, so a link inside a script page cannot be told from an
+     instruction by colour. The underline is what distinguishes it. */
+  text-decoration: underline;
+  text-underline-offset: .16em;
+  text-decoration-thickness: 1px;
+}
+a:hover { color: var(--parc-700); }
+a:visited { color: var(--parc-700); }
+
+/* ---------------------------------------------------------------------------
+   Component links must not inherit the global :visited colour.
+
+   `a:visited` has specificity (0,1,1), which beats a bare class like
+   `.btn--primary` (0,1,0). So once a visitor had opened the schedule page, the
+   "Schedule an exam" button rendered dark red text on a red background —
+   1.44:1, effectively invisible. Same for the footer's VE link and the mobile
+   submenu, both dark red on a dark ground.
+
+   Anything whose colour is set by a component rather than by running text needs
+   its link states pinned explicitly.
+   --------------------------------------------------------------------------- */
+.btn:link, .btn:visited            { color: var(--ink); }
+.btn--primary:link,
+.btn--primary:visited,
+.btn--primary:hover,
+.btn--primary:focus                { color: #fff; }
+.card__link:link, .card__link:visited     { color: var(--parc-red); }
+.slot:link, .slot:visited, .avail-slot a:link, .avail-slot a:visited { color: inherit; }
+.site-footer a:link, .site-footer a:visited { color: #fff; }
+.site-footer__ve:link, .site-footer__ve:visited { color: var(--muted-dark); }
+.nav-menu > li > a:link, .nav-menu > li > a:visited { color: #fff; }
+.nav-sub a:link, .nav-sub a:visited { color: var(--ink); }
+.skip-link:link, .skip-link:visited { color: #fff; }
+
+/* The mobile submenu sits on the dark nav, so it needs the opposite of the
+   desktop rule. Its original declaration is earlier in the file than
+   `a:visited`, so at equal specificity it lost. Restating it here — after
+   a:visited — is what makes it stick. */
+@media (max-width: 900px) {
+  .nav-sub a:link, .nav-sub a:visited { color: #fff; }
+}
+
+blockquote {
+  margin: var(--sp-5) 0; padding: var(--sp-4) var(--sp-5);
+  border-left: 4px solid var(--parc-red); background: var(--parc-50); border-radius: 0 var(--radius) var(--radius) 0;
+}
+code, kbd, samp { font-family: var(--font-mono); font-size: .92em; background: var(--surface-2);
+  padding: .1em .35em; border-radius: var(--radius-sm); border: 1px solid var(--line); }
+
+/* Legacy bordered callouts used on calendar.html and elsewhere. */
+#example2, #example3 {
+  padding: var(--sp-4) var(--sp-5); margin: var(--sp-5) auto; border-radius: var(--radius);
+  border: 1px solid var(--line-2); background: var(--surface-2); text-align: left;
+}
+#example3 { border-color: var(--parc-red); background: var(--parc-50); }
+div1 { display: block; padding: var(--sp-4); border: 1px solid var(--line-2); border-radius: var(--radius); }
+
+table { width: 100%; border-collapse: collapse; margin: var(--sp-5) 0; font-size: var(--step--1); }
+th, td { padding: var(--sp-3); border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+th { background: var(--surface-2); font-weight: 700; }
+
+/* Wide content must scroll inside itself, never the page body. */
+.scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* ---------- buttons ------------------------------------------------------ */
+/* One button shape for the whole site: same size, radius, weight and casing.
+   Only the fill changes, and the fill carries the meaning.
+
+     .btn--primary   solid red      the main action here, one per view
+     .page-link      red outline    a choice among several, or navigation
+     .btn            grey outline   quiet: back, next, dismiss, cancel
+
+   The navigation grids used to be a separate component with 2px borders, a
+   larger radius and uppercase labels, so the same kind of action looked
+   different depending which page you were on. */
+button, .btn, .page-link {
+  font: inherit; font-weight: 600; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--radius-sm); border: 1px solid var(--line-2);
+  background: var(--surface); color: var(--ink); text-decoration: none;
+  transition: background-color .15s ease, border-color .15s ease, transform .05s ease;
+}
+button:hover, .btn:hover { background: var(--surface-2); border-color: var(--muted); }
+button:active, .btn:active, .page-link:active { transform: translateY(1px); }
+
+.btn--primary,
+.btn--primary:link,
+.btn--primary:visited { background: var(--parc-red); border-color: var(--parc-red); color: #fff; }
+.btn--primary:hover,
+.btn--primary:focus-visible { background: var(--parc-700); border-color: var(--parc-700); color: #fff; }
+
+
+/* ---------- script toolbar (VE pages) ------------------------------------ */
+/* The exam scripts carry four dropdown menus inline in the page body. These
+   rules used to live in a <style> block copy-pasted into 21 files; they belong
+   here. Opening on :focus-within as well as :hover keeps them keyboard-usable
+   without any JavaScript. */
+.dropdown { position: relative; display: inline-block; margin: var(--sp-1); }
+
+.dropbtn {
+  background: var(--parc-red); border-color: var(--parc-red); color: #fff;
+  font-size: var(--step--1); font-weight: 700;
+  letter-spacing: .03em; text-transform: uppercase;
+  padding: var(--sp-3) var(--sp-4);
+}
+.dropbtn:hover { background: var(--parc-700); border-color: var(--parc-700); }
+
+/* Not a menu — a link straight to the team-profile form, sitting in the same row
+   as the four dropdowns. Outlined rather than solid so it does not compete with
+   the script menus, which are what a VE reaches for mid-session. */
+a.dropbtn--team,
+a.dropbtn--team:link,
+a.dropbtn--team:visited {
+  background: transparent; color: var(--parc-red);
+  border: 1px solid var(--parc-red); text-decoration: none;
+}
+a.dropbtn--team:hover,
+a.dropbtn--team:focus-visible {
+  background: var(--parc-red); color: #fff; border-color: var(--parc-red);
+}
+
+.dropdown-content {
+  display: none; position: absolute; left: 0; top: 100%; z-index: 60;
+  min-width: 16rem; text-align: left;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow-3);
+  padding: var(--sp-2) 0;
+}
+.dropdown-content a {
+  display: block; padding: var(--sp-3) var(--sp-4);
+  color: var(--ink); text-decoration: none; font-size: var(--step--1);
+}
+.dropdown-content a:hover, .dropdown-content a:focus-visible {
+  background: var(--parc-50); color: var(--parc-700);
+}
+.dropdown:hover .dropdown-content,
+.dropdown:focus-within .dropdown-content { display: block; }
+
+/* The script pages centre their toolbar in a <center> wrapper. */
+.dropdown-row { display: flex; flex-wrap: wrap; gap: var(--sp-2); justify-content: center; }
+
+/* ---------- footer ------------------------------------------------------- */
+.site-footer {
+  background: var(--ink); color: #C9D1D8;
+  padding: var(--sp-7) var(--sp-4) var(--sp-5);
+  font-size: var(--step--1);
+}
+.site-footer__inner {
+  max-width: var(--wrap); margin-inline: auto;
+  display: flex; flex-wrap: wrap; gap: var(--sp-6); justify-content: space-between;
+}
+.site-footer h2 { color: #fff; font-size: var(--step-0); margin-bottom: var(--sp-3); }
+.site-footer a { color: #fff; }
+.site-footer a:hover { color: var(--parc-50); }
+.site-footer__bottom {
+  color: var(--muted-dark);
+  max-width: var(--wrap); margin: var(--sp-6) auto 0;
+  padding-top: var(--sp-4); border-top: 1px solid rgba(255,255,255,.14);
+  display: flex; flex-wrap: wrap; gap: var(--sp-3); justify-content: space-between; align-items: center;
+}
+.site-footer__ve { color: var(--muted-dark); text-decoration: none; font-size: var(--step--1); }
+.site-footer__ve:hover { color: #fff; }
+
+/* Legacy footer classes, in case any page is missed by the retheme pass. */
+.footer, .copyright { background: var(--ink); color: #C9D1D8; }
+.copyright { text-align: center; padding: var(--sp-4); letter-spacing: .08em; text-transform: uppercase; }
+
+/* ---------- legacy chrome classes, neutralised --------------------------- */
+/* These styled the old hand-built header. The retheme pass removes the markup,
+   but the class names survive in page bodies here and there. */
+.secondary_header:not(.site-nav) { background: none; padding: 0; }
+.primary_header { background: none; padding: 0; }
+.title { font-weight: 700; text-align: center; letter-spacing: .04em; }
+.thumbnail { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; }
+.thumbnail_align { text-align: center; }
+.social { text-align: center; }
+.social_icon { display: inline-block; padding: var(--sp-2); }
+
+/* ---------- print -------------------------------------------------------- */
+@media print {
+  :root { --measure: none; }
+  .site-nav, .site-header, .site-footer, .skip-link,
+  .script-toolbar, .nav-donate, .no-print { display: none !important; }
+  body { background: #fff; font-size: 11pt; }
+  .container { box-shadow: none; margin: 0; padding: 0; max-width: none; background: #fff; }
+  .container > section { max-width: none; }
+  a { color: #000; text-decoration: underline; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #444; }
+  h1, h2, h3, h4, h5, h6, h7, h8 { break-after: avoid-page; }
+  li, p { break-inside: avoid; }
+  /* Keep the script colour code legible in greyscale. */
+  p5, h5, h6, h8 { color: #000 !important; font-weight: 700; }
+  p5::before { content: "▶ "; }
+}
+
+/* ---------- homepage ----------------------------------------------------- */
+.hero { text-align: center; padding: var(--sp-4) 0 var(--sp-6); }
+.hero h1 { margin-bottom: var(--sp-4); }
+.hero__lede {
+  max-width: 46ch; margin: 0 auto var(--sp-5);
+  font-size: var(--step-1); color: var(--ink-2); text-wrap: pretty;
+}
+.hero__actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); justify-content: center; }
+
+.cards {
+  display: grid; gap: var(--sp-5);
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  margin: var(--sp-6) 0 var(--sp-7);
+}
+.card {
+  display: flex; flex-direction: column;
+  padding: var(--sp-5);
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+}
+.card:hover { border-color: var(--nav-bg); box-shadow: var(--shadow-2); transform: translateY(-2px); }
+.card h2 { font-size: var(--step-1); margin-bottom: var(--sp-2); color: var(--ink); }
+.card p { color: var(--ink-2); font-size: var(--step--1); flex: 1; }
+.card__link { font-weight: 700; text-decoration: none; margin-top: var(--sp-3); }
+.card__link::after { content: " \2192"; }
+.card a::before { content: ""; position: absolute; inset: 0; }
+.card { position: relative; }
+
+.home-grid {
+  display: grid; gap: clamp(var(--sp-5), 4vw, var(--sp-7));
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  align-items: start;
+}
+@media (max-width: 820px) { .home-grid { grid-template-columns: 1fr; } }
+.home-main > h2:first-child { margin-top: 0; }
+
+.callout {
+  /* Information, not a warning — the red tint made a meeting notice read as an
+     alert. Red stays on .booking-alert and #example3, which really are. */
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-left: 4px solid var(--nav-bg);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: var(--sp-5);
+}
+.callout h2 { font-size: var(--step-1); margin-bottom: var(--sp-3); }
+.callout dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: var(--sp-2) var(--sp-4); }
+.callout dt { font-weight: 700; color: var(--ink-2); }
+.callout dd { margin: 0; }
+
+.home-side img { border-radius: var(--radius); margin-top: var(--sp-5); }
+.social-row { display: flex; gap: var(--sp-4); align-items: center; margin-top: var(--sp-5); }
+
+/* ---------- VE unlock screen --------------------------------------------- */
+.ve-lock { max-width: 26rem; margin: var(--sp-7) auto; text-align: center; }
+.ve-lock h1 { font-size: var(--step-2); margin-bottom: var(--sp-3); }
+.ve-lock__hint { color: var(--ink-2); margin-bottom: var(--sp-5); }
+.ve-lock__form { display: grid; gap: var(--sp-3); text-align: left; }
+.ve-lock__label { font-weight: 600; font-size: var(--step--1); }
+.ve-lock__input {
+  font: inherit; padding: var(--sp-3); width: 100%;
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm); background: var(--surface);
+}
+.ve-lock__remember { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--step--1); color: var(--ink-2); }
+.ve-lock__status { min-height: 1.5em; margin: 0; font-size: var(--step--1); color: var(--ink-2); }
+.ve-lock__status.is-error { color: var(--parc-red); font-weight: 600; }
+.ve-lock__foot { margin-top: var(--sp-6); font-size: var(--step--1); color: var(--muted); }
+
+.ve-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4);
+  background: var(--ink); color: #fff; padding: var(--sp-2) var(--sp-4); font-size: var(--step--1);
+}
+.ve-bar__label { letter-spacing: .04em; text-transform: uppercase; font-weight: 600; }
+.ve-bar__lock { padding: var(--sp-1) var(--sp-3); font-size: var(--step--1); }
+.ve-file__actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-bottom: var(--sp-4); }
+.ve-file__frame { width: 100%; height: min(80vh, 900px); border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-2); }
+
+/* ---------- schedule page ------------------------------------------------ */
+.age-gate {
+  max-width: 34rem; margin: var(--sp-6) auto;
+  padding: var(--sp-5); background: var(--surface-2);
+  border: 1px solid var(--line); border-radius: var(--radius);
+}
+.age-gate h2 { margin-top: 0; font-size: var(--step-1); }
+.age-gate__fields { display: flex; flex-wrap: wrap; gap: var(--sp-3); border: 0; padding: 0; margin: 0 0 var(--sp-3); }
+.age-gate__field { display: flex; flex-direction: column; gap: var(--sp-1); flex: 1 1 7rem; }
+.age-gate__field label { font-size: var(--step--1); font-weight: 600; color: var(--ink-2); }
+.age-gate__field select {
+  font: inherit; padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm); background: var(--surface);
+}
+.age-gate__why { margin: 0 0 var(--sp-3); }
+.age-gate__safe {
+  margin: 0 0 var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--surface-2);
+  border-left: 3px solid var(--good, #1C6340);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: var(--step--1); color: var(--ink-2);
+}
+.age-gate__safe strong { color: var(--ink); }
+.age-gate__privacy { font-size: var(--step--1); color: var(--muted); margin-bottom: var(--sp-3); }
+.age-gate__actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+
+.audience-note {
+  background: var(--surface-2); border-left: 4px solid var(--ve-blue);
+  padding: var(--sp-3) var(--sp-4); border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.next-available {
+  margin: var(--sp-5) 0 var(--sp-7);
+  padding: var(--sp-5); background: var(--surface-2);
+  border: 1px solid var(--line); border-radius: var(--radius);
+}
+.next-available h2 { margin-top: 0; font-size: var(--step-1); }
+.next-available__sub { font-size: var(--step--1); color: var(--muted); }
+.avail-day h3 { font-size: var(--step-0); margin: var(--sp-4) 0 var(--sp-2); }
+.avail-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.avail-slot a {
+  display: flex; flex-direction: column; gap: 1px;
+  padding: var(--sp-2) var(--sp-3); text-decoration: none;
+  background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+}
+.avail-slot a:hover { border-color: #0F6B62; background: #E8F4F3; }
+.avail-slot__time { font-weight: 700; color: var(--ink); }
+.avail-slot__meta { font-size: var(--step--1); color: var(--muted); }
+
+/* ---------- donate ------------------------------------------------------- */
+.donate-box {
+  margin: var(--sp-6) 0; padding: var(--sp-5);
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius);
+}
+.donate-box h2 { margin-top: 0; font-size: var(--step-1); }
+
+/* ---------- legacy workflow navigation ----------------------------------
+   The Online_* pages navigate with buttons laid out inside <table> elements
+   (`<table width="400" border="1">` … `<th><a><button style="width:200px">`).
+
+   Every table on this site is one of these — 19 tables across 15 pages, all
+   containing buttons, none holding tabular data — so re-rendering them as a
+   wrapping flex row is safe and is the only way to fix the real problem: a
+   table row cannot wrap, so four 200px buttons simply run off a 390px phone
+   screen. That produced a horizontally scrolling page with the last button
+   clipped off the edge.
+
+   Inline style attributes outrank classes, so !important is the only lever
+   available for the widths. Everything here is scoped to .container so it can
+   never reach the site chrome. */
+.container table { display: block; width: 100%; border: 0; margin: var(--sp-5) 0; }
+.container thead, .container tbody { display: block; }
+.container tr {
+  display: flex; flex-wrap: wrap; gap: var(--sp-3);
+  justify-content: center; align-items: stretch;
+}
+.container th, .container td {
+  display: block; border: 0; padding: 0; background: none;
+  flex: 1 1 9rem; max-width: 16rem;
+}
+.container th > a, .container td > a { display: block; height: 100%; text-decoration: none; }
+
+.container button[style] {
+  height: auto !important;
+  width: 100% !important;
+  min-height: 3rem;
+  padding: var(--sp-3) var(--sp-4);
+  /* Outlined rather than filled: these pages carry four to eight of them, and
+     as solid red blocks they dominated the page. */
+  background: var(--surface); border: 2px solid var(--parc-red); color: var(--parc-700);
+  text-align: center; font-weight: 700;
+}
+.container button[style]:hover { background: var(--parc-red); border-color: var(--parc-red); color: #fff; }
+.container button h3, .container button h7, .container button h5 {
+  margin: 0; font-size: var(--step--1); color: inherit;
+  text-transform: uppercase; letter-spacing: .03em;
+  text-align: center; white-space: normal; overflow-wrap: anywhere;
+}
+
+@media (max-width: 520px) {
+  /* One per row on small phones — two 9rem buttons plus a gap no longer fit. */
+  .container th, .container td { flex: 1 1 100%; max-width: none; }
+}
+
+/* ---------- merged availability calendar --------------------------------- */
+.cal-status { font-size: var(--step--1); color: var(--muted); }
+
+.cal-unavailable {
+  padding: var(--sp-5); margin-bottom: var(--sp-5);
+  background: var(--parc-50); border: 1px solid var(--line);
+  border-left: 4px solid var(--parc-red); border-radius: 0 var(--radius) var(--radius) 0;
+}
+.cal-unavailable h2 { margin-top: 0; font-size: var(--step-1); }
+
+.cal-toolbar {
+  display: flex; flex-wrap: wrap; gap: var(--sp-3) var(--sp-4);
+  align-items: flex-end;
+  padding: var(--sp-4); margin-bottom: var(--sp-4);
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius);
+}
+.cal-filter { display: flex; flex-direction: column; gap: var(--sp-2); }
+/* Label above the select, matching the chip groups beside it. Deliberately no
+   margin-left:auto — pushing it to the far right stranded it alone on an
+   otherwise empty row whenever the five band chips filled the line. Sitting
+   directly after the chips keeps it part of the same group at any width. */
+.cal-filter--tz .cal-filter__label { white-space: nowrap; }
+.tz-detected { display: inline-flex; align-items: baseline; gap: var(--sp-2); }
+.tz-change {
+  background: none; border: 0; padding: 0;
+  font: inherit; font-size: var(--step--2);
+  color: var(--parc-red); text-decoration: underline;
+  cursor: pointer;
+}
+.tz-change:hover { color: var(--parc-700); }
+.cal-filter__label {
+  font-size: var(--step--1); font-weight: 700; color: var(--ink-2);
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.cal-filter select {
+  font: inherit; padding: var(--sp-2) var(--sp-3); max-width: 11rem;
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm); background: var(--surface);
+}
+.chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.chip {
+  padding: var(--sp-2) var(--sp-3); border-radius: 999px;
+  font-size: var(--step--1); font-weight: 600;
+  background: var(--surface); border: 1px solid var(--line-2); color: var(--muted);
+}
+/* Matched to the calendar they filter, rather than a row of black pills. */
+.chip.is-on { background: #0F6B62; border-color: #0F6B62; color: #fff; }
+.chip__hint { font-weight: 400; opacity: .75; font-size: .85em; }
+
+.cal-summary { font-size: var(--step--1); color: var(--ink-2); margin-bottom: var(--sp-4); }
+
+.cal-layout {
+  display: grid; gap: clamp(var(--sp-4), 3vw, var(--sp-6));
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: start;
+}
+@media (max-width: 860px) { .cal-layout { grid-template-columns: 1fr; } }
+
+.cal-nav { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); margin-bottom: var(--sp-3); }
+.cal-nav h2 { margin: 0; font-size: var(--step-1); }
+
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-head {
+  text-align: center; font-size: var(--step--1); font-weight: 700;
+  color: var(--muted); padding-bottom: var(--sp-1);
+}
+.cal-cell {
+  position: relative; min-height: 3.1rem;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface); font: inherit; padding: 0;
+}
+.cal-cell.is-empty { border: 0; background: none; }
+.cal-cell.is-none { color: var(--line-2); background: var(--surface-2); }
+.cal-cell__num { font-size: var(--step--1); font-weight: 600; }
+.cal-cell__count { font-size: .7rem; font-weight: 700; line-height: 1; }
+
+/* Availability density — three steps so a glance shows where the room is.
+   Teal rather than the brand red: this is data, and a red-saturated grid read
+   as a warning when it actually means "plenty of room". Single-hue lightness
+   ramp, so it stays legible under every colour-vision deficiency. */
+.cal-cell.has-slots { cursor: pointer; color: var(--ink); }
+.cal-cell.lvl-1 { background: #E8F4F3; border-color: #C4E2DF; }
+.cal-cell.lvl-2 { background: #8FCBC6; border-color: #6FB5AF; }
+.cal-cell.lvl-3 { background: #0F6B62; border-color: #0B554E; color: #fff; }
+.cal-cell.has-slots:hover { outline: 2px solid var(--ink); outline-offset: 1px; }
+.cal-cell.is-today { box-shadow: inset 0 0 0 2px var(--ve-blue); }
+.cal-cell.is-selected { outline: 3px solid var(--ink); outline-offset: 1px; }
+
+.cal-legend { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap;
+  font-size: var(--step--1); color: var(--muted); margin-top: var(--sp-3); }
+.cal-key { width: 14px; height: 14px; border-radius: 3px; display: inline-block; border: 1px solid var(--line-2); }
+.cal-key.lvl-1 { background: #E8F4F3; } .cal-key.lvl-2 { background: #8FCBC6; }
+.cal-key.lvl-3 { background: #0F6B62; }
+
+.cal-daybox {
+  padding: var(--sp-4); background: var(--surface-2);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  max-height: 34rem; overflow-y: auto;
+}
+.cal-day__title { margin: 0 0 var(--sp-3); font-size: var(--step-1); }
+.cal-day__count { font-size: var(--step--1); color: var(--muted); font-weight: 400; }
+.cal-day__empty { color: var(--muted); }
+.slot-group h4 { margin: var(--sp-4) 0 var(--sp-2); font-size: var(--step--1);
+  text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.slot-group:first-of-type h4 { margin-top: 0; }
+.slot-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-2);
+  grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr)); }
+.slot {
+  /* One line now that the seat count is gone — centred rather than left-aligned
+     with a phantom second row. */
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+  padding: var(--sp-3) var(--sp-3);
+  background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+}
+.slot:hover { border-color: #0F6B62; background: #E8F4F3; }
+.slot__time { font-weight: 700; color: var(--ink); }
+.slot__meta { font-size: .75rem; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+.cal-foot { margin-top: var(--sp-5); font-size: var(--step--1); color: var(--muted); }
+
+.booking-alert {
+  background: var(--parc-50); border: 1px solid var(--parc-red);
+  border-left: 4px solid var(--parc-red);
+  padding: var(--sp-3) var(--sp-4); border-radius: 0 var(--radius) var(--radius) 0;
+  margin-bottom: var(--sp-5); font-size: var(--step--1);
+}
+.notices { margin-top: var(--sp-8); padding-top: var(--sp-5); border-top: 1px solid var(--line); }
+.notices h2 { font-size: var(--step-1); }
+.cal-freshness { font-size: var(--step--1); color: var(--muted); margin: calc(-1 * var(--sp-3)) 0 var(--sp-4); }
+.cal-freshness.is-stale {
+  color: var(--warn); font-weight: 600;
+  background: #FFF8E6; border: 1px solid #F0DFAF; border-radius: var(--radius-sm);
+  padding: var(--sp-2) var(--sp-3);
+}
+
+/* Youth sessions are a different session and a different fee, so they stay
+   visually distinct — unlike the internal A–F session letters, which candidates
+   have no reason to think about. */
+.slot--youth { border-color: var(--ve-blue); background: #F2F7FF; }
+.slot--youth:hover { border-color: var(--ve-blue); background: #E6F0FF; }
+.slot__youth {
+  display: inline-block; margin-left: 4px; padding: 0 5px; border-radius: 3px;
+  background: var(--ve-blue); color: #fff;
+  font-size: .62rem; font-weight: 700; letter-spacing: .04em;
+  text-transform: uppercase; vertical-align: middle;
+}
+#filter-youth.is-on { background: var(--ve-blue); border-color: var(--ve-blue); color: #fff; }
+.cal-cell.is-today { box-shadow: inset 0 0 0 2px var(--ink-2); }
+
+/* Section headings that used to be <h1> in the old template. Demoted to <h2>
+   for a correct document outline; styled here so the pages look unchanged. */
+.page-section {
+  font-size: var(--step-4); color: var(--ink);
+  text-align: center; font-weight: 700;
+}
+
+/* Visually hidden but read by screen readers and indexed by search engines. */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+/* Headings whose LEVEL changed so the document outline is correct, but whose
+   APPEARANCE must stay as it was. The old template picked heading levels for
+   their font size and colour rather than for structure; these classes keep the
+   look while the level does the semantic work. */
+.hx-4 { font-size: var(--step-1); color: var(--ink-2); font-weight: 700; }
+.hx-5 { font-size: var(--step-1); color: var(--ve-note); font-weight: 600; }
+.hx-6 { font-size: var(--step-0); color: var(--ve-note); font-weight: 600; }
+
+/* ---------- site search --------------------------------------------------- */
+/* An icon in the bar, a panel below it. The field used to sit in the bar and
+   took 176px from the navigation, compressing the menu links from 902px to
+   626px on a narrower desktop window. The icon costs about 90px and the panel
+   gives the field far more room than it ever had inline. */
+.nav-search-toggle {
+  align-self: center;
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  margin-left: auto;
+  padding: var(--sp-2) var(--sp-3);
+  background: transparent; color: #fff;
+  border: 1px solid rgba(255, 255, 255, .28); border-radius: var(--radius-sm);
+  font: inherit; font-size: var(--step--1); font-weight: 600;
+  letter-spacing: .04em; text-transform: uppercase;
+  cursor: pointer; white-space: nowrap;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+.nav-search-toggle:hover,
+.nav-search-toggle[aria-expanded="true"] {
+  background: var(--nav-bg-2); border-color: rgba(255, 255, 255, .5);
+}
+.nav-search-toggle svg { flex: none; }
+
+.search-panel {
+  position: absolute; left: 0; right: 0; top: 100%; z-index: 130;
+  background: var(--nav-bg-2);
+  border-top: 1px solid rgba(255, 255, 255, .14);
+  box-shadow: var(--shadow-2);
+}
+.search-panel__inner {
+  position: relative;
+  max-width: var(--wrap); margin-inline: auto;
+  padding: var(--sp-4) var(--sp-4) var(--sp-5);
+}
+.search-panel input {
+  font: inherit; font-size: var(--step-1);
+  width: 100%; padding: var(--sp-3) 3rem var(--sp-3) var(--sp-4);
+  color: var(--ink); background: var(--surface);
+  border: 2px solid transparent; border-radius: var(--radius);
+}
+.search-panel input:focus { border-color: var(--parc-red); outline: none; }
+/* Chrome and Safari draw their own clear button inside type="search". Next to
+   the panel's close button it read as two identical X controls doing different
+   things — one clearing the field, one closing the panel. Only ours remains. */
+.search-panel input::-webkit-search-cancel-button,
+.search-panel input::-webkit-search-decoration { -webkit-appearance: none; appearance: none; }
+.search-panel input::placeholder { color: var(--muted); }
+.search-panel__close {
+  position: absolute; top: calc(var(--sp-4) + 4px); right: calc(var(--sp-4) + 8px);
+  width: 2rem; height: 2rem; padding: 0; line-height: 1;
+  font-size: 1.6rem; color: var(--muted);
+  background: none; border: 0; cursor: pointer;
+}
+.search-panel__close:hover { color: var(--ink); }
+
+.nav-search__results {
+  margin-top: var(--sp-3);
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow-3);
+  max-height: 60vh; overflow-y: auto;
+}
+.search-msg { margin: 0; padding: var(--sp-4); font-size: var(--step--1); color: var(--ink-2); }
+.search-list { list-style: none; margin: 0; padding: var(--sp-2) 0; }
+.search-list li { margin: 0; }
+.search-list a { display: block; padding: var(--sp-3) var(--sp-4); text-decoration: none; color: var(--ink); }
+.search-list li.is-active a,
+.search-list a:hover,
+.search-list a:focus-visible { background: var(--surface-2); }
+.search-title { display: block; font-weight: 700; color: var(--parc-700); margin-bottom: 2px; }
+.search-snip { display: block; font-size: var(--step--1); color: var(--ink-2); line-height: 1.45; }
+.search-snip mark { background: #FFF1A8; color: inherit; padding: 0 .1em; border-radius: 2px; }
+
+@media (max-width: 900px) {
+  /* One place for the mobile order. Adding search introduced a second set of
+     order rules that collided with the originals — nav-menu and the donate form
+     both landed on order 3, and the menu's flex:1 0 100% forced a full-width
+     row between them, so the bar rendered as four rows. */
+  /* The Menu button has taller padding than the two controls beside it, so
+     with align-items:stretch it started 10px higher than they did. */
+  .nav-toggle        { order: 1; align-self: center; }
+  .nav-search-toggle { order: 2; margin-left: auto; align-self: center; }
+  .nav-donate-form   { order: 3; margin-left: var(--sp-2); align-self: center; }
+  .nav-menu          { order: 4; }
+
+  /* Icon only; the word costs a third of the bar on a phone. */
+  .nav-search-toggle { padding: var(--sp-2); }
+  .nav-search-toggle__label {
+    position: absolute; width: 1px; height: 1px;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
+
+  .search-panel__inner { padding: var(--sp-3); }
+  .search-panel input { font-size: var(--step-0); padding-right: 2.75rem; }
+  .search-panel__close { top: calc(var(--sp-3) + 2px); right: calc(var(--sp-3) + 4px); }
+}
+
+/* ---------- reviews ------------------------------------------------------- */
+.reviews-summary {
+  display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap;
+  padding: var(--sp-4) var(--sp-5); margin-bottom: var(--sp-5);
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius);
+}
+.reviews-avg { font-size: var(--step-3); font-weight: 700; line-height: 1; }
+.reviews-count { color: var(--muted); font-size: var(--step--1); }
+
+.stars-inline { display: inline-flex; gap: 1px; }
+.star-mark { color: var(--line-2); font-size: 1.15em; line-height: 1; }
+/* Amber reads as a rating; red would read as an error. Dark enough to clear
+   3:1 against the page, which WCAG requires of graphics that carry meaning —
+   these stars ARE the rating. */
+.star-mark.is-on { color: #C07D14; }
+
+.reviews-list { display: grid; gap: var(--sp-4); }
+.review {
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+}
+.review__head { display: flex; align-items: baseline; gap: var(--sp-3); flex-wrap: wrap; margin-bottom: var(--sp-2); }
+.review__name { font-weight: 700; }
+.review__date { color: var(--muted); font-size: var(--step--1); }
+.review__text { margin: 0; overflow-wrap: break-word; }
+.reviews-empty, .reviews-status { color: var(--muted); font-size: var(--step--1); }
+
+.review-form-wrap {
+  margin-top: var(--sp-7); padding-top: var(--sp-5); border-top: 1px solid var(--line);
+}
+.review-form-note { font-size: var(--step--1); color: var(--ink-2); }
+.rating-field { border: 0; padding: 0; margin: 0 0 var(--sp-4); }
+.rating-field legend { font-weight: 700; font-size: var(--step--1); padding: 0 0 var(--sp-2); }
+.rating-stars { display: flex; gap: var(--sp-1); }
+.star {
+  background: none; border: 0; cursor: pointer; padding: var(--sp-1) 2px;
+  font-size: 2rem; line-height: 1; color: var(--line-2);
+  transition: color .12s ease, transform .06s ease;
+}
+.star:hover, .star.is-on { color: #C07D14; }
+.star:active { transform: scale(.92); }
+
+.review-label { display: block; font-weight: 700; font-size: var(--step--1); margin-bottom: var(--sp-1); }
+.review-optional { font-weight: 400; color: var(--muted); }
+.review-input {
+  font: inherit; width: 100%; padding: var(--sp-3);
+  margin-bottom: var(--sp-3);
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--ink);
+}
+.review-input:focus { border-color: var(--parc-red); outline-offset: 1px; }
+textarea.review-input { resize: vertical; min-height: 7rem; }
+.review-hint {
+  margin: calc(var(--sp-2) * -1) 0 var(--sp-4);
+  font-size: var(--step--1); color: var(--ink-2);
+}
+
+.review-count { font-size: var(--step--1); color: var(--muted); margin: calc(-1 * var(--sp-2)) 0 var(--sp-4); }
+
+/* Honeypot. Off-screen rather than display:none, because some bots skip
+   anything that is not rendered. */
+.review-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* Turnstile draws its own fixed-size iframe; this only gives it room. It is
+   empty until the widget renders, so it must not reserve space of its own. */
+.review-turnstile:not(:empty) { margin: var(--sp-4) 0; }
+.review-turnstile { max-width: 100%; }
+
+/* The widget is a hard 300px wide. On a 320px phone the content column is about
+   288px, so it pushed the whole page sideways and gave the reviews page a
+   horizontal scrollbar. Scale it down rather than let it set the page width. */
+@media (max-width: 359px) {
+  .review-turnstile { transform: scale(.9); transform-origin: left top; }
+}
+
+/* A pasted URL or an unbroken run of characters would otherwise stretch the
+   card past the screen edge — the one thing a visitor can put on this page that
+   sets its width. */
+.review-card p, .review-text { overflow-wrap: anywhere; }
+
+.review-result { margin: var(--sp-3) 0 0; font-size: var(--step--1); min-height: 1.4em; }
+.review-result.is-ok { color: var(--ok); font-weight: 600; }
+.review-result.is-error { color: var(--parc-700); font-weight: 600; }
+
+
+/* ---------- our team ------------------------------------------------------ */
+.team-grid {
+  display: grid;
+  /* auto-fill rather than auto-fit: with two or three volunteers listed,
+     auto-fit would stretch each card the full width of the page. */
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: var(--sp-4);
+  margin: var(--sp-5) 0;
+}
+
+.team-card {
+  display: flex; gap: var(--sp-4); align-items: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--sp-4);
+}
+
+.team-card__photo {
+  flex: none; width: 5rem; height: 5rem;
+  border-radius: 50%; object-fit: cover;
+  background: var(--surface-2);
+}
+/* Initial in a circle when somebody submits a bio without a photo, so the grid
+   keeps its rhythm instead of leaving a ragged gap. */
+.team-card__photo--none {
+  display: flex; align-items: center; justify-content: center;
+  font-size: var(--step-2); font-weight: 700; color: var(--parc-700);
+  background: var(--parc-50);
+}
+
+.team-card__body { min-width: 0; }
+.team-card__name { margin: 0 0 2px; font-size: var(--step-0); }
+.team-card__call {
+  font-family: var(--font-mono); font-size: var(--step--1);
+  font-weight: 600; color: var(--parc-700); letter-spacing: .03em;
+}
+.team-card__role {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--step--1); color: var(--muted); font-weight: 600;
+}
+.team-card__bio {
+  margin: 0; font-size: var(--step--1); line-height: 1.55;
+  color: var(--ink-2); overflow-wrap: anywhere;
+}
+
+.team-footnote { margin-top: var(--sp-5); font-size: var(--step--1); color: var(--muted); }
+
+.review-input--short { max-width: 12rem; }
+
+.review-file {
+  display: block; width: 100%; max-width: 26rem;
+  font: inherit; font-size: var(--step--1);
+  padding: var(--sp-3); margin-bottom: var(--sp-2);
+  border: 1px dashed var(--line-2); border-radius: var(--radius-sm);
+  background: var(--surface-2); color: var(--ink);
+}
+.review-file::file-selector-button {
+  font: inherit; font-weight: 600;
+  margin-right: var(--sp-3); padding: var(--sp-2) var(--sp-4);
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--ink); cursor: pointer;
+}
+.review-file::file-selector-button:hover { background: var(--surface-2); }
+
+.team-preview {
+  display: flex; align-items: center; gap: var(--sp-4);
+  margin-bottom: var(--sp-4);
+}
+.team-preview img {
+  width: 5rem; height: 5rem; border-radius: 50%;
+  object-fit: cover; border: 1px solid var(--line);
+}
+
+
+/* ---------- instructional figures ---------------------------------------- */
+/* Screenshots inside a run of instructions. Bounded and centred so a wide
+   capture cannot set the page width, with the caption carrying the reason for
+   the step — the picture shows what to click, the words say why it matters. */
+.instruction-figure {
+  margin: var(--sp-5) 0;
+  padding: var(--sp-4);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.instruction-figure img {
+  display: block; max-width: 100%; height: auto;
+  margin-inline: auto;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+.instruction-figure figcaption {
+  margin-top: var(--sp-3);
+  font-size: var(--step--1); line-height: 1.5;
+  color: var(--ink-2);
+}
+
+
+/* ---------- FAQ ----------------------------------------------------------- */
+/* 34 questions used to render as one paragraph with 123 <br> tags. They are now
+   collapsed by default: the page opens as a scannable list of questions rather
+   than 3,600 words, and the answer you want is one click away instead of a
+   scroll hunt. <details> keeps that working without JavaScript, and browser
+   find-in-page still reaches closed answers in current Chrome and Safari. */
+.faq-toc {
+  margin: var(--sp-5) 0 var(--sp-6);
+}
+.faq-toc__title {
+  margin: 0 0 .25rem;
+  font-size: var(--step--2); font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+  padding-bottom: var(--sp-2);
+  border-bottom: 2px solid var(--ink);
+}
+/* Two columns of numbered entries with a hairline under each — a contents list
+   rather than a panel of links. It replaced a grey card whose three columns
+   wrapped raggedly. */
+.faq-toc ul {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--sp-7);
+  counter-reset: toc;
+}
+.faq-toc li { counter-increment: toc; display: block; border-bottom: 1px solid var(--line); }
+.faq-toc a {
+  display: flex; align-items: baseline; gap: var(--sp-3);
+  padding: .55rem 0; text-decoration: none;
+  font-weight: 500; color: var(--ink);
+}
+.faq-toc a::before {
+  content: counter(toc, decimal-leading-zero);
+  flex: none; font-variant-numeric: tabular-nums;
+  font-size: var(--step--2); font-weight: 700; color: var(--parc-red);
+}
+.faq-toc a:hover, .faq-toc a:focus-visible { color: var(--parc-700); }
+
+@media (max-width: 640px) {
+  .faq-toc ul { grid-template-columns: 1fr; }
+}
+
+/* Category headings. At full section-heading weight they competed with the
+   questions, which are what people scan; dropped to muted grey they stopped
+   dividing the page at all. This is the settled middle: same uppercase-with-rule
+   idiom as the Contents heading above, so the page reads as one system, but in
+   ink with a red keyline so a section start is unmissable. */
+.faq-cat {
+  font-size: var(--step-0);
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: var(--sp-7) 0 0;
+  padding-bottom: var(--sp-3);
+  border-bottom: 2px solid var(--parc-red);
+}
+.faq-cat:first-of-type { margin-top: var(--sp-5); }
+
+.faq-item {
+  border-bottom: 1px solid var(--line);
+}
+.faq-item summary {
+  cursor: pointer;
+  font-weight: 500;
+  padding: var(--sp-4) var(--sp-6) var(--sp-4) 0;
+  font-weight: 600; line-height: 1.4;
+  position: relative;
+  list-style: none;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+/* A chevron that rotates, rather than the default triangle, so the control
+   reads the same on every browser. */
+.faq-item summary::after {
+  content: ""; position: absolute; right: var(--sp-2); top: 1.35em;
+  width: .55rem; height: .55rem;
+  border-right: 2px solid var(--parc-red); border-bottom: 2px solid var(--parc-red);
+  transform: translateY(-50%) rotate(45deg);
+  transition: transform .15s ease;
+}
+.faq-item[open] summary::after { transform: translateY(-25%) rotate(-135deg); }
+.faq-item summary:hover { color: var(--parc-700); }
+.faq-item summary:focus-visible {
+  outline: 2px solid var(--parc-red); outline-offset: 2px; border-radius: var(--radius-sm);
+}
+.faq-answer { padding: 0 var(--sp-6) var(--sp-4) 0; }
+.faq-answer p { margin: 0 0 var(--sp-3); }
+.faq-answer p:last-child, .faq-answer ul:last-child { margin-bottom: 0; }
+.faq-answer ul { margin: 0 0 var(--sp-3); padding-left: var(--sp-5); }
+
+/* Answers that differ by exam type. Splitting them into two labelled bullets
+   means a candidate reads only the half that applies to them, instead of
+   scanning a paragraph for the words "In-Person". */
+.faq-split { list-style: none; padding-left: 0 !important; }
+.faq-split li {
+  padding-left: var(--sp-4);
+  border-left: 3px solid var(--line-2);
+  margin-bottom: var(--sp-3);
+}
+.faq-split li strong { color: var(--parc-700); }
+.faq-answer li { margin-bottom: var(--sp-2); }
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-item summary::after { transition: none; }
+}
+
+
+/* ---------- controls that must never be overridden ------------------------ */
+/* Two bugs kept coming back here, both from the same cause: generic rules that
+   outrank a single class.
+   - `button:hover` is (0,1,1) and beats `.nav-toggle` (0,1,0), so the Menu
+     button's background could flip to near-white while its label and bars
+     stayed white. That is the white-on-white Menu button.
+   - `a:link` / `a:visited` are (0,1,1) and beat `.skip-link` (0,1,0), so the
+     skip link could paint as an unstyled blue link on white.
+   Both are stated here with literal colours (no custom property to fail to
+   resolve), for every state, prefixed so nothing generic can reach them. The
+   skip-link cannot be reached by a later a:link rule at this specificity. */
+
+.site-header .skip-link,
+.site-header .skip-link:link,
+.site-header .skip-link:visited,
+.site-header .skip-link:hover,
+.site-header .skip-link:focus,
+.site-header .skip-link:focus-visible,
+.site-header .skip-link:active,
+a.skip-link,
+a.skip-link:link,
+a.skip-link:visited,
+a.skip-link:hover,
+a.skip-link:focus,
+a.skip-link:focus-visible,
+a.skip-link:active {
+  background: #BA0005;
+  color: #FFFFFF;
+  text-decoration: none;
+  border: 0;
+}
+/* It sits on the red banner, so it needs an edge of its own to read as a
+   control rather than as text printed on the photograph. */
+.site-header .skip-link:focus,
+a.skip-link:focus {
+  outline: 3px solid #FFFFFF;
+  outline-offset: -3px;
+}
+
+.site-nav button.nav-toggle,
+.site-nav button.nav-toggle:link,
+.site-nav button.nav-toggle:visited,
+.site-nav button.nav-toggle:active {
+  background: transparent;
+  color: #FFFFFF;
+  border: 0;
+}
+/* A visible press state, kept dark so the white label stays readable. */
+.site-nav button.nav-toggle:hover,
+.site-nav button.nav-toggle:focus-visible {
+  background: #313740;
+  color: #FFFFFF;
+}
+.site-nav button.nav-toggle .nav-toggle__bars,
+.site-nav button.nav-toggle .nav-toggle__bars::before,
+.site-nav button.nav-toggle .nav-toggle__bars::after {
+  background: #FFFFFF;
+}
+.site-nav button.nav-toggle[aria-expanded="true"] .nav-toggle__bars {
+  background: transparent;
+}
+
+
+/* ---------- exam-day timeline -------------------------------------------- */
+/* Numbered because the order is the information: a candidate wants to know what
+   comes next, not a set of equally-weighted facts. The rail is drawn on the list
+   itself so the steps stay connected when one wraps to several lines. */
+.timeline {
+  list-style: none;
+  margin: var(--sp-5) 0;
+  padding: 0 0 0 var(--sp-6);
+  position: relative;
+  counter-reset: step;
+  border-left: 2px solid var(--line-2);
+}
+.timeline > li {
+  counter-increment: step;
+  position: relative;
+  padding-bottom: var(--sp-5);
+}
+.timeline > li:last-child { padding-bottom: 0; }
+.timeline > li::before {
+  content: counter(step);
+  position: absolute;
+  left: calc(var(--sp-6) * -1 - 1px);
+  transform: translateX(-50%);
+  top: .15em;
+  width: 1.75rem; height: 1.75rem;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--parc-red); color: #fff;
+  font-size: var(--step--2); font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.timeline h3 { margin: 0 0 var(--sp-2); font-size: var(--step-0); }
+.timeline p  { margin: 0; color: var(--ink-2); }
+
+/* The last step is the one worth reading twice — it is where PARC is quicker
+   than the process candidates expect. */
+.timeline__win h3 { color: var(--parc-700); }
+.timeline__win::before { background: var(--parc-700); }
+
+@media (max-width: 560px) {
+  .timeline { padding-left: var(--sp-5); }
+  .timeline > li::before { width: 1.5rem; height: 1.5rem; }
+}
+
+
+/* ---------- pre-exam checklist ------------------------------------------- */
+/* Meant to be printed and ticked off the day before, so the print rules matter
+   as much as the screen ones: boxes stay visible on paper, and a group never
+   splits across a page break. */
+.checklist-block {
+  margin: var(--sp-6) 0;
+  padding: var(--sp-5);
+  border: 2px solid var(--line-2);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.checklist-head {
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: var(--sp-3) var(--sp-5);
+  border-bottom: 2px solid var(--parc-red);
+  padding-bottom: var(--sp-4); margin-bottom: var(--sp-4);
+}
+.checklist-head h2 { margin: 0; flex: 1 1 auto; }
+.checklist-head p { flex: 1 1 100%; margin: 0; color: var(--ink-2); font-size: var(--step--1); }
+.checklist-cta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3) var(--sp-4);
+  margin: var(--sp-4) 0 var(--sp-5);
+}
+.checklist-cta span { font-size: var(--step--1); color: var(--ink-2); }
+
+.checklist-actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+
+.checklist-block h3 {
+  margin: var(--sp-5) 0 var(--sp-3); font-size: var(--step-0);
+  color: var(--parc-700);
+}
+.checklist-block h3:first-of-type { margin-top: 0; }
+
+.checklist { list-style: none; margin: 0; padding: 0; }
+.checklist li { border-bottom: 1px solid var(--line); }
+.checklist li:last-child { border-bottom: 0; }
+
+/* Real checkboxes, not drawn squares. The first version painted an empty box
+   with ::before, which looked tickable and was not — you could click it all day
+   and nothing happened. */
+.checklist label {
+  display: flex; gap: var(--sp-3); align-items: flex-start;
+  padding: var(--sp-3) 0;
+  font-size: var(--step--1); line-height: 1.5;
+  cursor: pointer;
+}
+.checklist input[type="checkbox"] {
+  flex: none; width: 1.15rem; height: 1.15rem;
+  margin: .1rem 0 0; accent-color: var(--parc-red);
+  cursor: pointer;
+}
+.checklist input:checked + span { color: var(--muted); text-decoration: line-through; }
+.checklist label:hover span { color: var(--parc-700); }
+.checklist input:focus-visible { outline: 2px solid var(--parc-red); outline-offset: 2px; }
+
+@media print {
+  .checklist-block { border-color: #000; break-inside: auto; }
+  .checklist-head { border-bottom-color: #000; }
+  .checklist-cta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3) var(--sp-4);
+  margin: var(--sp-4) 0 var(--sp-5);
+}
+.checklist-cta span { font-size: var(--step--1); color: var(--ink-2); }
+
+.checklist-actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+
+.checklist-block h3 { color: #000; break-after: avoid-page; }
+  .checklist li { break-inside: avoid; }
+  .checklist input[type="checkbox"] { -webkit-appearance: none; appearance: none;
+    border: 2px solid #000; border-radius: 2px; width: 1rem; height: 1rem; }
+
+  /* "Print this checklist" means the checklist, not the page it sits on.
+     js/site.js marks every ancestor's siblings before calling print().
+
+     It does NOT use the usual visibility:hidden + position:absolute trick.
+     Firefox clips absolutely-positioned content to the first page, so a
+     22-item checklist printed as a single page with the rest missing —
+     which is exactly how this was first written. Hiding siblings instead
+     leaves the checklist in normal flow, so it paginates properly. */
+  .print-hide { display: none !important; }
+  body.print-checklist-only .checklist-block {
+    margin: 0; border: 0; padding: 0;
+  }
+  body.print-checklist-only .no-print { display: none !important; }
+}
+
+
+/* ---------- troubleshooting ---------------------------------------------- */
+/* Symptom as the heading, answer underneath: somebody arrives here already
+   knowing what went wrong and needs to find their own sentence fast. */
+.trouble {
+  padding: var(--sp-4) 0;
+  border-bottom: 1px solid var(--line);
+}
+.trouble:last-of-type { border-bottom: 0; }
+.trouble h3 {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--step-0);
+  display: flex; gap: var(--sp-3); align-items: baseline;
+}
+.trouble h3::before {
+  content: "?"; flex: none;
+  width: 1.4rem; height: 1.4rem; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--parc-50); color: var(--parc-700);
+  font-size: var(--step--2); font-weight: 700;
+}
+.trouble p { margin: 0 0 0 calc(1.4rem + var(--sp-3)); color: var(--ink-2); }
+
+
+/* The one fact about PARC that beats every other team, and it was buried in a
+   FAQ answer. Given its own weight on the homepage. */
+.home-usp {
+  margin: var(--sp-5) auto;
+  max-width: var(--measure);
+  padding: var(--sp-4) var(--sp-5);
+  border-left: 4px solid var(--parc-red);
+  background: var(--parc-50);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.home-usp strong { color: var(--parc-700); }
+
+
+/* ---------- touch targets ------------------------------------------------- */
+/* Links that sit inside a sentence are exempt from target-size guidance and are
+   left alone — padding them would wreck the line spacing of body copy. These are
+   the lists that act as navigation, where a 26px row is genuinely fiddly with a
+   thumb. Only applied on touch pointers so mouse users keep the tighter layout. */
+@media (pointer: coarse) {
+  .faq-toc li { align-items: center; }
+  .faq-toc a {
+    display: block;
+    padding-block: var(--sp-3);
+    min-height: 2.75rem;
+    display: flex; align-items: center;
+  }
+  .faq-item summary { padding-block: var(--sp-4); }
+}
+
+
+/* ---------- side-by-side comparison --------------------------------------- */
+/* Two drawings that only mean something next to each other. They are separate
+   files rather than one wide image so they stack on a phone at full size, where
+   a single side-by-side drawing would shrink until neither half was legible. */
+.compare-figs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  gap: var(--sp-4);
+  margin: var(--sp-5) 0;
+}
+.compare-figs figure { margin: 0; }
+.compare-figs img {
+  display: block; width: 100%; height: auto;
+  border-radius: var(--radius);
+}
+.compare-figs figcaption {
+  margin-top: var(--sp-2);
+  font-size: var(--step--1); color: var(--ink-2); line-height: 1.5;
+}
+
+
+/* ---------- long-document contents ---------------------------------------- */
+.doc-toc {
+  margin: var(--sp-5) 0 var(--sp-6);
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--parc-red);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.doc-toc h2 { margin: 0 0 var(--sp-3); font-size: var(--step-0); }
+.doc-toc ol { margin: 0; padding-left: var(--sp-5); }
+.doc-toc li { margin-bottom: var(--sp-2); }
+.doc-toc a { font-weight: 600; }
+.doc-toc__note {
+  margin: var(--sp-3) 0 0; font-size: var(--step--1); color: var(--muted);
+}
+/* Section starts, so the eye can find where one topic ends and the next begins
+   in a document this long. scroll-margin keeps the heading clear of the sticky
+   nav when a contents link jumps to it. */
+h2.doc-section {
+  margin-top: var(--sp-7);
+  padding-top: var(--sp-4);
+  border-top: 2px solid var(--line-2);
+  scroll-margin-top: 5rem;
+}
+
+
+.field-list { margin: var(--sp-3) 0; padding-left: var(--sp-5); }
+.field-list li { margin-bottom: var(--sp-2); }
+.field-eg {
+  font-family: var(--font-mono); font-size: .92em;
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: .05em .35em;
+}
+
+/* ---------- in-person registration form ----------------------------------- */
+/* A template to copy into an email. It was originally laid out with one <br>
+   per field and a row of "=" as a rule; converting <br> to paragraphs flattened
+   it into prose and the form became unusable. A <pre> keeps the line structure,
+   copies cleanly, and cannot be flattened again by a markup pass. */
+.reg-form {
+  margin: var(--sp-6) 0;
+  padding: var(--sp-5);
+  border: 2px solid var(--line-2);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+.reg-form h2 { margin: 0 0 var(--sp-3); font-size: var(--step-1); }
+.reg-form pre {
+  margin: var(--sp-4) 0 0;
+  padding: var(--sp-4);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono); font-size: var(--step--1);
+  line-height: 1.9;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.reg-form__note { margin: var(--sp-3) 0 0; font-size: var(--step--1); color: var(--ink-2); }
+
+
+/* A page kept for reference whose content is tied to a past event. The notice
+   has to be unmissable: without it the page reads as current advice. */
+.shutdown-notice {
+  margin: var(--sp-4) 0 var(--sp-6);
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--warn-bg, #FBF2E0);
+  border-left: 4px solid #8A5A00;
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+
+/* The step-by-step pages were button grids with almost no words on them — one
+   had sixteen. A short introduction and a list of what the section covers means
+   a candidate can see where they are without clicking to find out. */
+.stepper-intro { margin-bottom: var(--sp-5); }
+.stepper-list { margin: var(--sp-4) 0 var(--sp-6); padding-left: var(--sp-5); }
+.stepper-list li { margin-bottom: var(--sp-3); }
+.stepper-list a { font-weight: 600; }
+
+
+/* Legacy inline-styled buttons carry width:200px in the markup. "Accommodations"
+   does not fit and broke mid-word as "ACCOMMODATION S". Let the box grow to its
+   content and never split a word; the fixed width becomes a minimum. */
+.container a > button[style] {
+  width: auto !important;
+  min-width: 200px;
+  height: auto !important;
+  min-height: 3rem;
+  padding: var(--sp-3) var(--sp-4);
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
+}
+
+
+/* ---------- page navigation (replaces the legacy button tables) ----------- */
+/* These were <table border="1"> grids of <button style="height:100px;width:200px">
+   wrapped in nested <center> tags, with the table never closed. They rendered
+   at uneven widths, wrapped raggedly, and overlapped each other. One grid, equal
+   cells, wrapping properly at any width. */
+.page-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--sp-3);
+  margin: var(--sp-6) 0;
+  padding: 0;
+  list-style: none;
+}
+/* The outlined variant of the shared button. Only the colour differs — the box
+   comes from the base rule, so a navigation choice and an action button are the
+   same shape and size wherever they appear. */
+.page-link,
+.page-link:link,
+.page-link:visited { border-color: var(--parc-red); color: var(--parc-700); }
+
+/* The shared base is inline-flex, which shrinks to its text. Inside a grid the
+   cells should be equal, so stretch them. */
+.page-links .page-link { display: flex; width: 100%; }
+.page-link:hover,
+.page-link:focus-visible { background: var(--parc-red); border-color: var(--parc-red); color: #fff; }
+
+/* Back and Next read as direction, so they get arrows and sit at the edges. */
+.page-links--pager { grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); }
+.page-link--back::before { content: "\2190\00a0"; }
+.page-link--next::after  { content: "\00a0\2192"; }
+.page-link--back, .page-link--next,
+.page-link--back:link, .page-link--next:link,
+.page-link--back:visited, .page-link--next:visited {
+  border-color: var(--line-2); color: var(--ink-2);
+}
+.page-link--back:hover, .page-link--next:hover,
+.page-link--back:focus-visible, .page-link--next:focus-visible {
+  background: var(--ink); border-color: var(--ink); color: #fff;
+}
+
+@media (max-width: 480px) {
+  .page-links { grid-template-columns: 1fr; }
+}
+
+
+/* ---------- legacy <center> containment ----------------------------------- */
+/* The original pages centre things with <center>, and one of them was left
+   unclosed — it centred the remaining two thirds of a page, leaving list numbers
+   at the margin while their text floated in the middle. The tag is balanced
+   again, but never centre a list or a paragraph of body copy even if an ancestor
+   asks for it: prose is read left-aligned and a marker has to sit beside its
+   item. Headings and single buttons may still be centred. */
+.container center ol,
+.container center ul,
+.container center p,
+.container center li,
+.container center table { text-align: left; }
+.container center ol,
+.container center ul { display: block; margin-inline: 0; }

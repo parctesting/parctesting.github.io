@@ -1,0 +1,16 @@
+name = "parc-reviews"
+main = "parc-reviews.js"
+compatibility_date = "2026-01-01"
+
+# Runs on parc-reviews.<your-subdomain>.workers.dev, alongside the availability
+# Worker. No DNS change; radiotests.org keeps being served by GitHub Pages.
+workers_dev = true
+
+# Submitted reviews live here. Nothing is public until it is approved, so this
+# holds pending text as well as published text.
+#
+# Create the namespace first, then paste the id it prints:
+#   npx wrangler kv namespace create PARC_REVIEWS --config wrangler-reviews.toml
+[[kv_namespaces]]
+binding = "REVIEWS"
+id = "PASTE_THE_ID_WRANGLER_PRINTS"

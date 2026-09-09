@@ -1,284 +1,154 @@
 <!doctype html>
-<html>
-<head>   <center><img src="../Banner.jpg" width="100%" height="" alt=""/>
+<html lang="en">
+<head>
 <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Main Room Script</title>
-<link href="../css/multiColumnTemplate.css" rel="stylesheet" type="text/css">
-	
-<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-<!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+<title>Volunteer Examiner Access | PARC</title>
+<link rel="canonical" href="https://parcradio.net/pages/Online_MainRoomSetupScript.html">
+<meta name="robots" content="noindex, nofollow">
+
+<meta name="theme-color" content="#BA0005">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="stylesheet" href="../css/site.css">
 </head>
 <body>
 
-<header>
-  
-    <center><nav class="secondary_header" id="menu">
-      <ul>
-        <a href="../index.html"><li>HOME</li>
-        </a>
-		  <li><div class="dropdown">HELPFUL<br>LINKS
-			<div class="dropdown-content"><a href="whatnext.html">WHAT NEXT</a>
-			  <a href="https://www.arrl.org" target="_blank">ARRL</a>
-			  <a href="https://www.eham.net" target="_blank">eHam</a>
-			  <a href="https://wireless2.fcc.gov" target="_blank">FCC Search</a>
-			  <a href="govshutdown.html">Government Shutdown</a>
-			  <a href="https://hamradioprep.com" target="_blank">Ham Radio Prep</a>
-			  <a href="https://www.handiham.org" target="_blank">HandiHam</a>
-			  <a href="https://www.qrz.com" target="_blank">QRZ</a>
-			  <a href="https://www.ylrl.net" target="_blank">Young Ladies Radio League</a>
-			  			</div></div></li>
-        <a href="Online_InstructionSeparation.html"><li>ONLINE<br>TESTING</li></a>
-        <a href="inperson.html"><li>IN-PERSON<br>TESTING</li></a>
-        <a href="faq.html"><li>FAQ</li></a>
-		<a href="calendar.html"><li>SCHEDULE</li></a>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <a class="site-banner" href="../index.html" aria-label="PARC Radio &amp; Technology home">
+    <picture>
+      <source media="(max-width: 700px)" srcset="../images/banner-900.jpg">
+      <img src="../images/banner-1600.jpg" width="1600" height="192" fetchpriority="high"
+           alt="PARC Radio &amp; Technology">
+    </picture>
+  </a>
+
+  <nav class="site-nav" id="menu" aria-label="Main">
+    <div class="site-nav__inner">
+      <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">
+        <span class="nav-toggle__bars" aria-hidden="true"></span> Menu
+      </button>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li class="has-sub">
+          <button type="button" class="nav-sub-toggle" aria-expanded="false">Helpful Links</button>
+          <ul class="nav-sub">
+            <li><a href="../pages/whatnext.html">What's Next</a></li>
+            <li><a href="../pages/handiham.html">Accessible Testing / HandiHam</a></li>
+            <li><a href="../pages/govshutdown.html">Government Shutdown</a></li>
+            <li><a href="https://www.arrl.org" target="_blank" rel="noopener">ARRL</a></li>
+            <li><a href="https://www.eham.net" target="_blank" rel="noopener">eHam</a></li>
+            <li><a href="https://wireless2.fcc.gov" target="_blank" rel="noopener">FCC License Search</a></li>
+            <li><a href="https://hamradioprep.com" target="_blank" rel="noopener">Ham Radio Prep</a></li>
+            <li><a href="https://www.handiham.org" target="_blank" rel="noopener">HandiHam.org</a></li>
+            <li><a href="https://www.qrz.com" target="_blank" rel="noopener">QRZ</a></li>
+            <li><a href="https://www.ylrl.net" target="_blank" rel="noopener">Young Ladies Radio League</a></li>
+          </ul>
+        </li>
+        <li><a href="../pages/Online_InstructionSeparation.html">Online Testing</a></li>
+        <li><a href="../pages/inperson.html">In-Person Testing</a></li>
+        <li><a href="../pages/faq.html">FAQ</a></li>
+        <li><a href="../pages/calendar.html">Schedule</a></li>
+        <li><a href="../pages/reviews.html">Reviews</a></li>
+        <li><a href="../pages/team.html">Our Team</a></li>
       </ul>
-</nav></center> 	 <div class="primary_header">
+      <button type="button" class="nav-search-toggle" id="site-search-toggle"
+              aria-expanded="false" aria-controls="site-search-panel" aria-label="Search this site">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" focusable="false">
+          <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/>
+          <line x1="12.8" y1="12.8" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-search-toggle__label">Search</span>
+      </button>
 
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-<input type="hidden" name="cmd" value="_s-xclick" />
-<input type="hidden" name="hosted_button_id" value="FG837WNAHF4P4" />
-<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
-</form></center> </div>
+      <form class="nav-donate-form" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="hosted_button_id" value="FG837WNAHF4P4">
+        <button type="submit" class="nav-donate">Donate</button>
+      </form>
+    </div>
 
-  </header><div class="container">
-  <section>
-    <h2 class="noDisplay">Main Content</h2>
+    <div class="search-panel" id="site-search-panel" hidden>
+      <form class="search-panel__inner" id="site-search" role="search" autocomplete="off">
+        <label class="sr-only" for="site-search-input">Search this site</label>
+        <input id="site-search-input" type="search" name="q"
+               placeholder="Search for fees, ID, scheduling, what to expect…"
+               aria-controls="site-search-results" aria-expanded="false"
+               aria-autocomplete="list" role="combobox">
+        <button type="button" class="search-panel__close" id="site-search-close"
+                aria-label="Close search">&times;</button>
+        <div class="nav-search__results" id="site-search-results" hidden></div>
+      </form>
+    </div>
+  </nav>
+</header>
 
-      <h4><center>
-        <em>MAIN ROOM SCRIPT for BREAKOUT ROOMS</em>
-    </center></h4><br>    
-	  <center>
-<style>
-.dropbtn {
-  background-color: #4070CC;
-  color: white;
-  padding: 16px;
-  border: none;
-}
+<main id="main">
 
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f4f6f5;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  font-size: 12px;
-}
-
-.dropdown-content a:hover {background-color: #b50000;}
-
-.dropdown:hover .dropdown-content {display: block;}
-
-.dropdown:hover .dropbtn {background-color: #black;}
-</style>
-
-<div class="dropdown">
-  <button class="dropbtn">SPECIAL LINKS</button>
-  <div class="dropdown-content">
-    <a href="handiham.html">HandiHam</a>
+<div class="container">
+<section>
+  <div class="ve-lock" id="ve-lock">
+    <h1>Volunteer Examiner Access</h1>
+    <p class="ve-lock__hint">This page is encrypted. Enter the VE passphrase to open it.</p>
+    <form class="ve-lock__form" id="ve-form" autocomplete="off">
+      <label class="ve-lock__label" for="ve-pass">Passphrase</label>
+      <input class="ve-lock__input" id="ve-pass" name="passphrase" type="password"
+             autocomplete="current-password" autocapitalize="off" spellcheck="false" required>
+      <label class="ve-lock__remember">
+        <input type="checkbox" id="ve-remember"> Remember on this device for 12 hours
+      </label>
+      <button class="btn btn--primary" type="submit" id="ve-submit">Unlock</button>
+      <p class="ve-lock__status" id="ve-status" role="status" aria-live="polite"></p>
+    </form>
+    <p class="ve-lock__foot">Not a VE? <a href="../index.html">Return to the PARC home page</a>.
+      For access, email <a href="mailto:ve@parcradio.org">ve@parcradio.org</a>.</p>
   </div>
+</section>
 </div>
-<div class="dropdown">
-  <button class="dropbtn">SCRIPTS</button>
-  <div class="dropdown-content">
-    <a href="script.html">Single Room Sript</a>
-    <a href="scriptnospace.html">No Space</a>
-    <a href="easyread.html">Easy Read</a>
-    <a href="oldscript.html">Old Script</a>	 
-    <a href="Online_ScriptW5YI.html">W5YI Script</a>	
+
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <h2>Contact Us</h2>
+      <p>PARC Radio &amp; Technology<br>
+         PO Box 926<br>
+         Roanoke, AL 36274-0926<br>
+         USA</p>
+      <p><a href="mailto:vetesting@yahoo.com">vetesting@yahoo.com</a></p>
+      <p>Our examiners are volunteers. Please allow up to 24 hours for a reply.</p>
+    </div>
+    <div>
+      <h2>Exams</h2>
+      <ul>
+        <li><a href="../pages/calendar.html">Schedule an exam</a></li>
+        <li><a href="../pages/Online_InstructionSeparation.html">Online testing</a></li>
+        <li><a href="../pages/inperson.html">In-person testing</a></li>
+        <li><a href="../pages/faq.html">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>More</h2>
+      <ul>
+        <li><a href="../pages/whatnext.html">What's next after passing</a></li>
+        <li><a href="../pages/handiham.html">Accessible testing</a></li>
+        <li><a href="../pages/donations.html">Support PARC</a></li>
+        <li><a href="https://www.facebook.com/groups/833919518104689" target="_blank" rel="noopener">Facebook group</a></li>
+      </ul>
+    </div>
   </div>
-</div>	
-<div class="dropdown">
-  <button class="dropbtn">BREAK OUT ROOM SCRIPTS</button>
-  <div class="dropdown-content">
-    <a href="script.html">Single Room Sript</a>
-    <a href="Online_MainRoomSetupScript.html">Main Room Sript</a>
-    <a href="ScriptBreakOutPreRead.html">Break Out Room Pre-Read</a> 	  
-    <a href="Online_ScriptD.html">Break Out Room Delta *D*</a> 	 
-    <a href="Online_ScriptF.html">Break Out Room Foxtrot *F*</a>
-    <a href="Online_ScriptI.html">Break Out Room India *I*</a> 
-    <a href="Online_ScriptR.html">Break Out Room Romeo *R*</a> 
-    <a href="Online_ScriptR.html">Break Out Room Sierra *S*</a> 
+  <div class="site-footer__bottom">
+    <span>&copy; 2020&ndash;2026 PARC Radio &amp; Technology</span>
+    <a class="site-footer__ve" href="../pages/script.html" rel="nofollow">VE Access</a>
   </div>
-</div>	
-<div class="dropdown">
-  <button class="dropbtn">TRAINING MATERIAL</button>
-  <div class="dropdown-content">
-    <a href="../Documents/PARC Handbook1.pdf">PARC HANDBOOK FOR EXAMINERS</a>
-    <a href="../Documents/prohibitlist.pdf">PROHIBITED APPS AND PROGRAMS</a>  
-  </div>
-</div>	
-<br>
-<br>
-<br>
+</footer>
 
-<h5><center>ATTENTION: All VE’s please mute your microphone at this time.<br>
-<br>
-Before we begin, we want to bring your phone into the session. Is your phone and iPhone or something else? <br>
-(If it is an iPhone ask them to click on cancel) <br>
-(If it is something else, ask them to click on your image, not any of the selections in the dialogue box)</center></h5><br></center>
-<ol>
-  Before we get started, we would like to ask how you found PARC Radio to take your exams?
-(If they need prompting suggest, “Was it through ARRL, Ham Radio Prep, hamstudy.org, etc.?”)<br><br>
-<li>We will need you to complete the test without any interruptions.</li>
-<br>
-<li>Please keep your attention on your computer screen at all times. Don’t let your eyes wander to other parts of the room and don’t leave your seat during the exam.
-</li>
-<br>
-
-<li>You are not allowed to read any questions or answers out loud and you cannot talk to yourself. Mouthing the words, even if no sound is coming out, IS talking to yourself.</li><br>
-
-<li>You must remove any drinks, snacks, papers, or anything else that might distract you including vapes and tobacco products.</li><br>
-
-<li>You cannot have any visitors or pets in the room, so please close and lock all doors.</li><br>
-
-<li>Since you cannot use scrap paper or manual calculators, you can use an on-screen calculator app.<br><p2>Do you want to use a calculator app?</p2> <h5><strong>(If there are multiple applicants, ask them to raise their hands)</strong></h5></li><br>
-
-<li>Move the calculator to the left side of the screen. Put it in Basic / Standard Mode and make it as small as possible.</li><br>
-
-<li>You should only have on your screen the calculator app and the zoom app. All browsers, emails, notifications, and notes must not only be closed, but they have to be shut down and quit completely.</li><br>
-	  <h5><center>
-*STOP HERE FOR MULTI-CANDIDATE INSTRUCTIONS - BEGIN BELOW FOR INDIVIDUAL READING OF INSTRUCTIONS* 
-DESIGNATION “COMP *I*”
-		  <br><br></h5>
-
-<h4><center>
-  <em>IDENTIFICATION</em>
-</center></h4><br>
-</ol>
-<ol>
-<li>Please hold your driver’s license up to the camera to show that you have it ready.</li><br>
-
-<li>Put that down beside your computer so it is ready for the exam team to review when you are sent to your exam room.</li><br>
-
-<li>We need you to verify that you have read the website instructions and agreed to the following terms:</li><br>
-
-<li>You will share your entire screen.</li><br>
-
-<li>The exam session will be recorded and stored. </li><br>
-
-<li>You have either removed or covered any sensitive or personal items, otherwise you consent to the viewing and scanning of these items.</li><br>
-
-<li>If the Exam Team suspects a possibility of cheating, they will terminate your exam, the exam fee will be forfeited, and you will be barred from taking any future online exams?</li><br>
-
-<li>Please answer with a simple verbal yes or no.</li>
-<br>
-	<p2><strong><em><center>* Do Not Read * Do a visual check of their ears and arms for watches, earbuds, hearing 
-aids and hats.</center></em></strong></p2>
-</ol>
-<h4><center>
-  <em>ROOM SCAN</em>
-</center></h4>
-<ol>
-<li>Now take your cellphone, change to your rear camera, not your selfie camera. Stand up behind your chair. Hold your phone horizontally, in landscape mode, and point your camera toward your computer.<br><br> 
-Show us the left side of the computer.<br>
-Show us the right side of the computer. <br>
-Show us the back of the computer.<br>
-Show us the computer and desktop area.</li><br>
-
-<li>Now hold your phone vertically and in the center of your chest. While standing in the same spot, make a 360 degree turn in the same direction with your camera without stopping.</li>
-<br>
-
-<li>Please turn your phone back horizontal and set the phone where it views your monitor, keyboard, and hands.</li><br>
-</ol>
-	  <h5><center>CHANGE DESIGNATION TO "COMP *R*“<br></h5>
-<br>
-<h4><center>
-  <em>SCREEN SHARE</em>
-</center></h4>
-<br>
-<ol>
-<li>On the laptop press the “SHARE SCREEN” button at the bottom of the screen. It is the green button.</li><br>
-
-<li>Then press the “SHARE” button in the bottom right-hand corner of that dialog box. It is the blue button.</li><br>
-<br>
-***NOTE: It is NOT required to check ACTIVITY MONITOR unless a team member suspects an integrity issue. This is at the sole discretion of the VE’s proctoring the exam. If one VE asks, perform the check. ***<br><br>
-	  <h5><center>CHANGE DESIGNATION TO “COMP *D*“ ONLY IF YOU DO A COMPLETE COMPUTER SCAN OTHERWISE THE DESIGNATION IS “COMP *S*“</center></h5><br>
-<ul>
-<ul><li><strong><h8>For a Mac computer:</strong><br>
-<h8>* DO NOT READ * Look across the task bar for any dots under the applications. The only apps that may have a dot under them are the finder, Calculator, and Zoom apps. </h8><br><br>
-	
-Look at the top left corner of your screen for the apple, click on the apple. Now click on force quit which is about the fifth item down. <br>
-<br>
-Hold your command key and click all items other than finder, calculator, and zoom. Then click force quit. <br>
-<br>
-In the <a href="https://support.apple.com/guide/mac-help/aside/glos33eb8abd/11.0/mac/11.0">menu bar</a> (bar across the top) on your Mac, click <a href="https://support.apple.com/guide/mac-help/aside/glos269670b4/11.0/mac/11.0">Control Center</a> <img src="../images/controlcenter.png" width="30" height="30" alt=""/> <br>
-<br>In Control Center, click the Do Not Disturb icon <img src="../images/dnd.png" width="30" height="30" alt=""/><br>
-	<br>
-The Do Not Disturb icon appears in the menu bar to indicate Do Not Disturb is on.
-To close Control Center, click anywhere on the desktop.<br></li>
-<br>
-	  <h5><center>***NOTE: It is NOT required to check ACTIVITY MONITOR unless a team member suspects an integrity issue. This is at the sole discretion of the VE’s proctoring the exam. If one VE asks, perform the check. ***</center></h5></li><br>
-</ul>
-<ul>
-<li><strong><h8>If using a PC:</strong><br>
-<h8>* DO NOT READ * Look across the task bar for any bars or lines under the applications. The only apps that may have a line under them are the Calculator and Zoom apps. </h8><br>
-<br>
-Go to the bottom right-hand corner of the screen and look to the right of the time and date. You are looking for a text balloon, it may or may not have a number on it, and right click on it. Then click focus assist followed by clicking priority only. <br>
-<br>
-Right click on the task bar to open Task Manager. <br>
-<br>
-<h8>* DO NOT READ * (If this fails click CONTROL-SHIFT-ESCAPE all at once) Make sure all applications are closed except the ones we are using. </h8><br>
-<br>
-	  <h5><center>***NOTE: It is NOT required to check ACTIVITY MONITOR unless a team member suspects an integrity issue. This is at the sole discretion of the VE’s proctoring the exam. If one VE asks, perform the check. ***</center></h5></li><br>
-	</ul>
-<li><h8>* DO NOT READ * Make sure all apps and processes are quit except for zoom and a calculator app.</h8></li><br>
-<li>Move the calculator to the left side of the screen.</li><br>
-
-<li>Open the browser and narrow it down so that it fits between the calculator app and the zoom app. The exam is only 3 to 4 inches wide so narrow it down now.</li><br>
-
-<li>Type in the URL bar at the top of the browser “EXAM.TOOLS” and press enter.</li><br>
-
-<li><h8><strong>*IF IN DARK MODE*</strong></h8> Click on the black/white moon in the bottom right corner.</li><br>
-
-<li>Select “JOIN EXAM SESSION”.</li><br>
-
-<li>On the top line type the callsign “KJ4PJE”.</li><br>
-
-<li>On the next line type the PIN.</li><br>
-</ol>
-<h8><strong>STOP!</strong></h8> <br><br>
-We do not enter the PIN in the Main Room. This is reserved for the Exam Team in the Exam Room.<br>
-<br>
-	  <h5><center>CHANGE DESIGNATION TO “COMP *D*” ONLY IF YOU DO A COMPLETE COMPUTER SCAN OTHERWISE THE DESIGNATION IS “COMP *S*”</center></h5><br>
-<br>
-If the phone has already been moved out of the main room, it is a signal that a room is ready. Check Telegram to see if they are going to Observation or Exam Room.<br><br>
-<h8><strong>ROOM READY:</strong></h8> <br>
-We are now ready for your exam. We will be moving you shortly over to a room to take your exam. Please have your identification ready and good luck.<br>
-<br>
-<h8><strong>ROOMS BUSY:</strong></h8><br>
-<p2>MAIN ROOM HOLD</p2> - You are all set up now. If you can keep your hands in view and not leave your seat or make any adjustments, we will not have to scan your room again. Please stay just like you are and as soon as a room is ready, we will move you in to take your exam.<br>
-<br>
-<p2>OBSERVATION ROOM HOLD</p2> - You are all set up now. If you can keep your hands in view and not leave your seat or make any adjustments, we will not have to scan your room again. We are going to move you into an observation room where one of our VE’s will be watching you. Please stay just like you are and as soon as a room is ready, we will move you in to take your exam.<br>
-<br>
-  </section>
-  <div class="row">
-
-  <footer class="secondary_header footer">
-	  <br><center><div class="footer"><p style="color:white;text-align:center;">Contact Us:</p></center><div class="footer"><strong><p style="color:white;text-align:center;" >PARC Radio & Technology * PO Box 926 * Roanoke, AL 36274-0926 * USA</p></strong><p style="color:white;text-align:center;" ><center>vetesting@yahoo.com</center></p></div>
-				    <br><div class="copyright">&copy;2020 - <strong><a href="script.html">*****</a></div>
-  </footer>
-</div>
-	
+<script type="application/json" id="ve-payload">{"v":1,"salt":"LHsBRVNUW/QitIyxui1woQ==","it":600000,"iv":"UNYNyM3bj4XV17Fp","ct":"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","t":"Main Room Setup Script"}</script>
+<script src="../js/site.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/ve-lock.js" defer></script>
 </body>
 </html>
