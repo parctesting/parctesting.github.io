@@ -1,0 +1,53 @@
+# Failsafe for the schedule page.
+#
+# The page normally fetches live availability from the Cloudflare Worker on
+# every load. This exists for when that does not happen: the Worker is down,
+# Calendly changes the undocumented endpoint it reads, or an origin is missing
+# from the Worker's CORS allowlist — that last one fails silently, with the page
+# quietly serving whatever snapshot was last committed.
+#
+# Keeping data/availability.json fresh means the fallback is hours old rather
+# than months old.
+#
+# GitHub's scheduler is best-effort: runs are queued at low priority and are
+# routinely 5-20 minutes late, occasionally skipped. Treat the interval as a
+# floor. GitHub also disables scheduled workflows after 60 days with no
+# repository activity — re-enable from the Actions tab if the calendar goes cold.
+name: Refresh schedule availability
+
+on:
+  schedule:
+    - cron: '23 */3 * * *'      # every 3 hours, offset off the hour
+  workflow_dispatch:            # manual run button in the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-availability-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch and merge every Calendly session
+        run: node tools/fetch-availability.mjs --days=21
+
+      - name: Commit only when availability actually changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/availability.json
+          if git diff --staged --quiet; then
+            echo "no change — nothing to commit"
+          else
+            git commit -m "Refresh schedule availability [skip ci]"
+            git push
+          fi

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Volunteer Examiner Access | PARC</title>
+<link rel="canonical" href="https://parcradio.net/pages/team-submit.html">
+<meta name="robots" content="noindex, nofollow">
+
+<meta name="theme-color" content="#BA0005">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="stylesheet" href="../css/site.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <a class="site-banner" href="../index.html" aria-label="PARC Radio &amp; Technology home">
+    <picture>
+      <source media="(max-width: 700px)" srcset="../images/banner-900.jpg">
+      <img src="../images/banner-1600.jpg" width="1600" height="192" fetchpriority="high"
+           alt="PARC Radio &amp; Technology">
+    </picture>
+  </a>
+
+  <nav class="site-nav" id="menu" aria-label="Main">
+    <div class="site-nav__inner">
+      <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">
+        <span class="nav-toggle__bars" aria-hidden="true"></span> Menu
+      </button>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li class="has-sub">
+          <button type="button" class="nav-sub-toggle" aria-expanded="false">Helpful Links</button>
+          <ul class="nav-sub">
+            <li><a href="../pages/whatnext.html">What's Next</a></li>
+            <li><a href="../pages/handiham.html">Accessible Testing / HandiHam</a></li>
+            <li><a href="../pages/govshutdown.html">Government Shutdown</a></li>
+            <li><a href="https://www.arrl.org" target="_blank" rel="noopener">ARRL</a></li>
+            <li><a href="https://www.eham.net" target="_blank" rel="noopener">eHam</a></li>
+            <li><a href="https://wireless2.fcc.gov" target="_blank" rel="noopener">FCC License Search</a></li>
+            <li><a href="https://hamradioprep.com" target="_blank" rel="noopener">Ham Radio Prep</a></li>
+            <li><a href="https://www.handiham.org" target="_blank" rel="noopener">HandiHam.org</a></li>
+            <li><a href="https://www.qrz.com" target="_blank" rel="noopener">QRZ</a></li>
+            <li><a href="https://www.ylrl.net" target="_blank" rel="noopener">Young Ladies Radio League</a></li>
+          </ul>
+        </li>
+        <li><a href="../pages/Online_InstructionSeparation.html">Online Testing</a></li>
+        <li><a href="../pages/inperson.html">In-Person Testing</a></li>
+        <li><a href="../pages/faq.html">FAQ</a></li>
+        <li><a href="../pages/calendar.html">Schedule</a></li>
+        <li><a href="../pages/reviews.html">Reviews</a></li>
+        <li><a href="../pages/team.html">Our Team</a></li>
+      </ul>
+      <button type="button" class="nav-search-toggle" id="site-search-toggle"
+              aria-expanded="false" aria-controls="site-search-panel" aria-label="Search this site">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" focusable="false">
+          <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/>
+          <line x1="12.8" y1="12.8" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-search-toggle__label">Search</span>
+      </button>
+
+      <form class="nav-donate-form" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="hosted_button_id" value="FG837WNAHF4P4">
+        <button type="submit" class="nav-donate">Donate</button>
+      </form>
+    </div>
+
+    <div class="search-panel" id="site-search-panel" hidden>
+      <form class="search-panel__inner" id="site-search" role="search" autocomplete="off">
+        <label class="sr-only" for="site-search-input">Search this site</label>
+        <input id="site-search-input" type="search" name="q"
+               placeholder="Search for fees, ID, scheduling, what to expect…"
+               aria-controls="site-search-results" aria-expanded="false"
+               aria-autocomplete="list" role="combobox">
+        <button type="button" class="search-panel__close" id="site-search-close"
+                aria-label="Close search">&times;</button>
+        <div class="nav-search__results" id="site-search-results" hidden></div>
+      </form>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+
+<div class="container">
+<section>
+  <div class="ve-lock" id="ve-lock">
+    <h1>Volunteer Examiner Access</h1>
+    <p class="ve-lock__hint">This page is encrypted. Enter the VE passphrase to open it.</p>
+    <form class="ve-lock__form" id="ve-form" autocomplete="off">
+      <label class="ve-lock__label" for="ve-pass">Passphrase</label>
+      <input class="ve-lock__input" id="ve-pass" name="passphrase" type="password"
+             autocomplete="current-password" autocapitalize="off" spellcheck="false" required>
+      <label class="ve-lock__remember">
+        <input type="checkbox" id="ve-remember"> Remember on this device for 12 hours
+      </label>
+      <button class="btn btn--primary" type="submit" id="ve-submit">Unlock</button>
+      <p class="ve-lock__status" id="ve-status" role="status" aria-live="polite"></p>
+    </form>
+    <p class="ve-lock__foot">Not a VE? <a href="../index.html">Return to the PARC home page</a>.
+      For access, email <a href="mailto:ve@parcradio.org">ve@parcradio.org</a>.</p>
+  </div>
+</section>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <h2>Contact Us</h2>
+      <p>PARC Radio &amp; Technology<br>
+         PO Box 926<br>
+         Roanoke, AL 36274-0926<br>
+         USA</p>
+      <p><a href="mailto:vetesting@yahoo.com">vetesting@yahoo.com</a></p>
+      <p>Our examiners are volunteers. Please allow up to 24 hours for a reply.</p>
+    </div>
+    <div>
+      <h2>Exams</h2>
+      <ul>
+        <li><a href="../pages/calendar.html">Schedule an exam</a></li>
+        <li><a href="../pages/Online_InstructionSeparation.html">Online testing</a></li>
+        <li><a href="../pages/inperson.html">In-person testing</a></li>
+        <li><a href="../pages/faq.html">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>More</h2>
+      <ul>
+        <li><a href="../pages/whatnext.html">What's next after passing</a></li>
+        <li><a href="../pages/handiham.html">Accessible testing</a></li>
+        <li><a href="../pages/donations.html">Support PARC</a></li>
+        <li><a href="https://www.facebook.com/groups/833919518104689" target="_blank" rel="noopener">Facebook group</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="site-footer__bottom">
+    <span>&copy; 2020&ndash;2026 PARC Radio &amp; Technology</span>
+    <a class="site-footer__ve" href="../pages/script.html" rel="nofollow">VE Access</a>
+  </div>
+</footer>
+
+<script type="application/json" id="ve-payload">{"v":1,"salt":"LHsBRVNUW/QitIyxui1woQ==","it":600000,"iv":"vrKggm/8qzRwLq4j","ct":"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","t":"Add Yourself to the Team Page"}</script>
+<script src="../js/site.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/ve-lock.js" defer></script>
+</body>
+</html>

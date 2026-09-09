@@ -1,0 +1,34 @@
+# macOS
+.DS_Store
+._*
+
+# Office lock files
+~$*
+
+# Local build / verification artefacts
+.baseline/
+__preview/
+node_modules/
+
+# ---------------------------------------------------------------------------
+# PLAINTEXT VE EXAM SCRIPTS — NEVER COMMIT THESE
+#
+# This repository is a PUBLIC fork of parctesting/beta. Two GitHub behaviours
+# make committing plaintext here permanent and unfixable:
+#
+#   1. "You cannot change the visibility of a fork by itself" — this repo cannot
+#      be made private while its upstream is public.
+#   2. "Commits can remain accessible in the repository network even after a
+#      fork is deleted" — anything pushed here stays retrievable by SHA through
+#      parctesting/beta forever. Deleting the fork or force-pushing does not
+#      remove it.
+#
+# Only the ENCRYPTED output belongs in git: pages/*.html and ve/files/*.enc.
+# Keep the plaintext sources in a separate PRIVATE repo (private repos are free;
+# they simply cannot serve GitHub Pages).
+# ---------------------------------------------------------------------------
+_ve-source/
+
+# Photoshop sources and unused art — excluded from the published site by
+# _config.yml, and 95 MB of PSDs has no business in a pull request.
+design/

@@ -1,0 +1,7 @@
+name = "parc-availability"
+main = "parc-availability.js"
+compatibility_date = "2026-01-01"
+
+# Runs on parc-availability.<your-subdomain>.workers.dev.
+# No DNS change is needed and parcradio.net keeps being served by GitHub Pages.
+workers_dev = true

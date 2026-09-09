@@ -1,0 +1,30 @@
+# GitHub Pages / Jekyll configuration.
+#
+# ############################################################################
+# THE `exclude:` LIST BELOW IS A SECURITY CONTROL, NOT HOUSEKEEPING.
+#
+# GitHub Pages publishes everything in the branch. Without these entries,
+# _ve-source/ would be served in plaintext at
+#   https://parcradio.net/_ve-source/script.html
+# and the encryption of pages/ would be pointless.
+#
+# DO NOT ADD A .nojekyll FILE. That disables Jekyll entirely, which disables
+# this exclude list, which publishes every exam script in the clear.
+#
+# After any deploy, confirm:
+#   curl -s -o /dev/null -w "%{http_code}\n" https://parcradio.net/_ve-source/script.html
+# It must print 404.
+# ############################################################################
+
+exclude:
+  - .github/         # workflows; Jekyll skips dotdirs anyway, but be explicit
+  - _ve-source/      # plaintext exam scripts + VE training PDFs
+  - tools/           # build scripts
+  - worker/          # Cloudflare Worker source
+  - design/          # unused art, PSDs
+  - .baseline/       # content-integrity snapshots
+  - README.md
+  - LICENSE
+
+# Nothing here uses Jekyll templating; these files are copied verbatim.
+plugins: []
