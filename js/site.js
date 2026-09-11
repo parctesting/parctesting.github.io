@@ -140,3 +140,80 @@
     });
   }
 })();
+
+/**
+ * Where did this visitor come from? Recorded once per visit and passed to
+ * Calendly with the booking, so scheduled exams can be counted by source -
+ * "8 visits from ARRL, 3 booked" - without anyone changing the links that point
+ * here. ARRL, HamRadioPrep and HamStudy link to us from their own sites, so tags
+ * on those links were never an option; the referrer is.
+ *
+ * Privacy governs every line. Only the referring site's name is kept (arrl.org),
+ * never its full address, which can carry search terms. It lives in
+ * sessionStorage: per tab, gone when the tab closes, no cookie, nothing that
+ * identifies anyone. Calendly stores it with the booking as a utm_* tag, which is
+ * how its Scheduled Events filter groups them. The schedule page asks minors for
+ * a date of birth; that never leaves the browser, and this must never carry it.
+ */
+(function () {
+  'use strict';
+
+  var KEY = 'parc-src';
+  var TAGS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+
+  /* A narrow alphabet, so a crafted link cannot put anything else into the
+     booking URL. Calendly caps values at 255 characters; 100 is plenty. */
+  function clean(v) {
+    return String(v || '').toLowerCase()
+      .replace(/[^a-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 100);
+  }
+
+  function read() {
+    try { return JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) { return null; }
+  }
+
+  /* The first source in a visit wins. Every page after the first has this site
+     as its referrer, which must not overwrite ARRL. Tags on the link, where we
+     control it, beat the referrer. */
+  if (!read()) {
+    var src = {};
+    var q = new URLSearchParams(location.search);
+    TAGS.forEach(function (t) { var v = clean(q.get(t)); if (v) src[t] = v; });
+    if (!src.utm_source) {
+      var host = '';
+      try { host = document.referrer ? new URL(document.referrer).hostname : ''; } catch (e) { host = ''; }
+      host = host.replace(/^www\./, '');
+      if (host && host !== location.hostname.replace(/^www\./, '')) {
+        src.utm_source = clean(host);
+        src.utm_medium = src.utm_medium || 'referral';
+      } else {
+        src.utm_source = 'direct';
+      }
+    }
+    try { sessionStorage.setItem(KEY, JSON.stringify(src)); } catch (e) { /* not fatal */ }
+  }
+
+  /* Add the visit's tags to a Calendly link; anything else is returned as-is.
+     schedule.js calls this for the time-slot links it draws. */
+  function tag(url) {
+    var src = read();
+    if (!src) return url;
+    try {
+      var u = new URL(url);
+      if (!/(^|\.)calendly\.com$/.test(u.hostname)) return url;
+      TAGS.forEach(function (t) { if (src[t] && !u.searchParams.has(t)) u.searchParams.set(t, src[t]); });
+      return u.toString();
+    } catch (e) { return url; }
+  }
+  window.parcTagBooking = tag;
+
+  /* Calendly links already in the page - the schedule page's fallback, and any
+     others - get the same tags. Time-slot links are drawn later by schedule.js. */
+  function decorate() {
+    Array.prototype.forEach.call(document.querySelectorAll('a[href*="calendly.com"]'), function (a) {
+      a.href = tag(a.href);
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', decorate);
+  else decorate();
+})();

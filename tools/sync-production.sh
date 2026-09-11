@@ -98,9 +98,14 @@ git -C "$TMP/prod" config user.name  "$(git config user.name)"
 git -C "$TMP/prod" config user.email "$(git config user.email)"
 cd "$TMP/prod"
 git checkout -q -b "$WORK_BRANCH"
-# Replace the tree: drop every tracked file, then lay the new build down.
+# Replace the tree: drop every tracked file, then lay the new build down -
+# except the availability snapshot, which production's own scheduled job owns.
+# Taking ours would put a stale copy in the PR and roll production's back.
+SNAP_KEEP="$TMP/availability.json"
+if [ -f data/availability.json ]; then cp data/availability.json "$SNAP_KEEP"; fi
 git rm -rq . >/dev/null
 cp -a "$BUILD/." .
+if [ -f "$SNAP_KEEP" ]; then cp "$SNAP_KEEP" data/availability.json; fi
 git add -A
 git commit -q -m "Replace the 2019 site with the current build
 

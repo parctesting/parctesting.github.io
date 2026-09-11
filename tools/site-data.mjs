@@ -10,6 +10,26 @@
  * link in pages/GOV SHUTDOWN/ when those files were moved one level deeper.
  */
 
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+
+/* The domain a build is for comes from CNAME, because CNAME is what actually
+   decides which host serves the branch. It used to default to a hard-coded
+   parcradio.net, which meant running `node tools/retheme.mjs` on the
+   radiotests.org branch without SITE_ORIGIN silently stamped every page with
+   another domain's canonical and analytics token - the site then told search
+   engines its real version lived elsewhere, and filed its traffic under the
+   wrong Cloudflare site. That happened on 2026-09-09. SITE_ORIGIN still wins
+   when set, for building one branch's tree for a different host. */
+function originFromCNAME() {
+  try {
+    const here = dirname(fileURLToPath(import.meta.url));
+    const host = readFileSync(join(here, '..', 'CNAME'), 'utf8').trim();
+    return /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(host) ? `https://${host}` : '';
+  } catch { return ''; }
+}
+
 export const SITE = {
   name: 'PARC Radio & Technology',
   short: 'PARC',
@@ -19,7 +39,7 @@ export const SITE = {
      A canonical pointing at a different host tells search engines that host has
      the real version — which is wrong, and actively harmful when that host is
      serving different content. */
-  origin: process.env.SITE_ORIGIN || 'https://parcradio.net',
+  origin: process.env.SITE_ORIGIN || originFromCNAME() || 'https://parcradio.net',
   tagline: 'Amateur radio license exams, online and in person.',
   email: 'vetesting@yahoo.com',
   veEmail: 've@parcradio.org',
