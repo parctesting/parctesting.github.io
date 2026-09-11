@@ -29,6 +29,11 @@ concurrency:
 
 jobs:
   refresh:
+    # Only in the parctesting repos, which serve parcradio.net and parcradio.org.
+    # In a fork it ran too, committing its own copy of availability.json every
+    # three hours, so fork and upstream rewrote the same file independently and
+    # every PR between them conflicted on it.
+    if: github.repository_owner == 'parctesting'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
