@@ -91,7 +91,29 @@ else
 fi
 
 echo "Cloning production …"
-git clone -q --depth 20 --branch "$PROD_BRANCH" "$PROD_REPO" "$TMP/prod"
+git clone -q --depth 80 --branch "$PROD_BRANCH" "$PROD_REPO" "$TMP/prod"
+
+# This script replaces production's whole tree, so an edit made directly in that
+# repo is reverted without a word. That is not theoretical: index.html was edited
+# there on 2026-09-11 ("Same day licensing during FCC business hours…") and the
+# next sync silently put the old paragraph back. So: refuse to publish over any
+# commit this repo has not reconciled. The scheduled snapshot job and the
+# VE_Scripts deploy own their own files, so they are expected and ignored.
+LAST_SYNC=$(git -C "$TMP/prod" log --format='%H' --grep='current build' -1 2>/dev/null || true)
+if [ -n "$LAST_SYNC" ]; then RANGE="$LAST_SYNC..HEAD"; else RANGE="HEAD~20..HEAD"; fi
+FOREIGN=$(git -C "$TMP/prod" log --format='%h %an %ad %s' --date=short "$RANGE" 2>/dev/null \
+          | grep -vE 'Refresh schedule availability|Update VE scripts \(encrypted\)' || true)
+if [ -n "$FOREIGN" ]; then
+  echo
+  echo "  STOP. production has commits this build has not reconciled:"
+  echo "$FOREIGN" | sed 's/^/    /'
+  echo
+  echo "  Publishing now would revert them. Bring each one into this repo first"
+  echo "  (git show <sha> in the production repo shows what changed), then re-run."
+  echo "  To publish over them deliberately: FORCE_OVER_EDITS=1 $0 $PUSH"
+  [ "${FORCE_OVER_EDITS:-}" = "1" ] || exit 1
+  echo "  FORCE_OVER_EDITS=1 set - continuing and reverting the commits above."
+fi
 git -C "$TMP/prod" remote set-url --push origin "$PUSH_REPO"
 # A fresh clone inherits nothing when there is no global git identity, and the
 # commit below then fails with "Author identity unknown". Carry this repo's.
