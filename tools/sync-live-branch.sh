@@ -65,7 +65,7 @@ markers() {
 
 # Merge a ref in, resolving only what is safe to resolve mechanically.
 merge_in() {
-  local ref="$1" rebuild=0 f left
+  local ref="$1" rebuild=0 f left pages="" lost
   if git merge -q --no-edit --no-ff "$ref" >/dev/null 2>&1; then
     echo "  merged $ref"
     return 0
@@ -74,7 +74,8 @@ merge_in() {
     case "$f" in
       CNAME)   printf '%s' "$DOMAIN" > CNAME; git add CNAME ;;
       "$SNAP") git checkout upstream/main -- "$SNAP" ;;
-      sitemap.xml|robots.txt|data/search-index.json|index.html|404.html|pages/*.html) rebuild=1 ;;
+      sitemap.xml|robots.txt|data/search-index.json) rebuild=1 ;;
+      index.html|404.html|pages/*.html) rebuild=1; pages="$pages $f" ;;
       *)
         echo "  conflict in $f while merging $ref - that needs a person"
         git merge --abort
@@ -82,6 +83,39 @@ merge_in() {
     esac
   done < <(git diff --name-only --diff-filter=U)
   if [ "$rebuild" = "1" ]; then printf '%s' "$DOMAIN" > CNAME; build; fi
+
+  # Rebuilding a conflicted page takes this repo's copy, which is right for chrome
+  # and wrong for content: an edit made upstream would vanish without a word. That
+  # is how the homepage wording was lost on production. So after the rebuild, check
+  # that every sentence upstream has still exists here, and stop if one does not.
+  if [ -n "$pages" ]; then
+    lost=$(python3 - "$ref" $pages <<'PY'
+import html, re, subprocess, sys
+ref, files = sys.argv[1], sys.argv[2:]
+def vis(s):
+    s = re.sub(r'(?is)<(script|style)\b.*?</\1>', ' ', s)
+    return re.sub(r'\s+', ' ', html.unescape(re.sub(r'<[^>]+>', ' ', s)))
+for f in files:
+    up = subprocess.run(['git', 'show', f'{ref}:{f}'], capture_output=True, text=True).stdout
+    if not up.strip():
+        continue
+    try: here = vis(open(f, encoding='utf-8').read())
+    except OSError: continue
+    for s in re.split(r'(?<=[.!?])\s', vis(up)):
+        w = s.split()
+        if len(w) >= 8 and ' '.join(w[:8]) not in here:
+            print(f'{f}: {" ".join(w[:14])}…'); break
+PY
+)
+    if [ -n "$lost" ]; then
+      echo "  rebuilding the conflicted pages would drop text that $ref has:"
+      echo "$lost" | sed 's/^/    /'
+      echo "  bring those edits into main first; the rebuild is not safe here"
+      git merge --abort
+      exit 1
+    fi
+    echo "  rebuilt $(echo $pages | wc -w) conflicted page(s); no upstream text lost"
+  fi
   left=$(markers)
   if [ -n "$left" ]; then
     echo "  conflict markers survived the rebuild while merging $ref:"
