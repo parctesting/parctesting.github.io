@@ -719,6 +719,9 @@ a.dropbtn--team:focus-visible {
 
 .home-side img { border-radius: var(--radius); margin-top: var(--sp-5); }
 .social-row { display: flex; gap: var(--sp-4); align-items: center; margin-top: var(--sp-5); }
+/* Keep each logo at its set size. In a flex row a longer caption beside one
+   otherwise squeezes it smaller than its neighbour. */
+.social-row > a { flex: none; }
 
 /* ---------- VE unlock screen --------------------------------------------- */
 .ve-lock { max-width: 26rem; margin: var(--sp-7) auto; text-align: center; }
