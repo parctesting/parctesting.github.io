@@ -100,30 +100,60 @@ if (!CHECK_ONLY) {
 /* ---------- 2. verify ------------------------------------------------------ */
 step('Verifying');
 
-// exam script text unchanged since before the rebuild
+/* The local scripts must match the private VE_Scripts repo, which owns them.
+   That repo's deploy publishes straight to both live sites, so a stale copy here
+   is the real danger: re-encrypting from it would republish old wording over the
+   current scripts. Point VE_SCRIPTS_REPO at a clone to turn this on; without one
+   there is nothing to compare against, so it says so rather than passing quietly.
+
+   This replaced a comparison against ${BASELINE_TAG}. That tag answered "did the
+   facelift alter exam copy?", which it did not, and the question is now closed:
+   the owner edited 17 scripts on 2026-09-12 and a reviewed PR fixed 96 spellings,
+   so the tag can only ever disagree from here on. It is still reported below, as
+   information, because a gate that is permanently red teaches people to ignore
+   the whole list. */
+const VE_REPO = process.env.VE_SCRIPTS_REPO;
+if (!VE_REPO) {
+  warn('VE_SCRIPTS_REPO not set — cannot confirm _ve-source/ matches VE_Scripts');
+} else if (!existsSync(join(VE_REPO, '.git'))) {
+  bad(`VE_SCRIPTS_REPO=${VE_REPO} is not a git clone`);
+} else {
+  let match = 0, differ = [], missing = [];
+  for (const rel of VE_PAGES) {
+    const name = rel.split('/').pop();
+    const src = join(ROOT, '_ve-source', name);
+    if (!existsSync(src)) { missing.push(name); continue; }
+    let theirs;
+    try {
+      theirs = execFileSync('git', ['show', `origin/main:${name}`],
+        { cwd: VE_REPO, encoding: 'utf8', maxBuffer: 1e8, stdio: ['pipe', 'pipe', 'ignore'] });
+    } catch { missing.push(`${name} (absent from VE_Scripts)`); continue; }
+    readFileSync(src, 'utf8') === theirs ? match++ : differ.push(name);
+  }
+  differ.length === 0 && missing.length === 0
+    ? ok(`_ve-source/ matches VE_Scripts origin/main (${match}/${VE_PAGES.length})`)
+    : bad(`_ve-source/ is out of step with VE_Scripts`
+        + (differ.length ? ` — differs: ${differ.join(', ')}` : '')
+        + (missing.length ? ` — missing: ${missing.join(', ')}` : ''));
+}
+
+// for information only: how far the scripts have moved since the pre-rebuild tag
 try {
   let same = 0, added = 0, checked = 0;
   for (const rel of VE_PAGES) {
     const name = rel.split('/').pop();
     const src = join(ROOT, '_ve-source', name);
     if (!existsSync(src)) continue;
-
-    /* A locked page written after the rebuild has nothing in the baseline to
-       drift from. Counting it as a mismatch would turn "we added a page" into
-       a failed integrity check and train everyone to ignore this line. */
     let before;
     try {
       before = textOf(zone(execSync(`git show ${BASELINE_TAG}:"${rel}"`,
         { cwd: ROOT, encoding: 'utf8', maxBuffer: 1e8, stdio: ['pipe', 'pipe', 'ignore'] })));
     } catch { added++; continue; }
-
     checked++;
     if (before === textOf(zone(readFileSync(src, 'utf8')))) same++;
   }
-  same === checked
-    ? ok(`exam script text unchanged (${same}/${checked})`
-        + (added ? `, ${added} locked page(s) added since` : ''))
-    : bad(`exam script text DRIFTED — only ${same}/${checked} match ${BASELINE_TAG}`);
+  console.log(`  \x1b[90minfo\x1b[0m  ${same}/${checked} script(s) still read as they did at `
+    + `${BASELINE_TAG}${added ? `, ${added} added since` : ''}`);
 } catch { warn(`could not compare against ${BASELINE_TAG} (tag missing?)`); }
 
 // every VE page carries ciphertext, and none leaks plaintext
