@@ -40,17 +40,30 @@ export const SITE = {
      the real version — which is wrong, and actively harmful when that host is
      serving different content. */
   origin: process.env.SITE_ORIGIN || originFromCNAME() || 'https://parcradio.net',
+
+  /* The one address search engines should credit. parcradio.org is the primary
+     site - ARRL links to it and it is the one indexed - and parcradio.net and
+     radiotests.org serve the same pages. Left pointing at themselves, the three
+     copies each claimed to be the original and split the credit between them. */
+  canonicalOrigin: 'https://parcradio.org',
+  /* Hosts that must never appear in search results: the test site. */
+  noindexHosts: ['radiotests.org'],
   tagline: 'Amateur radio license exams, online and in person.',
   email: 'vetesting@yahoo.com',
   veEmail: 've@parcradio.org',
   address: { po: 'PO Box 926', city: 'Roanoke', state: 'AL', zip: '36274-0926', country: 'USA' },
   facebook: 'https://www.facebook.com/groups/833919518104689',
+  telegram: 'https://t.me/+d32UCpaXRLhiNjJh',
   paypalButton: 'FG837WNAHF4P4',
   banner: '/images/banner-1600.jpg',
   bannerMobile: '/images/banner-900.jpg',
   ogImage: '/images/og-parc.jpg',
-  // Paste the token from Search Console -> Settings -> Ownership verification.
-  googleSiteVerification: '',
+  /* Ownership of parcradio.org is verified in Search Console as a DNS *domain*
+     property, which covers every subdomain and both protocols - stronger than a
+     URL prefix, and it cannot be broken by a page edit. This tag is a harmless
+     second method; if Search Console ever issues a different token for the
+     HTML-tag method, paste that one here instead. */
+  googleSiteVerification: 'Qgf_7BEJyxvtJa5wpbbwUiHJSL-rnJdlhxHs4_h0uow',
 
   /* Cloudflare Web Analytics, one token per site.
      Deliberately this and not Google Analytics: the schedule page asks minors
@@ -142,9 +155,9 @@ export const DELETE_PAGES = [
  */
 export const PAGES = {
   'index.html': {
-    title: 'Amateur Radio License Exams — Online & In-Person',
-    desc: 'PARC Radio & Technology gives amateur radio license exams online and in person. All-volunteer examiners, sessions most days, Technician through Extra.',
-    h1: 'Amateur Radio License Exams, Online and In Person',
+    title: 'Ham Radio License Exams — Online & In-Person',
+    desc: 'Take your ham radio (amateur radio) license exam online over Zoom or in person. All-volunteer examiners, sessions most days, Technician through Extra.',
+    h1: 'Ham Radio License Exams, Online and In Person',
     schema: 'organization',
   },
   'pages/calendar.html': {

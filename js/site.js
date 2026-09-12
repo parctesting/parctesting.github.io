@@ -111,7 +111,7 @@
   }
   window.addEventListener('afterprint', function () { isolate(false); });
 
-  /* Remember ticks on this device, so the list can be worked through the night
+  /* Remember the checkmarks on this device, so the list can be worked through the night
      before and still be there in the morning. Per-browser only; nothing is sent
      anywhere. Wrapped because storage throws outright in some privacy modes. */
   var KEY = 'parc-checklist';

@@ -32,9 +32,13 @@ export function link(rel, path) {
 
 /* ---------- head ---------------------------------------------------------- */
 export function buildHead(rel, meta) {
-  const url = SITE.origin + '/' + rel.replace(/\\/g, '/');
+  const url = SITE.canonicalOrigin + '/' + rel.replace(/\\/g, '/');
   const title = `${meta.title} | ${SITE.short}`;
   const noindex = !!meta.noindex;
+  /* A whole host can be kept out of search - the test site - without touching the
+     page-level noindex above, which also drives the sitemap, the site search index
+     and the analytics beacon. All three should keep working on the test site. */
+  const hostNoindex = (SITE.noindexHosts || []).includes(new URL(SITE.origin).hostname.replace(/^www\./, ''));
   const L = [];
   L.push('<meta charset="UTF-8">');
   L.push('<meta name="viewport" content="width=device-width, initial-scale=1">');
@@ -44,7 +48,8 @@ export function buildHead(rel, meta) {
   if (noindex) {
     L.push('<meta name="robots" content="noindex, nofollow">');
   } else {
-    L.push('<meta name="robots" content="index, follow, max-image-preview:large">');
+    L.push(hostNoindex ? '<meta name="robots" content="noindex, nofollow">'
+                        : '<meta name="robots" content="index, follow, max-image-preview:large">');
     if (SITE.googleSiteVerification)
       L.push(`<meta name="google-site-verification" content="${esc(SITE.googleSiteVerification)}">`);
   }
@@ -201,6 +206,7 @@ export function buildFooter(rel = 'index.html') {
         <li><a href="${link(rel, '/pages/handiham.html')}">Accessible testing</a></li>
         <li><a href="${link(rel, '/pages/donations.html')}">Support PARC</a></li>
         <li><a href="${esc(SITE.facebook)}" target="_blank" rel="noopener">Facebook group</a></li>
+        <li><a href="${esc(SITE.telegram)}" target="_blank" rel="noopener">Telegram group</a></li>
       </ul>
     </div>
   </div>

@@ -55,7 +55,7 @@ Allow: /
 # encrypted, so there is nothing to read even when fetched.
 Disallow: /ve/files/
 
-Sitemap: ${SITE.origin}/sitemap.xml
+${SITE.origin === SITE.canonicalOrigin ? `Sitemap: ${SITE.origin}/sitemap.xml` : `# No Sitemap line: this copy's pages name ${SITE.canonicalOrigin} as canonical,\n# and a sitemap here would list the non-canonical addresses.`}
 `);
 console.log(`sitemap.xml: ${urls.length} public URLs`);
 console.log(`robots.txt : sitemap -> ${SITE.origin}/sitemap.xml`);
