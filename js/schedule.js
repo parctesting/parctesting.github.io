@@ -16,6 +16,11 @@
  * otherwise falls back to data/availability.json, refreshed by
  * `node tools/fetch-availability.mjs`. Same JSON shape either way.
  *
+ * Availability loads a month at a time, as the candidate moves through the
+ * calendar. It used to load the next three weeks once, at the start, so a
+ * candidate looking at October saw only its first few days and November stayed
+ * empty however many sessions were open. See loadMonth().
+ *
  * The snapshot can be stale, so this is a FINDER, never the source of truth —
  * Calendly decides what is actually bookable at the moment of booking.
  */
@@ -53,11 +58,28 @@
 
   var WORKER_URL = (root.getAttribute('data-availability-endpoint') || '').trim();
   var SNAPSHOT_URL = BASE + 'data/availability.json';
+  var BOOK_DIRECT = 'https://calendly.com/parctesting';
   var GATE_KEY = 'parc-schedule-audience';
 
   var DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
                 'August', 'September', 'October', 'November', 'December'];
+
+  var DAY_MS = 86400000;
+
+  /* How far ahead the calendar goes. The Worker serves months up to twelve out. */
+  var MONTHS_AHEAD = 12;
+
+  /* The widest window a Worker older than month= support can return: Calendly
+     refuses spans much past a month. The page asks for it alongside month=, so
+     an older Worker, which ignores month=, still returns as much as it can. */
+  var LEGACY_DAYS = 35;
+
+  /* A month loads once the candidate stops on it. Clicking through five months to
+     reach the one they want should fetch that one, not all five: each month is
+     several calls to Calendly, which throttles hard. */
+  var SETTLE_MS = 350;
+  var settleTimer = null;
 
   /* Time-of-day buckets, so "I can only test after work" is one click.
      Listed in clock order across a single day. "Late night" used to wrap from
@@ -75,7 +97,17 @@
     audience: null, data: null, tz: guessTz(),
     month: null, selectedDay: null, youthOnly: false, live: false,
     sessions: {},          // letter -> enabled
-    bands: {}              // band id -> enabled
+    bands: {},             // band id -> enabled
+    index: {},             // slot instant, as UTC ISO -> merged slot
+    months: {},            // 'YYYY-MM' -> queued | loading | live | incomplete | snapshot | partial | unavailable | failed
+    partialUntil: {},      // 'YYYY-MM' -> ms: the loaded data for that month stops here
+    pending: {},           // 'YYYY-MM' -> the load in flight
+    coverage: [],          // { from, to, source }: spans an older Worker or the snapshot covered
+    monthAware: null,      // does the Worker answer month=? unknown until it first replies
+    monthOpen: 0,          // future times in the month on screen, before time-of-day filters
+    staleAt: {},           // 'YYYY-MM' -> when times the Worker served from its fallback copy were checked
+    snapshotTried: false,
+    snapshotGenerated: null
   };
 
   /* "America/Chicago" is an IANA identifier, not something a candidate in
@@ -115,30 +147,55 @@
   }
 
   /* ---- date helpers (all timezone-aware) -------------------------------- */
-  /** "2026-08-22" for an instant, as seen in tz. en-CA gives ISO-ish order. */
-  function dayKey(d, tz) {
-    return new Intl.DateTimeFormat('en-CA',
-      { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
+  /* One formatter per zone and kind, built once and reused. Constructing an
+     Intl.DateTimeFormat costs far more than calling one, and a month of
+     availability is thousands of calls per render. */
+  var FORMATS = {};
+  function formatter(kind, tz) {
+    var k = kind + '|' + tz;
+    if (!FORMATS[k]) {
+      FORMATS[k] = kind === 'day'
+        /* "2026-08-22" for an instant, as seen in tz. en-CA gives ISO-ish order. */
+        ? new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' })
+        /* hourCycle h23 rather than hour12:false. Several Safari and Firefox builds
+           read hour12:false as h24 and return "24" for midnight, which would file a
+           midnight session under Late night instead of Early morning — and PARC runs
+           a midnight calendar. The modulo in hourIn covers engines that ignore it. */
+        : kind === 'hour'
+          ? new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: '2-digit', hourCycle: 'h23' })
+          : new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', minute: '2-digit' });
+    }
+    return FORMATS[k];
   }
-  /* hourCycle h23 rather than hour12:false. Several Safari and Firefox builds
-     read hour12:false as h24 and return "24" for midnight, which would file a
-     midnight session under Late night instead of Early morning — and PARC runs
-     a midnight calendar. The modulo covers engines that ignore hourCycle. */
+  function dayKey(d, tz) { return formatter('day', tz).format(d); }
   function hourIn(d, tz) {
-    var h = Number(new Intl.DateTimeFormat('en-US',
-      { timeZone: tz, hour: '2-digit', hourCycle: 'h23' }).format(d));
+    var h = Number(formatter('hour', tz).format(d));
     return isNaN(h) ? 0 : h % 24;
   }
-  function timeLabel(d, tz) {
-    return new Intl.DateTimeFormat('en-US',
-      { timeZone: tz, hour: 'numeric', minute: '2-digit' }).format(d);
-  }
+  function timeLabel(d, tz) { return formatter('time', tz).format(d); }
   function bandOf(hour) {
     for (var i = 0; i < BANDS.length; i++) {
       var b = BANDS[i];
       if (b.from < b.to ? (hour >= b.from && hour < b.to) : (hour >= b.from || hour < b.to)) return b.id;
     }
     return 'latenight';
+  }
+
+  /* ---- months ----------------------------------------------------------- */
+  function monthKey(mo) { return mo.y + '-' + String(mo.m + 1).padStart(2, '0'); }
+  function monthOf(d, tz) {
+    var k = dayKey(d, tz);
+    return { y: Number(k.slice(0, 4)), m: Number(k.slice(5, 7)) - 1 };
+  }
+  function thisMonth() { return monthOf(new Date(), state.tz); }
+  function monthIndex(mo) { return mo.y * 12 + mo.m; }
+  function addMonths(mo, n) { var i = monthIndex(mo) + n; return { y: Math.floor(i / 12), m: i % 12 }; }
+  function sameMonth(a, b) { return !!a && !!b && a.y === b.y && a.m === b.m; }
+  /** A month as UTC instants. With margin, a day wider each side, which puts
+   *  every US zone's view of the month inside the span. */
+  function monthSpan(mo, margin) {
+    var pad = margin ? DAY_MS : 0;
+    return { from: Date.UTC(mo.y, mo.m, 1) - pad, to: Date.UTC(mo.y, mo.m + 1, 1) + pad };
   }
 
   /* ---- age gate --------------------------------------------------------- */
@@ -200,37 +257,25 @@
     cal.hidden = false;
     setStatus('Loading availability…');
 
-    fetchData()
-      .then(function (data) {
-        state.data = normalize(data);
-        var youth = audience === 'youth';
-        // Youth-only sessions are hidden from everyone else.
-        state.data.sources = data.sources.filter(function (s) { return youth || !s.youth; });
-        state.data.slots = data.slots
-          .map(function (s) {
-            var keep = s.sessions.filter(function (x) { return youth || x.letter !== 'Y'; });
-            if (!keep.length) return null;
-            return { start: s.start, sessions: keep,
-                     remaining: keep.reduce(function (a, b) { return a + (b.remaining || 0); }, 0) };
-          })
-          .filter(Boolean);
+    state.data = { sources: [], slots: [] };
+    BANDS.forEach(function (b) { state.bands[b.id] = true; });
 
-        state.data.sources.forEach(function (s) { state.sessions[s.letter] = true; });
-        BANDS.forEach(function (b) { state.bands[b.id] = true; });
-
-        /* Open on the first time that can still be booked. The snapshot the page
-           falls back to is refreshed every few hours, so it always holds slots that
-           have already started - its first entry can be yesterday. */
-        var now = Date.now(), first = null;
-        state.data.slots.forEach(function (s) {
-          var t = new Date(s.start).getTime();
-          if (t > now && (!first || t < new Date(first.start).getTime())) first = s;
-        });
+    var here = thisMonth();
+    loadMonth(here)
+      .then(function () {
+        /* Open on the first time that can still be booked. Late in a month there
+           may be none left in it, so load next month before choosing rather than
+           open on an empty grid. The snapshot the page can fall back to always
+           holds slots that have already started, so "first" means first future. */
+        var first = firstOpen();
+        if (state.monthAware !== true ||
+            (first && sameMonth(monthOf(new Date(first.start), state.tz), here))) return first;
+        return loadMonth(addMonths(here, 1)).then(firstOpen, firstOpen);
+      })
+      .then(function (first) {
         var base = first ? new Date(first.start) : new Date();
-        state.month = { y: Number(dayKey(base, state.tz).slice(0, 4)),
-                        m: Number(dayKey(base, state.tz).slice(5, 7)) - 1 };
+        state.month = monthOf(base, state.tz);
         state.selectedDay = first ? dayKey(base, state.tz) : null;
-
         buildControls();
         render();
         setStatus('');
@@ -239,6 +284,14 @@
         setStatus('');
         document.getElementById('cal-unavailable').hidden = false;
       });
+  }
+
+  function firstOpen() {
+    var now = Date.now(), slots = state.data.slots;
+    for (var i = 0; i < slots.length; i++) {
+      if (Date.parse(slots[i].start) > now) return slots[i];
+    }
+    return null;
   }
 
   /**
@@ -267,21 +320,145 @@
     return data;
   }
 
-  function fetchData() {
+  /**
+   * Fold one reply into the merged calendar.
+   *
+   * `prune` is the span the reply speaks for with authority: anything already held
+   * inside it is dropped first, so a time booked since an earlier load does not
+   * linger. The margin days a month reply also carries are merged but never
+   * pruned, because the neighboring month's own reply is the one that owns them.
+   */
+  function absorb(data, prune) {
+    normalize(data);
     var youth = state.audience === 'youth';
-    if (WORKER_URL) {
-      var u = WORKER_URL + (WORKER_URL.indexOf('?') === -1 ? '?' : '&') +
-        'tz=' + encodeURIComponent(state.tz) + '&days=21' + (youth ? '&include=youth' : '');
-      var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
-      var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 5000);
-      return fetch(u, ctrl ? { signal: ctrl.signal } : undefined)
-        .then(function (r) { clearTimeout(timer); if (!r.ok) throw 0; state.live = true; return r.json(); })
-        .catch(function () {
-          state.live = false;               // Worker unreachable — fall back
-          return fetch(SNAPSHOT_URL).then(function (r) { return r.json(); });
-        });
+    var have = {};
+    state.data.sources.forEach(function (s) { have[s.letter] = true; });
+    (data.sources || []).forEach(function (s) {
+      if ((!youth && s.youth) || have[s.letter]) return;   // youth-only sessions are hidden from everyone else
+      state.data.sources.push(s);
+      have[s.letter] = true;
+      state.sessions[s.letter] = true;
+    });
+    if (prune) {
+      Object.keys(state.index).forEach(function (k) {
+        var t = Date.parse(k);
+        if (t >= prune.from && t < prune.to) delete state.index[k];
+      });
     }
-    return fetch(SNAPSHOT_URL).then(function (r) { if (!r.ok) throw 0; return r.json(); });
+    (data.slots || []).forEach(function (s) {
+      var keep = s.sessions.filter(function (x) { return youth || x.letter !== 'Y'; });
+      if (!keep.length) return;
+      /* Keyed by the instant, so a time that arrives twice - in two overlapping
+         months, or from the snapshot and then the Worker - replaces the earlier
+         copy instead of adding to it. Seats are never counted twice. */
+      state.index[new Date(s.start).toISOString()] = { start: s.start, sessions: keep,
+        remaining: keep.reduce(function (a, b) { return a + (b.remaining || 0); }, 0) };
+    });
+    state.data.slots = Object.keys(state.index).sort().map(function (k) { return state.index[k]; });
+    if (data.generated) state.data.generated = data.generated;
+  }
+
+  function getJson(url, ms) {
+    var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, ms);
+    return fetch(url, ctrl ? { signal: ctrl.signal } : undefined).then(
+      function (r) { clearTimeout(timer); if (!r.ok) throw 0; return r.json(); },
+      function (e) { clearTimeout(timer); throw e; });
+  }
+
+  function workerUrl(mo) {
+    return WORKER_URL + (WORKER_URL.indexOf('?') === -1 ? '?' : '&') +
+      'tz=' + encodeURIComponent(state.tz) +
+      '&month=' + monthKey(mo) + '&days=' + LEGACY_DAYS +
+      (state.audience === 'youth' ? '&include=youth' : '');
+  }
+
+  function loadSnapshot() {
+    state.snapshotTried = true;
+    return getJson(SNAPSHOT_URL, 10000).then(function (data) {
+      absorb(data, null);
+      var made = Date.parse(data.generated) || Date.now();
+      state.snapshotGenerated = data.generated || null;
+      state.coverage.push({ from: made, to: made + (data.days || 21) * DAY_MS, source: 'snapshot' });
+    });
+  }
+
+  /* A month that failed, or came back with some sessions missing, is worth asking for again. */
+  function retryable(status) { return status === 'failed' || status === 'incomplete'; }
+  function isLoading(status) { return status === 'loading' || status === 'queued'; }
+
+  /**
+   * Make sure a month's times are loaded, then settle what the page can say
+   * about that month.
+   *
+   * A current Worker answers ?month= with that month and echoes it back. An older
+   * Worker ignores month= and returns LEGACY_DAYS from today; the missing echo is
+   * how that is recognized, and from then on later months are judged by how far
+   * that window reaches rather than fetched. If the Worker cannot be reached before
+   * anything has loaded, the committed snapshot stands in. None of this can block
+   * booking: every time links to Calendly, and a month that cannot be shown says
+   * so and links there too.
+   */
+  function loadMonth(mo) {
+    var key = monthKey(mo);
+    if (state.pending[key]) return state.pending[key];
+    if (state.months[key] && !retryable(state.months[key])) return Promise.resolve();
+    state.months[key] = 'loading';
+
+    var job;
+    if (WORKER_URL && state.monthAware !== false) {
+      job = getJson(workerUrl(mo), 10000).then(function (data) {
+        state.live = true;
+        if (data && data.month === key) {
+          state.monthAware = true;
+          absorb(data, monthSpan(mo, false));
+          /* Some calendars answered and some did not. What arrived is real, but times
+             may be missing, and a thin month must not pass for a full one. */
+          state.months[key] = data.partial ? 'incomplete' : 'live';
+          state.staleAt[key] = data.stale ? (data.checkedAt || data.generated || null) : null;
+        } else {
+          state.monthAware = false;
+          absorb(data, null);
+          var now = Date.now();
+          state.coverage.push({ from: now, to: now + LEGACY_DAYS * DAY_MS, source: 'live' });
+          classify(mo);
+        }
+      }, function () {
+        if (!state.snapshotTried && !state.data.slots.length) {
+          return loadSnapshot().then(function () { classify(mo); });
+        }
+        classify(mo);
+        // Nothing loaded reaches this month, and it may be a passing failure: offer a retry.
+        if (state.months[key] === 'unavailable') state.months[key] = 'failed';
+      });
+    } else if (!WORKER_URL && !state.snapshotTried) {
+      job = loadSnapshot().then(function () { classify(mo); });
+    } else {
+      classify(mo);
+      job = Promise.resolve();
+    }
+
+    state.pending[key] = job.then(
+      function () { delete state.pending[key]; },
+      function (e) { delete state.pending[key]; state.months[key] = 'failed'; throw e; });
+    return state.pending[key];
+  }
+
+  /** What the data already loaded can say about a month nobody fetched for it. */
+  function classify(mo) {
+    var key = monthKey(mo), span = monthSpan(mo, false);
+    var from = Math.max(span.from, Date.now()), best = null;
+    state.coverage.forEach(function (c) {
+      if (c.from <= from + DAY_MS && (!best || c.to > best.to)) best = c;
+    });
+    if (best && best.to >= span.to) {
+      state.months[key] = best.source;
+    } else if (best && best.to > from) {
+      state.months[key] = 'partial';
+      state.partialUntil[key] = best.to;
+    } else {
+      state.months[key] = 'unavailable';
+    }
   }
 
   function setStatus(msg) {
@@ -372,32 +549,67 @@
     document.getElementById('cal-next').addEventListener('click', function () { shiftMonth(1); });
   }
 
+  /** Move the calendar, and load the month it lands on once the candidate stops there. */
   function shiftMonth(n) {
-    var m = state.month.m + n, y = state.month.y;
-    if (m < 0) { m = 11; y--; } if (m > 11) { m = 0; y++; }
-    state.month = { y: y, m: m };
+    var target = addMonths(state.month, n), here = thisMonth();
+    if (monthIndex(target) < monthIndex(here) || monthIndex(target) > monthIndex(here) + MONTHS_AHEAD) return;
+    // Passing through a month without stopping leaves it unloaded, not stuck "loading".
+    if (state.months[monthKey(state.month)] === 'queued') delete state.months[monthKey(state.month)];
+    state.month = target;
+    clearTimeout(settleTimer);
+    var st = state.months[monthKey(target)];
+    if (!st || retryable(st)) {
+      state.months[monthKey(target)] = 'queued';
+      settleTimer = setTimeout(function () {
+        if (!sameMonth(state.month, target) || state.months[monthKey(target)] !== 'queued') return;
+        delete state.months[monthKey(target)];
+        ensureMonth(target);
+        render();
+      }, SETTLE_MS);
+    }
     render();
   }
 
-  /** Slots passing the current session + time-of-day filters, grouped by day. */
+  function ensureMonth(mo) {
+    var st = state.months[monthKey(mo)];
+    if (st && !retryable(st)) return;
+    var redraw = function () { if (sameMonth(state.month, mo)) render(); };
+    loadMonth(mo).then(redraw, redraw);
+  }
+
+  /** Slots in the month on screen passing the current filters, grouped by day. */
   function visibleByDay() {
     var out = {};
+    var prefix = monthKey(state.month), span = monthSpan(state.month, true);
     /* A slot that has already started cannot be booked, and offering one sends a
        candidate to a Calendly page that turns them away. Checked on every render,
        so a tab left open overnight drops them as well. */
     var now = Date.now();
+    state.monthOpen = 0;
     state.data.slots.forEach(function (s) {
-      var d = new Date(s.start);
-      if (d.getTime() <= now) return;
+      var t = Date.parse(s.start);
+      /* Only the month on screen, with a day either side for other zones. Every
+         loaded month is held, and formatting all of them on every render would
+         make the calendar sluggish once a candidate has looked a few months out. */
+      if (t < span.from || t >= span.to || t <= now) return;
+      var d = new Date(t);
       var keep = s.sessions.filter(function (x) { return state.sessions[x.letter]; });
+      if (!keep.length) return;
+      var k = dayKey(d, state.tz);
+      if (k.slice(0, 7) === prefix) state.monthOpen++;
       if (state.youthOnly) keep = keep.filter(function (x) { return x.letter === 'Y'; });
       if (!keep.length) return;
       if (!state.bands[bandOf(hourIn(d, state.tz))]) return;
-      var k = dayKey(d, state.tz);
       (out[k] = out[k] || []).push({ start: s.start, date: d, sessions: keep,
         remaining: keep.reduce(function (a, b) { return a + (b.remaining || 0); }, 0) });
     });
     return out;
+  }
+
+  /** The days of the month on screen that have times, in order. */
+  function daysOf(byDay) {
+    var prefix = monthKey(state.month);
+    return Object.keys(byDay).filter(function (k) { return k.slice(0, 7) === prefix; }).sort();
   }
 
   /* ---- render ----------------------------------------------------------- */
@@ -405,26 +617,57 @@
     var byDay = visibleByDay();
     renderGrid(byDay);
     renderDay(byDay);
-    var total = Object.keys(byDay).reduce(function (a, k) { return a + byDay[k].length; }, 0);
-    /* No running total. A candidate wants a time that suits them, not a tally
-       of how many exist. Two things still earn this line: the empty state
-       (otherwise an over-filtered calendar just looks broken with no
-       explanation) and, for youth candidates, what the Youth badge means. */
-    var sum = document.getElementById('cal-summary');
-    if (sum) {
-      if (!total) {
-        sum.textContent = 'No times match these filters. Try turning another one on.';
-      } else if (state.audience === 'youth' && !state.youthOnly) {
-        /* Says which sessions are open to them, not what they cost. Terms are
-           settled at booking; stating them here would invite people to work the
-           date of birth backwards from the answer. */
-        sum.textContent = 'Sessions for candidates 18 and under are marked “Youth”.';
-      } else {
-        sum.textContent = '';
-      }
-      sum.hidden = !sum.textContent;
-    }
+    renderSummary(byDay);
     renderFreshness();
+  }
+
+  /** The one line above the calendar.
+   *
+   *  No running total. A candidate wants a time that suits them, not a tally of
+   *  how many exist. What earns this line: a month still loading, a month that
+   *  cannot be shown (which must say so, and where to book instead, rather than
+   *  look like a month with no sessions), the empty states, and for youth
+   *  candidates what the Youth badge means. */
+  function renderSummary(byDay) {
+    var sum = document.getElementById('cal-summary');
+    if (!sum) return;
+    var key = monthKey(state.month), status = state.months[key], name = MONTHS[state.month.m];
+    var total = daysOf(byDay).reduce(function (a, k) { return a + byDay[k].length; }, 0);
+    var direct = function (text) {
+      return '<a href="' + BOOK_DIRECT + '" target="_blank" rel="noopener">' + text + '</a>';
+    };
+    var html = '';
+    if (isLoading(status)) {
+      html = 'Loading times for ' + name + '…';
+    } else if (status === 'failed') {
+      html = 'Times for ' + name + ' could not be loaded just now. ' +
+        '<button type="button" class="tz-change" id="cal-retry">Try again</button>, or ' +
+        direct('book directly on Calendly') + '.';
+    } else if (status === 'unavailable') {
+      html = 'Times for ' + name + ' cannot be shown here right now. Every session can still be ' +
+        direct('booked directly on Calendly') + '.';
+    } else if (status === 'partial') {
+      html = 'Times after ' + new Intl.DateTimeFormat('en-US', { timeZone: state.tz, month: 'long', day: 'numeric' })
+        .format(new Date(state.partialUntil[key] - DAY_MS)) +
+        ' cannot be shown here right now. Later sessions can still be ' + direct('booked directly on Calendly') + '.';
+    } else if (status === 'incomplete') {
+      html = 'Some sessions for ' + name + ' could not be loaded just now, so times may be missing. ' +
+        '<button type="button" class="tz-change" id="cal-retry">Try again</button>, or ' +
+        direct('book directly on Calendly') + '.';
+    } else if (!total && !state.monthOpen) {
+      html = 'No exam times are open in ' + name + ' yet.';
+    } else if (!total) {
+      html = 'No times match these filters. Try turning another one on.';
+    } else if (state.audience === 'youth' && !state.youthOnly) {
+      /* Says which sessions are open to them, not what they cost. Terms are
+         settled at booking; stating them here would invite people to work the
+         date of birth backwards from the answer. */
+      html = 'Sessions for candidates 18 and under are marked “Youth”.';
+    }
+    sum.innerHTML = html;
+    sum.hidden = !html;
+    var retry = document.getElementById('cal-retry');
+    if (retry) retry.addEventListener('click', function () { ensureMonth(state.month); render(); });
   }
 
   /** Say plainly how old this data is.
@@ -435,18 +678,32 @@
    *  older than a day says so out loud. */
   function renderFreshness() {
     var el = document.getElementById('cal-freshness');
-    if (!el || !state.data || !state.data.generated) return;
+    if (!el) return;
 
-    /* When a Worker is configured the data IS fetched per page load, so a
-       "checked at" timestamp is noise — it would always read "just now".
-       The line exists only to disclose that the committed snapshot can be
-       out of date, which is a real risk worth telling candidates about.
-       No Worker, no live data: Calendly's availability endpoint sends no
-       Access-Control-Allow-Origin header, so a browser cannot call it. */
-    if (state.live) { el.hidden = true; el.textContent = ''; return; }
-    var ageMs = Date.now() - new Date(state.data.generated).getTime();
+    /* Live months are fetched when viewed, so a "checked at" timestamp would
+       always read "just now" and is noise. The line exists only to disclose
+       that the committed snapshot can be out of date, so it shows only for a
+       month whose times came from the snapshot. No Worker, no live data:
+       Calendly's availability endpoint sends no Access-Control-Allow-Origin
+       header, so a browser cannot call it. */
+    var key = monthKey(state.month), status = state.months[key];
+    /* A live month the Worker could only answer from its fallback copy, because
+       Calendly refused it just then. Say when those times were checked. */
+    if ((status === 'live' || status === 'incomplete') && state.staleAt[key]) {
+      el.className = 'cal-freshness is-stale';
+      el.textContent = 'Some of these times were last checked ' +
+        new Date(state.staleAt[key]).toLocaleString('en-US',
+          { timeZone: state.tz, month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) +
+        ' and may already be taken. Calendly confirms what is still free when you book.';
+      el.hidden = false;
+      return;
+    }
+    if (status !== 'snapshot' || !state.snapshotGenerated) {
+      el.hidden = true; el.textContent = ''; return;
+    }
+    var ageMs = Date.now() - new Date(state.snapshotGenerated).getTime();
     var hours = ageMs / 3600000;
-    var when = new Date(state.data.generated).toLocaleString('en-US',
+    var when = new Date(state.snapshotGenerated).toLocaleString('en-US',
       { timeZone: state.tz, month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
     if (hours < 24) {
       el.className = 'cal-freshness';
@@ -455,7 +712,7 @@
       el.className = 'cal-freshness is-stale';
       el.textContent = 'Availability last checked ' + when + ' (' + Math.round(hours / 24) +
         ' day' + (Math.round(hours / 24) === 1 ? '' : 's') + ' ago). Some of these times may ' +
-        'already be taken \u2014 Calendly will show what is really free when you click through.';
+        'already be taken — Calendly will show what is really free when you click through.';
     }
     el.hidden = false;
   }
@@ -464,7 +721,14 @@
     var y = state.month.y, m = state.month.m;
     document.getElementById('cal-month').textContent = MONTHS[m] + ' ' + y;
 
+    /* Nothing before this month can be booked, and the Worker serves twelve
+       months out, so the arrows stop at both ends rather than lead to empty grids. */
+    var at = monthIndex(state.month), here = monthIndex(thisMonth());
+    document.getElementById('cal-prev').disabled = at <= here;
+    document.getElementById('cal-next').disabled = at >= here + MONTHS_AHEAD;
+
     var grid = document.getElementById('cal-grid');
+    grid.setAttribute('aria-busy', isLoading(state.months[monthKey(state.month)]) ? 'true' : 'false');
     grid.innerHTML = '';
     DAY_NAMES.forEach(function (n) {
       var h = document.createElement('div');
@@ -538,11 +802,19 @@
 
   function renderDay(byDay) {
     var panel = document.getElementById('cal-day');
-    var key = state.selectedDay;
-    if (!key || !byDay[key]) {
-      var anyKey = Object.keys(byDay).sort()[0];
-      if (!anyKey) { panel.innerHTML = '<p class="cal-day__empty">No times match these filters.</p>'; return; }
-      key = state.selectedDay = anyKey;
+    var days = daysOf(byDay), key = state.selectedDay;
+    /* The selected day has to belong to the month on screen. Moving to November
+       with an October day still selected used to leave October's times beside
+       November's grid. */
+    if (!key || !byDay[key] || key.slice(0, 7) !== monthKey(state.month)) {
+      if (!days.length) {
+        var loading = isLoading(state.months[monthKey(state.month)]);
+        panel.innerHTML = '<p class="cal-day__empty">' +
+          (loading ? 'Loading times…' : state.monthOpen ? 'No times match these filters.' : 'No times to show for this month.') +
+          '</p>';
+        return;
+      }
+      key = state.selectedDay = days[0];
     }
     var slots = byDay[key].slice().sort(function (a, b) { return a.date - b.date; });
     var heading = new Intl.DateTimeFormat('en-US',
