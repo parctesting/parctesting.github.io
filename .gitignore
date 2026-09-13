@@ -32,3 +32,7 @@ _ve-source/
 # Photoshop sources and unused art — excluded from the published site by
 # _config.yml, and 95 MB of PSDs has no business in a pull request.
 design/
+
+# Wrangler writes local state beside the Worker when it deploys (which account it
+# picked, build scratch). Machine-local; never part of the site.
+.wrangler/

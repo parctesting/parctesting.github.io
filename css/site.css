@@ -901,6 +901,8 @@ a.dropbtn--team:focus-visible {
 .chip__hint { font-weight: 400; opacity: .75; font-size: .85em; }
 
 .cal-summary { font-size: var(--step--1); color: var(--ink-2); margin-bottom: var(--sp-4); }
+/* "Try again" sits inside the sentence, so it takes the sentence's size. */
+.cal-summary .tz-change { font-size: inherit; }
 
 .cal-layout {
   display: grid; gap: clamp(var(--sp-4), 3vw, var(--sp-6));
@@ -911,6 +913,11 @@ a.dropbtn--team:focus-visible {
 
 .cal-nav { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); margin-bottom: var(--sp-3); }
 .cal-nav h2 { margin: 0; font-size: var(--step-1); }
+/* The arrows stop at this month and twelve months out. A stopped arrow should
+   look stopped, not just ignore the click. */
+.cal-nav .btn:disabled { opacity: .35; cursor: default; pointer-events: none; }
+/* A month still loading is dimmed, so it never reads as a month with no sessions. */
+.cal-grid[aria-busy="true"] { opacity: .5; }
 
 .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
 .cal-head {
