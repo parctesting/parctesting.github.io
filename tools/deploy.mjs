@@ -25,7 +25,7 @@
 import { execSync, execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import { VE_PAGES, PAGES } from './site-data.mjs';
+import { VE_PAGES, PAGES, SITE } from './site-data.mjs';
 
 const ROOT = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
 const args = process.argv.slice(2);
@@ -207,6 +207,34 @@ try {
   ok('no broken internal links');
 } catch (e) {
   bad('broken internal links — run: node tools/check-links.mjs');
+}
+
+// Ham Radio Prep course links: every one on every page must be in site-data. The
+// study cards are hand-edited HTML, so without this a changed or mistyped link
+// would drift silently - the old "All Access Pass" button opened the Technician
+// course for months.
+{
+  const allowed = new Set((SITE.hamRadioPrep?.courses || []).map((c) => c.href));
+  const files = [];
+  const walkHtml = (d) => {
+    for (const n of readdirSync(d)) {
+      if (['.git', '.baseline', 'node_modules', 'design', 'tools', 'worker', '__preview', '_ve-source'].includes(n)) continue;
+      const f = join(d, n);
+      statSync(f).isDirectory() ? walkHtml(f) : n.endsWith('.html') && files.push(f);
+    }
+  };
+  walkHtml(ROOT);
+  const wrong = [];
+  for (const f of files) {
+    for (const m of readFileSync(f, 'utf8').matchAll(/href="(https:\/\/study\.hamradioprep\.com\/[^"]*)"/g)) {
+      const href = m[1].replace(/&amp;/g, '&');
+      if (!allowed.has(href)) wrong.push(`${relative(ROOT, f)}: ${href}`);
+    }
+  }
+  wrong.length === 0
+    ? ok(`every Ham Radio Prep course link matches site-data (${allowed.size} courses)`)
+    : bad(`Ham Radio Prep link not in site-data: ${wrong.slice(0, 3).join('; ')}`
+        + (wrong.length > 3 ? ` (+${wrong.length - 3} more)` : ''));
 }
 
 // markup balance

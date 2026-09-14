@@ -54,6 +54,24 @@ export const SITE = {
   address: { po: 'PO Box 926', city: 'Roanoke', state: 'AL', zip: '36274-0926', country: 'USA' },
   facebook: 'https://www.facebook.com/groups/833919518104689',
   telegram: 'https://t.me/+d32UCpaXRLhiNjJh',
+  /* Ham Radio Prep, PARC's study partner. Every link carries the coupon, so a
+     candidate gets the discount without typing it. This list builds the band in
+     the footer of every page. The study card on the study pages is plain HTML so
+     it can be edited on GitHub, and tools/deploy.mjs fails the build if a course
+     link on any page is not one of these - the old "All Access Pass" link opened
+     the Technician course, which is the drift that check is there to catch. */
+  hamRadioPrep: {
+    home: 'https://hamradioprep.com/',
+    code: 'PARC',
+    percent: 20,
+    courses: [
+      { label: 'Technician Course',       short: 'Technician',     href: 'https://study.hamradioprep.com/enroll/1972787?price_id=2681038&coupon=parc' },
+      { label: 'General Course',          short: 'General',        href: 'https://study.hamradioprep.com/enroll/2432887?price_id=3224428&coupon=parc' },
+      { label: 'Amateur Extra Course',    short: 'Amateur Extra',  href: 'https://study.hamradioprep.com/enroll/2935944?price_id=3784628&coupon=parc' },
+      { label: 'Tech + General Bundle',   short: 'Tech + General', href: 'https://study.hamradioprep.com/enroll/405063?price_id=422572&coupon=parc' },
+      { label: 'All Access License Pass', short: 'All Access',     href: 'https://study.hamradioprep.com/enroll/1701522?price_id=3096155&coupon=parc' },
+    ],
+  },
   paypalButton: 'FG837WNAHF4P4',
   banner: '/images/banner-1600.jpg',
   bannerMobile: '/images/banner-900.jpg',

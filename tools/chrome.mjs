@@ -175,12 +175,27 @@ ${navHtml(rel)}
 }
 
 /* ---------- footer -------------------------------------------------------- */
+/* Ham Radio Prep on every page, built from SITE.hamRadioPrep so a changed course
+   link is changed in one place. */
+function studyBand() {
+  const p = SITE.hamRadioPrep;
+  if (!p || !p.courses || !p.courses.length) return '';
+  const links = p.courses
+    .map((c) => `<a href="${esc(c.href)}" target="_blank" rel="noopener">${esc(c.short)}</a>`)
+    .join(', ');
+  return `  <aside class="study-band" aria-label="Study partner">
+    <p><strong>Studying for your exam?</strong> Ham Radio Prep courses are
+      <strong>${p.percent}% off</strong> with code <span class="coupon">${esc(p.code)}</span> &mdash; ${links}.</p>
+  </aside>
+`;
+}
+
 export function buildFooter(rel = 'index.html') {
   const a = SITE.address;
   return `</main>
 
 <footer class="site-footer">
-  <div class="site-footer__inner">
+${studyBand()}  <div class="site-footer__inner">
     <div>
       <h2>Contact Us</h2>
       <p>${esc(SITE.name)}<br>
