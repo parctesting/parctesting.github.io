@@ -257,14 +257,42 @@ only displays profiles.
 node tools/moderate-team.mjs
 ```
 
-That lists everyone on the page with an id each. `delete <id>` removes a profile
-and its photo together, immediately — the page reads live, so nothing needs
-rebuilding. Uses the same `REVIEWS_URL` and `REVIEWS_ADMIN_KEY` as the review
+That lists everyone on the page with an id each, and whether they have an edit
+code. `delete <id>` removes a profile, its photo and its code together,
+immediately — the page reads live, so nothing needs rebuilding. Uses the same `REVIEWS_URL` and `REVIEWS_ADMIN_KEY` as the review
 tool.
 
 Photographs are resized to a 480px square in the volunteer's browser before
 upload, so a photo straight from a phone is fine, and are served from their own
 cached URL rather than inlined in the list.
+
+##### Volunteers updating their own profile
+
+Every profile has an **edit code**, like `W4CB-92QR-1AWH`. It is shown once when
+the profile is sent, and that browser remembers it. On the VE page the volunteer
+chooses **Update my profile**, enters the code, and changes their name, call
+sign, role, bio or photo. The profile keeps its place on the team page.
+
+- **One profile per call sign.** Sending a second profile for a call sign that is
+  already listed is refused, with a pointer to Update instead. Duplicates came
+  from volunteers sending the form again to change a photo.
+- **The code is what proves a profile is yours, not the call sign.** Everyone who
+  can open the VE page can see every call sign. The Worker stores only a hash of
+  each code. Ten wrong codes from one address locks that address out for the
+  day.
+- **Profiles sent before edit codes existed have no code.** Issue codes to all of
+  them at once, then send each person their own code privately:
+
+  ```bash
+  node tools/moderate-team.mjs issue-codes
+  ```
+
+- **A lost code:** `node tools/moderate-team.mjs reset-code <id>` prints a new
+  one, and the old one stops working at once.
+
+The Update option appears on the VE page only once the Worker in Cloudflare is
+the version with edit codes (it announces `canUpdate` on `/team`), so the page
+never offers an edit the Worker cannot make.
 
 ##### Optional: make the VE lock a real gate
 
