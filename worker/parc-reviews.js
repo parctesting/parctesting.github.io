@@ -30,17 +30,28 @@
  * see DEPLOY.md. Without the code set, anyone who works out the endpoint can
  * post, so keep an eye on the page.
  *
+ * EDITING A PROFILE. Each profile gets an edit code when it is sent. The
+ * volunteer is shown it once and their browser remembers it; this Worker keeps
+ * only a hash. The code, not the call sign, is what proves a profile is yours:
+ * everyone who can open the VE page can see everyone's call sign. A profile sent
+ * before codes existed has none, and `tools/moderate-team.mjs reset-code <id>`
+ * issues one to hand over. A call sign can hold only one profile, so sending a
+ * second is refused with a pointer to editing. The duplicates that prompted all
+ * this were one volunteer sending the form again to change a photo.
+ *
  * ROUTES
  *   GET  /            published reviews (public)
  *   POST /            submit a review   (public, Turnstile + rate limited)
  *   GET  /list        every stored review with ids  -- requires ADMIN_KEY
  *   POST /moderate    delete one                    -- requires ADMIN_KEY
  *
- *   GET  /team              approved team members (public)
- *   GET  /team/photo/<id>   one member's photo (public, immutable)
- *   POST /team              submit a bio + photo (Turnstile, publishes at once)
- *   GET  /team/list         every profile with ids  -- requires ADMIN_KEY
- *   POST /team/moderate     delete one              -- requires ADMIN_KEY
+ *   GET  /team                   every team profile (public)
+ *   GET  /team/photo/<id>[/<v>]  one member's photo (public, immutable)
+ *   POST /team                   add a profile, get its edit code (Turnstile)
+ *   POST /team/lookup            a profile's details, given its edit code (Turnstile)
+ *   POST /team/update            change a profile, given its edit code (Turnstile)
+ *   GET  /team/list              every profile with ids   -- requires ADMIN_KEY
+ *   POST /team/moderate          delete, or reset-code    -- requires ADMIN_KEY
  *
  * SETUP (see DEPLOY.md)
  *   1. Workers & Pages -> KV -> Create namespace, call it PARC_REVIEWS
@@ -48,7 +59,7 @@
  *   3. Add a secret named ADMIN_KEY       (Settings -> Variables -> Encrypt)
  *   4. Add a secret named TURNSTILE_SECRET from the Turnstile widget
  *   5. Optional: TEAM_SUBMIT_CODE, matching data-team-code on the locked
- *      team-submit page, so only VEs can add themselves to the team page
+ *      team-submit page, so only VEs can add or change team profiles
  */
 
 const ALLOWED_DOMAINS = ['parcradio.net', 'parcradio.org', 'radiotests.org', 'github.io'];
@@ -68,6 +79,14 @@ const MAX_PHOTO_BYTES = 400 * 1024;
 const MAX_BIO = 600;
 const MAX_ROLE = 60;
 const MAX_CALLSIGN = 12;
+
+/* Edit codes are 12 characters of Crockford base32, which leaves out I, L, O
+   and U so nothing reads as a digit it is not. That is 60 random bits. Wrong
+   codes are counted per address per day, after the human check, so guessing
+   one through the form is not a realistic attack. */
+const CODE_ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+const MAX_CODE_FAILS_PER_DAY = 10;
+const MAX_TEAM_UPDATES_PER_DAY = 20;
 
 function originAllowed(origin) {
   if (!origin) return false;
@@ -151,6 +170,152 @@ async function listByPrefix(kv, prefix) {
     cursor = page.list_complete ? null : page.cursor;
   } while (cursor);
   return out.sort((a, b) => (b.at || '').localeCompare(a.at || ''));
+}
+
+/* ---- team profile helpers ------------------------------------------------ */
+
+/** A fresh edit code, grouped in fours: XXXX-XXXX-XXXX. */
+function newEditCode() {
+  let s = '';
+  // 256 divides evenly by 32, so masking a random byte keeps every character equally likely.
+  for (const b of crypto.getRandomValues(new Uint8Array(12))) s += CODE_ALPHABET[b & 31];
+  return `${s.slice(0, 4)}-${s.slice(4, 8)}-${s.slice(8)}`;
+}
+
+/** Uppercase it, drop spaces and dashes, and read O as 0 and I or L as 1, the
+    way people copy codes down. Returns '' for anything that cannot be a code. */
+function normaliseCode(s) {
+  const c = String(s == null ? '' : s).toUpperCase().replace(/[\s-]+/g, '')
+    .replace(/O/g, '0').replace(/[IL]/g, '1');
+  return /^[0-9A-HJKMNP-TV-Z]{12}$/.test(c) ? c : '';
+}
+
+/* Unsalted SHA-256 is enough: the code is 60 random bits rather than a password
+   somebody chose, so there is no list of likely codes to precompute. */
+async function codeHash(code) {
+  const d = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`parc-team-edit:${code}`));
+  return [...new Uint8Array(d)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+/* Version 0 is the key every photo had before profiles could be edited. */
+const photoKey = (id, ver) => (ver ? `teamphoto:${id}:${ver}` : `teamphoto:${id}`);
+
+/** A profile as the public page sees it. A replaced photo gets a new URL, so a
+    browser that cached the old one for a year never shows it again. */
+const publicMember = (m) => ({
+  id: m.id, name: m.name, callsign: m.callsign, role: m.role, bio: m.bio,
+  photo: m.hasPhoto ? `/team/photo/${m.id}${m.photoVer ? '/' + m.photoVer : ''}` : null,
+});
+
+/** The fields the add and update forms both send, checked the same way. */
+function readProfile(body) {
+  const profile = {
+    name: clean(body.name, MAX_NAME),
+    callsign: clean(body.callsign, MAX_CALLSIGN).toUpperCase(),
+    role: clean(body.role, MAX_ROLE),
+    bio: clean(body.bio, MAX_BIO),
+  };
+  if (profile.name.length < 2) return { error: 'Please give the name you would like shown.' };
+  if (profile.bio.length < 10) return { error: 'Please add a sentence or two about yourself.' };
+  if (EMAIL_RE.test(profile.bio) || PHONE_RE.test(profile.bio)) {
+    return { error: 'Please remove the contact details — this page is public. '
+      + 'Candidates reach the team through the address in the footer.' };
+  }
+  return { profile };
+}
+
+/** A data: URI from the page's canvas. Decoded here so a malformed one is
+    rejected on submit rather than breaking the photo route later. */
+function readPhoto(photo) {
+  if (typeof photo !== 'string' || !photo) return null;
+  const m = photo.match(/^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/);
+  if (!m) return { error: 'That photo could not be read. Please choose a JPEG or PNG.' };
+  if (m[2].length * 0.75 > MAX_PHOTO_BYTES) {
+    return { error: 'That photo is too large even after resizing. Please try another.' };
+  }
+  try { atob(m[2].slice(0, 64)); } catch {
+    return { error: 'That photo could not be read.' };
+  }
+  return { type: m[1], data: m[2] };
+}
+
+/* A replaced or removed photo stays readable for ten minutes instead of
+   vanishing. The team list is cached for a minute, and a page still holding the
+   old list would otherwise show a broken image. */
+async function retirePhoto(kv, id, ver) {
+  const key = photoKey(id, ver);
+  const old = await kv.get(key);
+  if (old) await kv.put(key, old, { expirationTtl: 600 });
+}
+
+/** The profile, other than `exceptId`, already listed under this call sign. */
+async function callsignTaken(kv, callsign, exceptId) {
+  if (!callsign) return null;
+  const all = await listByPrefix(kv, 'team:');
+  return all.find((m) => m.id !== exceptId && String(m.callsign || '').toUpperCase() === callsign) || null;
+}
+
+/** Everything a team form POST must pass before anything is read or written:
+    an allowed origin, an empty honeypot, the VE submit code and the human
+    check. Returns { body, ip }, or { response } to send back as it is. */
+async function teamGate(request, env, origin, H) {
+  if (!originAllowed(origin)) return { response: json({ error: 'origin not allowed' }, 403, H) };
+
+  let body;
+  try { body = await request.json(); } catch { body = null; }
+  if (!body || typeof body !== 'object') return { response: json({ error: 'bad request' }, 400, H) };
+  if (clean(body.website, 50)) return { response: json({ ok: true }, 200, H) };
+
+  /* The submit code lives only inside the AES-encrypted VE page, so holding
+     it is proof of holding the VE passcode. Optional: without the secret set
+     the form still works, it is simply not gated. */
+  if (env.TEAM_SUBMIT_CODE && clean(body.code, 200) !== env.TEAM_SUBMIT_CODE) {
+    return { response: json({ error: 'This form is for PARC volunteer examiners. '
+      + 'Please open it from the VE section so it can identify you.' }, 403, H) };
+  }
+
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  const human = await humanChecked(env, clean(body.turnstile, 4096), ip);
+  if (!human.ok) return { response: json({ error: human.error }, 400, H) };
+  return { body, ip };
+}
+
+/** The profile an edit code belongs to, or { status, error }. */
+async function findByCode(kv, raw, ip) {
+  const code = normaliseCode(raw);
+  if (!code) {
+    return { status: 400, error: 'That does not look like an edit code. '
+      + 'It is 12 letters and numbers, in three groups of four.' };
+  }
+
+  const day = new Date().toISOString().slice(0, 10);
+  const failKey = `rl:teamcode:${day}:${ip}`;
+  const fails = Number(await kv.get(failKey)) || 0;
+  if (fails >= MAX_CODE_FAILS_PER_DAY) {
+    return { status: 429, error: 'Too many wrong codes from this connection today. Please try again tomorrow.' };
+  }
+
+  const hash = await codeHash(code);
+  const id = await kv.get(`teamcode:${hash}`);
+  const rec = id ? await kv.get(`team:${id}`, 'json') : null;
+  // The hash on the record is checked too, so an index entry left behind by a reset cannot open a profile.
+  if (!rec || rec.editHash !== hash) {
+    await kv.put(failKey, String(fails + 1), { expirationTtl: 60 * 60 * 26 });
+    return { status: 403, error: 'That code does not match a profile. Please check it and try again. '
+      + 'Profiles sent before edit codes existed do not have one yet; ask and one can be sent to you.' };
+  }
+  return { rec };
+}
+
+/** Give a profile a new edit code, retiring any old one. Returns the code. */
+async function issueEditCode(kv, rec) {
+  const editCode = newEditCode();
+  const hash = await codeHash(normaliseCode(editCode));
+  if (rec.editHash) await kv.delete(`teamcode:${rec.editHash}`);
+  rec.editHash = hash;
+  await kv.put(`team:${rec.id}`, JSON.stringify(rec));
+  await kv.put(`teamcode:${hash}`, rec.id);
+  return editCode;
 }
 
 export default {
@@ -265,15 +430,18 @@ export default {
     /* Photos are served from their own URL rather than inlined in the list, so
        the JSON stays small and each image caches on its own. */
     if (request.method === 'GET' && path.startsWith('/team/photo/')) {
-      const id = path.slice('/team/photo/'.length);
-      const rec = await env.REVIEWS.get(`teamphoto:${id}`, 'json');
+      const parts = path.slice('/team/photo/'.length).split('/');
+      if (parts.length > 2 || (parts.length === 2 && !/^\d{1,6}$/.test(parts[1]))) {
+        return json({ error: 'not found' }, 404, H);
+      }
+      const rec = await env.REVIEWS.get(photoKey(parts[0], Number(parts[1] || 0)), 'json');
       if (!rec) return json({ error: 'not found' }, 404, H);
       const bytes = Uint8Array.from(atob(rec.data), (c) => c.charCodeAt(0));
       return new Response(bytes, {
         headers: {
           ...H,
           'content-type': rec.type || 'image/jpeg',
-          /* The id changes whenever the photo does, so this can cache hard. */
+          /* A replaced photo is stored under a new version, so this URL's bytes never change. */
           'cache-control': 'public, max-age=31536000, immutable',
         },
       });
@@ -285,45 +453,27 @@ export default {
          filtering on it only hid profiles submitted while the earlier
          hold-for-approval build was deployed — which is exactly what happened to
          the first VE who used the form. Delete is the control now, not a flag. */
-      const shown = items
-        .map((m) => ({
-          id: m.id, name: m.name, callsign: m.callsign,
-          role: m.role, bio: m.bio,
-          photo: m.hasPhoto ? `/team/photo/${m.id}` : null,
-        }));
-      return json({ count: shown.length, members: shown }, 200,
+      const shown = items.map(publicMember);
+      /* canUpdate tells the VE page this Worker accepts edit codes, so it offers
+         editing only once this version is the one deployed. */
+      return json({ count: shown.length, members: shown, canUpdate: true }, 200,
         { ...H, 'cache-control': 'public, max-age=60' });
     }
 
     if (request.method === 'POST' && path === '/team') {
-      if (!originAllowed(origin)) return json({ error: 'origin not allowed' }, 403, H);
+      const gate = await teamGate(request, env, origin, H);
+      if (gate.response) return gate.response;
+      const { body, ip } = gate;
 
-      let body;
-      try { body = await request.json(); } catch { return json({ error: 'bad request' }, 400, H); }
-      if (clean(body.website, 50)) return json({ ok: true }, 200, H);
+      const read = readProfile(body);
+      if (read.error) return json({ error: read.error }, 400, H);
+      const photo = readPhoto(body.photo);
+      if (photo && photo.error) return json({ error: photo.error }, 400, H);
 
-      /* The submit code lives only inside the AES-encrypted VE page, so holding
-         it is proof of holding the VE passcode. Optional: without the secret set
-         the form still works, it is simply not gated. */
-      if (env.TEAM_SUBMIT_CODE && clean(body.code, 200) !== env.TEAM_SUBMIT_CODE) {
-        return json({ error: 'This form is for PARC volunteer examiners. '
-          + 'Please open it from the VE section so it can identify you.' }, 403, H);
-      }
-
-      const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-      const human = await humanChecked(env, clean(body.turnstile, 4096), ip);
-      if (!human.ok) return json({ error: human.error }, 400, H);
-
-      const name = clean(body.name, MAX_NAME);
-      const callsign = clean(body.callsign, MAX_CALLSIGN).toUpperCase();
-      const role = clean(body.role, MAX_ROLE);
-      const bio = clean(body.bio, MAX_BIO);
-
-      if (name.length < 2) return json({ error: 'Please give the name you would like shown.' }, 400, H);
-      if (bio.length < 10) return json({ error: 'Please add a sentence or two about yourself.' }, 400, H);
-      if (EMAIL_RE.test(bio) || PHONE_RE.test(bio)) {
-        return json({ error: 'Please remove the contact details — this page is public. '
-          + 'Candidates reach the team through the address in the footer.' }, 400, H);
+      const { callsign } = read.profile;
+      if (await callsignTaken(env.REVIEWS, callsign, null)) {
+        return json({ error: `${callsign} already has a profile on the team page. To change it, `
+          + 'choose "Update my profile" and enter your edit code.', exists: true }, 409, H);
       }
 
       const day = new Date().toISOString().slice(0, 10);
@@ -335,39 +485,76 @@ export default {
       await env.REVIEWS.put(rlKey, String(used + 1), { expirationTtl: 60 * 60 * 26 });
 
       const id = `${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
-
-      /* A data: URI from the page's canvas. Decoded here so a malformed one is
-         rejected on submit rather than breaking the photo route later. */
-      let hasPhoto = false;
-      const photo = typeof body.photo === 'string' ? body.photo : '';
-      if (photo) {
-        const m = photo.match(/^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/);
-        if (!m) return json({ error: 'That photo could not be read. Please choose a JPEG or PNG.' }, 400, H);
-        const data = m[2];
-        if (data.length * 0.75 > MAX_PHOTO_BYTES) {
-          return json({ error: 'That photo is too large even after resizing. Please try another.' }, 400, H);
-        }
-        try { atob(data.slice(0, 64)); } catch {
-          return json({ error: 'That photo could not be read.' }, 400, H);
-        }
-        await env.REVIEWS.put(`teamphoto:${id}`, JSON.stringify({ type: m[1], data }));
-        hasPhoto = true;
-      }
+      if (photo) await env.REVIEWS.put(photoKey(id, 0), JSON.stringify({ type: photo.type, data: photo.data }));
 
       const record = {
-        id, name, callsign, role, bio, hasPhoto,
+        id, ...read.profile, hasPhoto: !!photo,
         approved: true,
         at: new Date().toISOString(),
       };
-      await env.REVIEWS.put(`team:${id}`, JSON.stringify(record));
+      const editCode = await issueEditCode(env.REVIEWS, record);
 
-      return json({ ok: true,
+      return json({ ok: true, id, editCode,
         message: 'Thank you — you are on the team page now.' }, 200, H);
+    }
+
+    if (request.method === 'POST' && path === '/team/lookup') {
+      const gate = await teamGate(request, env, origin, H);
+      if (gate.response) return gate.response;
+      const found = await findByCode(env.REVIEWS, gate.body.editCode, gate.ip);
+      if (found.error) return json({ error: found.error }, found.status, H);
+      return json({ ok: true, member: publicMember(found.rec) }, 200, H);
+    }
+
+    if (request.method === 'POST' && path === '/team/update') {
+      const gate = await teamGate(request, env, origin, H);
+      if (gate.response) return gate.response;
+      const { body, ip } = gate;
+
+      const found = await findByCode(env.REVIEWS, body.editCode, ip);
+      if (found.error) return json({ error: found.error }, found.status, H);
+      const rec = found.rec;
+
+      const read = readProfile(body);
+      if (read.error) return json({ error: read.error }, 400, H);
+      const photo = readPhoto(body.photo);
+      if (photo && photo.error) return json({ error: photo.error }, 400, H);
+
+      const { callsign } = read.profile;
+      if (await callsignTaken(env.REVIEWS, callsign, rec.id)) {
+        return json({ error: `${callsign} is already on another profile on the team page.` }, 409, H);
+      }
+
+      const day = new Date().toISOString().slice(0, 10);
+      const rlKey = `rl:teamupd:${day}:${ip}`;
+      const used = Number(await env.REVIEWS.get(rlKey)) || 0;
+      if (used >= MAX_TEAM_UPDATES_PER_DAY) {
+        return json({ error: 'That is a lot of changes for one day. Please try again tomorrow.' }, 429, H);
+      }
+      await env.REVIEWS.put(rlKey, String(used + 1), { expirationTtl: 60 * 60 * 26 });
+
+      // `at` stays as it was, so editing a profile does not move it up the page.
+      const next = { ...rec, ...read.profile, updatedAt: new Date().toISOString() };
+      if (photo) {
+        next.photoVer = (rec.photoVer || 0) + 1;
+        next.hasPhoto = true;
+        await env.REVIEWS.put(photoKey(rec.id, next.photoVer), JSON.stringify({ type: photo.type, data: photo.data }));
+        if (rec.hasPhoto) await retirePhoto(env.REVIEWS, rec.id, rec.photoVer);
+      } else if (body.removePhoto === true && rec.hasPhoto) {
+        next.hasPhoto = false;
+        await retirePhoto(env.REVIEWS, rec.id, rec.photoVer);
+      }
+      await env.REVIEWS.put(`team:${rec.id}`, JSON.stringify(next));
+
+      return json({ ok: true, member: publicMember(next),
+        message: 'Saved. Your changes will be on the team page within a minute or two.' }, 200, H);
     }
 
     if (path === '/team/list' || path === '/team/pending') {
       if (!authed) return json({ error: 'unauthorised' }, 401, H);
-      const items = await listByPrefix(env.REVIEWS, 'team:');
+      /* Says whether each profile has an edit code, never what its hash is. */
+      const items = (await listByPrefix(env.REVIEWS, 'team:'))
+        .map(({ editHash, ...m }) => ({ ...m, hasEditCode: !!editHash }));
       return json({
         count: items.length,
         members: items,
@@ -395,10 +582,17 @@ export default {
       }
       if (action === 'delete') {
         await env.REVIEWS.delete(`team:${id}`);
-        if (rec.hasPhoto) await env.REVIEWS.delete(`teamphoto:${id}`);
+        if (rec.hasPhoto) await env.REVIEWS.delete(photoKey(id, rec.photoVer));
+        if (rec.editHash) await env.REVIEWS.delete(`teamcode:${rec.editHash}`);
         return json({ ok: true, action: 'deleted', id }, 200, H);
       }
-      return json({ error: 'action must be delete or show' }, 400, H);
+      /* For a profile sent before edit codes existed, or a lost code. The old
+         code stops working at once. */
+      if (action === 'reset-code') {
+        const editCode = await issueEditCode(env.REVIEWS, rec);
+        return json({ ok: true, action: 'code-reset', id, editCode }, 200, H);
+      }
+      return json({ error: 'action must be delete, show or reset-code' }, 400, H);
     }
 
     return json({ error: 'not found' }, 404, H);
