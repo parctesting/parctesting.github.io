@@ -71,11 +71,24 @@ export function organizationSchema() {
  */
 export function faqSchema(faqPath) {
   const html = readFileSync(faqPath, 'utf8');
+  const items = [];
+  /* The FAQ is now one <details class="faq-item"> per question. Read those first;
+     the older list markup below is only a fallback. Until 2026-09-14 this found
+     nothing in the new markup, and a hand-pasted copy in the page body drifted
+     from the answers it described. */
+  const detailsRe = /<details class="faq-item">\s*<summary>([\s\S]*?)<\/summary>\s*<div class="faq-answer">([\s\S]*?)<\/div>\s*<\/details>/g;
+  for (const m of html.matchAll(detailsRe)) {
+    const question = decode(m[1]);
+    const answer = decode(m[2]);
+    if (question.length < 8 || answer.length < 12) continue;
+    items.push({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer.slice(0, 1200) } });
+  }
+  if (items.length) return { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: items };
+
   const ol = html.slice(html.indexOf('<ol>'), html.lastIndexOf('</ol>'));
   if (ol.length < 50) return null;
 
   const chunks = ol.split(/<li\b[^>]*>/i).slice(1);
-  const items = [];
   for (const chunk of chunks) {
     const qm = chunk.match(/^\s*<(?:strong|b)>([\s\S]*?)<\/(?:strong|b)>/i);
     if (!qm) continue;

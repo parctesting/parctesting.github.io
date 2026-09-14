@@ -21,11 +21,301 @@
 <meta name="color-scheme" content="light">
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="stylesheet" href="../css/site.css">
-<link rel="preload" as="image" href="../images/banner-1600.jpg" fetchpriority="high">
+<link rel="preload" as="image" media="(min-width: 701px)" href="../images/banner-1600.jpg" imagesrcset="../images/banner-1600.jpg 1600w, ../images/banner-2400.jpg 2400w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" as="image" media="(max-width: 700px)" href="../images/banner-900.jpg" imagesrcset="../images/banner-900.jpg 900w, ../images/banner-1200.jpg 1200w" imagesizes="100vw" fetchpriority="high">
 
 <!-- Cloudflare Web Analytics -->
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86375f5cd0ea45a9a9083404b92011b6"}'></script>
 <!-- End Cloudflare Web Analytics -->
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I schedule an exam?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Online exams: Go to the “SCHEDULE” tab above. Then select a TIME SLOT for your exam. In-person exams: Follow the instructions to email and request an in-person exam session by going to the “IN-PERSON VE TESTING” tab above."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When will I receive a link to my exam session?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ham Exam Links are emailed within 48 hours of selecting a time-slot and payment. If you register within 48 hours, continue to check your email, registrations are only done once a day. Be sure to check your spam or junk folder at least 8 hours prior to your exam. This registration link is where you complete the registration to get your FRN and complete your Form 605 as required by the FCC. This must be done in order to be admitted to the exam."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I take more than one exam in a session?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Online exams: We have a limit due to the Zoom System Sessions and being able to give as many people the opportunity to take an exam as possible. With advance request it is possible to provide additional elements. There is a requirement for your practice pass percentage, time per element, and availability of multiple time-slots that are back to back on a given day. In-person exams: Yes, provided you do not take too long on the first exam and/or you request multiple exams in advance from the exam team."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "My exam session time has passed, and I am still in the waiting room, what should I do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Be patient, if you are in the waiting room, that means you have received a link and are on the schedule. Some people take longer than others and can cause the online sessions to run behind. Rest assured that you will be brought into the exam session as quickly as the exam team can get you in. Also, this is a good time to make sure your devices are named properly. If the exam team does not see your name on your device, you will not get admitted until everyone else has been tested, if at all. Watch the “chat” in Zoom for messages. Use this time to review our website or study."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "I have signed up on the waitlist, but I have not received any communication. What should I do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "First, go to our website at parcradio.org and click on the schedule tab at the top of the page and look for an available time slot. If you still cannot find a time slot, send an email to vetesting@yahoo.com and inform us of dates that you are available to take an exam and if you prefer morning, afternoon, or evening."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a time limit for the exam?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Online exams: While there is no strict time limit, we do monitor duration for statistical purposes. Most well-prepared candidates complete the exam in about 10 minutes. If you miss more than 25% of the questions and it becomes clear through extended time that you are unprepared, we reserve the right to terminate the exam. In-person exams: Yes, most exam teams are at an exam session for up to one hour. Anything beyond that should be requested of the exam team in advance. Since the Exam Team members are volunteers, it may not be possible to have enough VEs available beyond the one-hour time frame. This will vary by exam session."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if I miss my exam time slot?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Please respect the time of the volunteer examiners along with any candidates that are waiting to take their exam after you. If you need to reschedule, please email us as soon as possible so that someone else may be able to take that slot. If you fail to show or do not email at least 24 hours in advance, your session will be marked as a no-show."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What payment methods do you accept?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Online exams: the $15 fee is taken when you book your time slot on the schedule page . Card and debit are both accepted there. There is no separate payment step, and nothing to send us afterwards. Use the same email address for scheduling, payment and registration, or your session may not be matched to your payment. In-person exams: payment is taken at the session. See in-person testing for what to bring. PayPal is only used for donations , never for exam fees. More detail on how payment works ."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "I paid for my exam, but I got a non-payment notice by email, what should I do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Either the card payment did not go through or the name and email on the payment do not match your name or email on your exam application/registration. You will need to request an invoice and we will include your name in the subject line."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are donations for?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Donation Link is not a requirement or a request for registering for exam sessions. The link is on all pages of our website for those that want to contribute to the operation of our group. Donations are used to build equipment, teach radio classes, provide internet, subscriptions, power, training and other operations of the club. While we do use a lot of this money for infrastructure to conduct online exams, that is not all it is used for. Neither club is supported by funds from any school or group. The funding is completely provided by members’ donations and the donations of others in the ham community. Remember, there is no request to make a donation as a requirement to take an exam. Any donations are greatly appreciated and are totally independent of our testing activities which we provide as a way to help the amateur radio community."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will you give an online exam to a person who is not a citizen of the USA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, we give exams to persons who possess proper photo ID issued by the US Government or a state of the USA. This ID must be a state-issued driver’s license, a state-issued non-driver’s license, or a US passport. (must have your valid current residential address, no business, mail service, or non-residential addresses) Non-US passports are not accepted for online exams. Citizenship is NOT a requirement. For persons under 18, they may present two forms of ID from the ID list as long as a parent or guardian with one of the three forms of ID above is present and identifies themselves and the minor. Do NOT schedule an exam if you do not have the proper ID. Failure to provide the above required documents will result in the exam session being terminated without any refund."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I have to have an FRN?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Online Exam: Yes! The FRN is required for all exams. The FRN is a federal number that is issued by the FCC and requires you to verify your identity. You cannot use a Restricted Use FRN to take an exam. An FRN beginning with the digits 213 (and some others) is a Restricted Use FRN which cannot be used for an application in the Amateur Radio Service. A Restricted Use FRN can ONLY be used on an FCC Form 2100, Schedule 323-E (Ownership Report for Noncommercial Broadcast Stations). If an applicant attempts to use a Restricted Use FRN the session will be terminated and the exam will be canceled as a fail to provide a valid FRN. The applicant MUST obtain a normal FRN before they can schedule another exam and apply for an amateur radio license."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need my PIN for the exam?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. You do not need your PIN; the exam team only needs to see your photo ID."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many forms of ID do I need for the exam?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "One, if you are an adult: a physical state-issued driver’s license, state-issued photo ID card, or US passport. Candidates under 18 have other options. See acceptable identification for the full list."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need two devices with cameras to take an exam online?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes! You must have two separate devices with working cameras and the Zoom application installed and running for the entire exam session. Device Requirements: Primary Device (Computer – Desktop or Laptop) Must have a working camera. Must be positioned so that the camera provides a clear, unobstructed view of your face, as seen from your computer screen. This device is used for the Zoom meeting and the exam. Secondary Device (Phone, Tablet, or Second Computer) Must have a working camera. Must be positioned exactly 90 degrees to your left or right. The camera must show a clear, continuous view of your entire workspace, including your face, hands, keyboard, computer screen, and surrounding area for the full duration of the exam. Both devices must remain connected to Zoom for the entire exam. The exam team has sole discretion to determine if your camera setup meets requirements. If you fail to meet these requirements , you will not be allowed to test and must find an in-person exam session instead. IMPORTANT: Failure to properly set up your devices or follow any exam instructions will result in the forfeiture of your exam session fee, and you will not be eligible for a refund. No except"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use an iPad or notebook for my computer to take my exam?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Online exams: No, we require a camera view of your face for the duration of the exam. These devices typically shut off the camera when sharing the screen and that is not acceptable. You must use a laptop or desktop that has a camera in the center of the screen looking at your face as well as the second camera device to the side. In-person exams: Yes, as long as it can be determined there is no assistive software on the device, you may be permitted to use your device at the exam. This is at the discretion of the exam team."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "I cannot figure out how to rename my devices, what should I do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You cannot rename your devices from the waiting room. You will need to go to the Zoom website and sign into your account. Change the first and last name to reflect your name. Then add “computer” or “phone” after your last name in the last name field. Save and remain logged into your Zoom account. Now go back to the email and click on the link. You cannot rename devices once you are in the waiting room. You have to rename your devices before you join the session. You do this in your profile. Understand that you must use the Zoom application which you must download. You cannot run Zoom in a browser. To rename your devices, you can follow these instructions at these links to complete the process: https://support.Zoom.us/hc/en-us/articles/201363203-Customizing-your-Profile"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "I have never used Zoom; do I have to download Zoom to my devices?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes! The Zoom app must be downloaded and run. You cannot run Zoom from a browser/website for the exam."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use a mouse or external keyboard?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No! You will not need them, and they are not allowed. To navigate the exam, you will use the keys A, B, C, and D on your keyboard to select the correct answer on the question. This will not only answer the question, it will automatically advance to the next question and light it up for you to answer. The question will be bottom justified to make sure you can see any schematics which would appear above the question. The small amount of adjustments is easily done using a trackpad. If you are using a PC, of course you can use the mouse for that portion of setting up your exam."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I test my Zoom settings?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You will need to download the Zoom application and set up your profile. Then test your video and audio using these procedures at this website: Testing Procedures After making sure your audio and video settings are correct and working, go to Zoom Test to test your equipment in Zoom using this link: Zoom Testing"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What applications are allowed on my computer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "To ensure exam integrity, all non-essential running applications must be closed. These include but are not limited to Mail, Messaging, Alerts, Teams, TeamViewer, Discord, Steam, VNC, Remote Desktops, VPNs, etc. The exam team will check your device for the presence of these running applications. You can eliminate most of this by looking at your task bar for any dots (Apple products) or lines (PC products) under any applications. That means they are running. You should also check the (^) in the task bar and quit, close, end, or exit everything that is not necessary to run your computer. Kindly follow their short instructional queries as they help you prepare your computer. Only a Browser with single tab open, Zoom and a Calculator may be active during the exam."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to remove any wearable technology?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Wearable technology such as Headsets / Earbuds / Headphones / Smart Watches / Smart Eyewear must be removed during the actual exam. Keep them on during setup, the exam team will tell you when to remove them. Put them back on when you select, “Grade Exam.” You also cannot wear any hats, wristbands or other articles of clothing that may obscure your face or any exam assisting devices such as bandanas, scarves, etc."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "I have a multi-screen set up for my computer, can I use this set up?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can only have one monitor operational in the room. If you are using a laptop, it cannot be docked to any other device. Please remove, turn around, or cover additional screens or monitors in the area. A simple shirt, blanket or towel works great for covering screens. During your exam, please concentrate on your exam, trying not to allow your vision or gaze to drift away from your own testing screen. A very handy place to test uninterrupted is in your bathroom! A smaller area, with minimal electronic distractions and the door can be locked, works nicely for your exam environment."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I find out which questions I missed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Online exams: No, we do not have this information available to candidates. In-person exams: No, it is against the rules for us to disclose any information other than the number you missed on your exam."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will my exam and area be recorded?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "When joining your meeting you are asked to consent with recording laws. You understand and agree that you have covered or removed anything that you do not wish to be recorded during the exam or room scan. Please remove any sensitive material from your test area that you do not wish to be recorded. A 360-degree scan of your room is needed along with a view of your work surface/desktop where you are testing. You agree to the recording, storage and distribution of video, images, and audio from the meeting. We would love to celebrate your success on our Website and Social Media pages. If you would like to send an email, we will post your comments with your permission. You are invited to go to our Facebook page and post your comments as well. NOTE: We do NOT post any information about our applicants publicly without them giving their permission. We value your privacy."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When will I receive my CSCE?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Online exams: Within 48 hours by email. In-person exams: At the time of successful completion of an exam element."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When will my call sign be issued by the FCC?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We file electronically, so new licenses and upgrades can be granted the same day during FCC business hours. It depends on FCC systems, and it can take up to 5-7 business days."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "I passed my exam, do I get a temporary license?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, you must wait until the paperwork is processed, pay your $35.00 FCC Application Fee, and then wait until they issue you a call sign. This can take anywhere from five days to five weeks depending on where you took your exam and any special circumstances related to your application."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "I passed my exam, is there anything else I have to do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The FCC now collects $35 for new amateur radio licenses. The fee was mandated by Congress and went into effect April 19, 2022. After you pass your first exam, the Volunteer Examiner Coordinator will submit your information to the FCC for processing. Once the FCC processes your application, you will receive a bill via email to pay the $35 online. The $35 must be paid within 10 days or your application will be dismissed, so be sure to check your spam folder, too! Currently there is no charge for address changes or upgrades. ALL OTHER SUBMISSIONS REQUIRE A $35.00 FEE!"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "I have special needs; can you provide a verbal exam?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Online exams: Yes, a VE specified by the Exam Team can read the questions off of video a maximum of two times per question. In-person exams: Yes, a VE selected by the Exam Team can read you the questions and answers."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can someone I know read the exam to me?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "NO! This is absolutely prohibited. No one may be present during your exam that is not a VE or taking an exam. EXCEPTION: children under 13 may have one parent observe at a distance."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "I cannot use an on-screen calculator. I have special needs that prevent me from doing so. Can I use scrap paper or a manual calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Online exams: No. Use the calculator built into ExamTools; a separate calculator app is not permitted. If you are unable to do so, you must take an in-person exam. Online exams are a convenience and are at the discretion of the VE Team. There is no requirement to provide any accommodations, as all team members are volunteers. If any requirement is too difficult for you to perform, you will need to seek out an in-person exam. In-person exams: You are permitted a single piece of blank paper which is provided by the exam team and a basic calculator with no memory or special functions."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "I need accommodations to take my exam, how can I arrange accommodations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Online exams: We can provide reading of questions to the visually impaired. Outside of that, you will have to contact the Exam Team to see if there is anything they can do. You will still have to meet ALL of the requirements and standards of the online exam as specified on this website. Online exams may not be for you if you require accommodations. You may need to seek and test at an in-person exam. In-person exams: Reasonable accommodations can usually be provided with restrictions based on the location of the exam and at the sole discretion of the exam team. All VEs are volunteers and are under no obligation or requirement to provide any exam that they are uncomfortable or unwilling to perform."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "I am 17 or under. Is there any program to help me pay for my amateur radio license?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We are an officially recognized Testing Team for the ARRL VEC. If you test with us, you may be eligible for the ARRL Youth Licensing Grant Program . In effect since April 19, 2022, this program covers the one-time $35 application fee for new amateur radio license candidates younger than 18 years old who take tests administered under the ARRL Volunteer Examiner Coordinator (VEC) program . This program is funded by a special initiative that may be restricted or discontinued at any time . However, until any changes take effect, eligible youth who meet the requirements will receive reimbursement. You are not eligible if you did not test with the ARRL VEC or if you are over 17 years of age . After your exam, you will receive an email with a link to claim the reimbursement. Additionally, if you wish to test under special youth programs, discounts, or designated youth testing sessions , you must email youthprogram@parcradio.org at least seven days in advance to inquire and prequalify. This does not apply to the $35 ARRL reimbursement program mentioned above. ARRL Youth Licensing Grant Program Information"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "I had a license in the past. What do I need to do to reinstate my license?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If within 728 days of expiration, you can go online to the FCC website and renew it or we can do it for a fee. If it is beyond this time period, you will need to email an expired official copy of your license or a copy of the official callbook page showing proof of your license prior to 1984 and then schedule, take, and pass the Technician class exam and be sure to inform the exam team before the exam starts that you had an expired license, proof was emailed, and you would like “General, Advanced, or Amateur Extra class” privileges restored. We cannot process this after the exam without you scheduling another exam."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -34,9 +324,11 @@
 <header class="site-header">
   <a class="site-banner" href="../index.html" aria-label="PARC Radio &amp; Technology home">
     <picture>
-      <source media="(max-width: 700px)" srcset="../images/banner-900.jpg">
-      <img src="../images/banner-1600.jpg" width="1600" height="192" fetchpriority="high"
-           alt="PARC Radio &amp; Technology">
+      <source media="(max-width: 700px)" sizes="100vw"
+              srcset="../images/banner-900.jpg 900w, ../images/banner-1200.jpg 1200w">
+      <img src="../images/banner-1600.jpg" sizes="100vw"
+           srcset="../images/banner-1600.jpg 1600w, ../images/banner-2400.jpg 2400w"
+           width="1600" height="192" fetchpriority="high" alt="PARC Radio &amp; Technology">
     </picture>
   </a>
 
@@ -218,13 +510,13 @@
 <details class="faq-item">
   <summary>Do I need my PIN for the exam?</summary>
   <div class="faq-answer">
-        <p>No! We only want to see your driver’s license unless you are under 18. If you are under 18, please see the ID requirements under rules on the online exam page.</p>
+        <p>No. You do not need your PIN; the exam team only needs to see your photo ID.</p>
   </div>
 </details>
 <details class="faq-item">
   <summary>How many forms of ID do I need for the exam?</summary>
   <div class="faq-answer">
-        <p>We only want to see your driver’s license unless you are under 18. If you are under 18, please see the ID requirements under rules on the online exam page. If you do not have a US State Driver’s License, please see the identification requirements on the online testing tab.</p>
+        <p>One, if you are an adult: a physical state-issued driver’s license, state-issued photo ID card, or US passport. Candidates under 18 have other options. See <a href="ID.html">acceptable identification</a> for the full list.</p>
   </div>
 </details>
 
@@ -391,8 +683,13 @@
         <p>We are an officially recognized Testing Team for the ARRL VEC. If you test with us, you may be eligible for the <strong>ARRL Youth Licensing Grant Program</strong>. In effect since April 19, 2022, this program covers the one-time <strong>$35 application fee</strong> for new amateur radio license candidates younger than 18 years old who take tests administered under the <strong>ARRL Volunteer Examiner Coordinator (VEC) program</strong>.</p>
         <p>This program is funded by a <strong>special initiative that may be restricted or discontinued at any time</strong>. However, until any changes take effect, eligible youth who meet the requirements will receive reimbursement. <strong>You are not eligible if you did not test with the ARRL VEC or if you are over 17 years of age</strong>. After your exam, you will receive an email with a link to claim the reimbursement.</p>
         <p>Additionally, if you wish to test under <strong>special youth programs, discounts, or designated youth testing sessions</strong>, you must email <strong>youthprogram@parcradio.org at least seven days in advance</strong> to inquire and prequalify. <strong>This does not apply to the $35 ARRL reimbursement program mentioned above.</strong> <a href="https://www.arrl.org/youth-licensing-grant-program">ARRL Youth Licensing Grant Program Information</a></p>
-        <p><strong><li>I had a license in the past, what do I need to do to reinstate my license?</li></strong> If within 728 days of expiration, you can go online to the FCC website and renew it or we can do it for a fee. If it is beyond this time period, you will need to email an expired official copy of your license or a copy of the official callbook page showing proof of your license prior to 1984 and then schedule, take, and pass the Technician class exam and be sure to inform the exam team before the exam starts that you had an expired license, proof was emailed, and you would like “General, Advanced, or Amateur Extra class” privileges restored. We cannot process this after the exam without you scheduling another exam.</p>
-        <ul><li>I had a license in the past, what do I need to do to reinstate my license?</li></ul>
+  </div>
+</details>
+
+<details class="faq-item">
+  <summary>I had a license in the past. What do I need to do to reinstate my license?</summary>
+  <div class="faq-answer">
+        <p>If within 728 days of expiration, you can go online to the FCC website and renew it or we can do it for a fee. If it is beyond this time period, you will need to email an expired official copy of your license or a copy of the official callbook page showing proof of your license prior to 1984 and then schedule, take, and pass the Technician class exam and be sure to inform the exam team before the exam starts that you had an expired license, proof was emailed, and you would like “General, Advanced, or Amateur Extra class” privileges restored. We cannot process this after the exam without you scheduling another exam.</p>
   </div>
 </details>
 
@@ -404,289 +701,11 @@
 <p><a class="btn" href="../Documents/The_New_Ham_FAQ.pdf">Download the New Ham FAQ (PDF)</a></p>
 </div>
 
-<script type="application/ld+json">{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How do I schedule an exam?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Online Exams: Go to the “SCHEDULE” tab above. Then select a TIME SLOT for your exam. In-Person Exams: Follow the instructions to email and request an in-person exam session by going to the “IN-PERSON VE TESTING” tab above."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "When will I receive my CSCE?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Online Exams: Within 48 hours by email. In-Person Exams: At the time of successful completion of an exam element."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "When will my call sign be issued by the FCC?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "We file electronically, so new licenses and upgrades can be granted the same day during FCC business hours. It depends on FCC systems, and it can take up to 5-7 business days."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "When will I receive a link to my exam session?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Ham Exam Links are emailed within 48 hours of selecting a time-slot and payment. If you register within 48 hours, continue to check your email, registrations are only done once a day. Be sure to check your spam or junk folder at least 8 hours prior to your exam. This registration link is where you complete the registration to get your FRN and complete your Form 605 as required by the FCC. This must be done in order to be admitted to the exam."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I take more than one exam in a session?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Online Exams: We have a limit due to the Zoom System Sessions and being able to give as many people the opportunity to take an exam as possible. With advance request it is possible to provide additional elements. There is a requirement for your practice pass percentage, time per element, and availability of multiple time-slots that are back to back on a given day. In-Person Exams: Yes, provided you do not take too long on the first exam and/or you request multiple exams in advance from the exam team."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What payment methods do you accept?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Online exams: the $15 fee is taken when you book your time slot on the schedule page. Card and debit are both accepted there. There is no separate payment step, and nothing to send us afterwards. Use the same email address for scheduling, payment and registration, or your session may not be matched to your payment. In-person exams: payment is taken at the session. PayPal is only used for donations, never for exam fees."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I find out which questions I missed?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Online Exams: No, we do not have this information available to candidates. In-Person Exams: No, it is against the rules for us to disclose any information other than the number you missed on your exam."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "I have special needs; can you provide a verbal exam?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Online Exams: Yes, a VE specified by the Exam Team can read the questions off of video a maximum of two times per question. In-Person Exams: Yes, a VE selected by the Exam Team can read you the questions and answers."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can someone I know read the exam to me?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "NO! This is absolutely prohibited. No one may be present during your exam that is not a VE or taking an exam. EXCEPTION: children under 13 may have one parent observe at a distance."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "I cannot use an on-screen calculator. I have special needs that prevent me from doing so. Can I use scrap paper or a manual calculator?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Online Exams: No. Use the calculator built into ExamTools; a separate calculator app is not permitted. If you are unable to do so, you must take an in-person exam. Online exams are a convenience and are at the discretion of the VE Team. There is no requirement to provide any accommodations, as all team members are volunteers. If any requirement is too difficult for you to perform, you will need to seek out an in-person exam. In-Person Exams: You are permitted a single piece of blank paper which is provided by the exam team and a basic calculator with no memory or special functions."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Will you give an online exam to a person who is not a citizen of the USA?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes, we give exams to persons who possess proper photo ID issued by the US Government or a state of the USA. This ID must be a state-issued driver’s license, a state-issued non-driver’s license, or a US passport. (must have your valid current residential address, no business, mail service, or non-residential addresses) Non-US passports are not accepted for online exams. Citizenship is NOT a requirement. For persons under 18, they may present two forms of ID from the ID list as long as a parent or guardian with one of the three forms of ID above is present and identifies themselves and the minor. Do NOT schedule an exam if you do not have the proper ID. Failure to provide the above required documents will result in the exam session being terminated without any refund."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do I need two devices with cameras to take an exam online?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes! You must have two separate devices with working cameras and the Zoom application installed and running for the entire exam session. Device Requirements:"
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I use an iPad or notebook for my computer to take my exam?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Online Exams: No, we require a camera view of your face for the duration of the exam. These devices typically shut off the camera when sharing the screen and that is not acceptable. You must use a laptop or desktop that has a camera in the center of the screen looking at your face as well as the second camera device to the side. In-Person Exams: Yes, as long as it can be determined there is no assistive software on the device, you may be permitted to use your device at the exam. This is at the discretion of the exam team."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "My exam session time has passed, and I am still in the waiting room, what should I do?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Be patient, if you are in the waiting room, that means you have received a link and are on the schedule. Some people take longer than others and can cause the online sessions to run behind. Rest assured that you will be brought into the exam session as quickly as the exam team can get you in. Also, this is a good time to make sure your devices are named properly. If the exam team does not see your name on your device, you will not get admitted until everyone else has been tested, if at all. Watch the “chat” in Zoom for messages. Use this time to review our website or study."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "I cannot figure out how to rename my devices, what should I do?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "You cannot rename your devices from the waiting room. You will need to go to the zoom website and sign into your account. Change the first and last name to reflect your name. Then add “computer” or “phone” after your last name in the last name field. Save and remain logged into your zoom account. Now go back to the email and click on the link. You cannot rename devices once you are in the waiting room. You have to rename your devices before you join the session. You do this in your profile. Understand that you must use the Zoom application which you must download. You cannot run Zoom in a browser. To rename your devices, you can follow these instructions at these links to complete the process: https://support.zoom.us/hc/en-us/articles/201363203-Customizing-your-Profile"
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "I paid for my exam, but I got a non-payment notice by email, what should I do?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Either the card payment did not go through or the name and email on the payment do not match your name or email on your exam application/registration. You will need to request an invoice and we will include your name in the subject line."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "I have signed up on the waitlist, but I have not received any communication. What should I do?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "First, go to our website at parcradio.org and click on the schedule tab at the top of the page and look for an available time slot. If you still cannot find a time slot, send an email to vetesting@yahoo.com and inform us of dates that you are available to take an exam and if you prefer morning, afternoon, or evening."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "I need accommodations to take my exam, how can I arrange accommodations?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Online Exam: We can provide reading of questions to the visually impaired. Outside of that, you will have to contact the Exam Team to see if there is anything they can do. You will still have to meet ALL of the requirements and standards of the online exam as specified on this website. Online exams may not be for you if you require accommodations. You may need to seek and test at an in-person exam. In-Person Exam: Reasonable accommodations can usually be provided with restrictions based on the location of the exam and at the sole discretion of the exam team. All VEs are volunteers and are under no obligation or requirement to provide any exam that they are uncomfortable or unwilling to perform."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is there a time limit for the exam?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Online Exam: While there is no strict time limit, we do monitor duration for statistical purposes. Most well-prepared candidates complete the exam in about 10 minutes. If you miss more than 25% of the questions and it becomes clear through extended time that you are unprepared, we reserve the right to terminate the exam. In-Person Exam: Yes, most exam teams are at an exam session for up to one hour. Anything beyond that should be requested of the exam team in advance. Since the Exam Team members are volunteers, it may not be possible to have enough VEs available beyond the one-hour time frame. This will vary by exam session."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What are donations for?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The Donation Link is not a requirement or a request for registering for exam sessions. The link is on all pages of our website for those that want to contribute to the operation of our group. Donations are used to build equipment, teach radio classes, provide internet, subscriptions, power, training and other operations of the club. While we do use a lot of this money for infrastructure to conduct online exams, that is not all it is used for. Neither club is supported by funds from any school or group. The funding is completely provided by members’ donations and the donations of others in the ham community. Remember, there is no request to make a donation as a requirement to take an exam. Any donations are greatly appreciated and are totally independent of our testing activities which we provide as a way to help the amateur radio community."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "I have never used Zoom; do I have to download Zoom to my devices?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes! The Zoom app must be downloaded and run. You cannot run Zoom from a browser/website for the exam."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do I have to have an FRN?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Online Exam: Yes! The FRN is required for all exams. The FRN is a federal number that is issued by the FCC and requires you to verify your identity. You cannot use a Restricted Use FRN to take an exam. An FRN beginning with the digits 213 (and some others) is a Restricted Use FRN which cannot be used for an application in the Amateur Radio Service. A Restricted Use FRN can ONLY be used on an FCC Form 2100, Schedule 323-E (Ownership Report for Noncommercial Broadcast Stations). If an applicant attempts to use a Restricted Use FRN the session will be terminated and the exam will be canceled as a fail to provide a valid FRN. The applicant MUST obtain a normal FRN before they can schedule another exam and apply for an amateur radio license."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do I need my PIN for the exam?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No! We only want to see your driver’s license unless you are under 18. If you are under 18, please see the ID requirements under rules on the online exam page."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How many forms of ID do I need for the exam?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "We only want to see your driver’s license unless you are under 18. If you are under 18, please see the ID requirements under rules on the online exam page. If you do not have a US State Driver’s License, please see the identification requirements on the online testing tab."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I use a mouse or external keyboard?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No! You will not need them, and they are not allowed. To navigate the exam, you will use the keys A, B, C, and D on your keyboard to select the correct answer on the question. This will not only answer the question, it will automatically advance to the next question and light it up for you to answer. The question will be bottom justified to make sure you can see any schematics which would appear above the question. The small amount of adjustments is easily done using a trackpad. If you are using a PC, of course you can use the mouse for that portion of setting up your exam."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What happens if I miss my exam time slot?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Please respect the time of the volunteer examiners along with any candidates that are waiting to take their exam after you. If you need to reschedule, please email us as soon as possible so that someone else may be able to take that slot. If you fail to show or do not email at least 24 hours in advance, your session will be marked as a no-show."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I test my Zoom settings?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "You will need to download the Zoom application and set up your profile. Then test your video and audio using these procedures at this website: Testing Procedures After making sure your audio and video settings are correct and working, go to Zoom Test to test your equipment in Zoom using this link: Zoom Testing"
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "I passed my exam, do I get a temporary license?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No, you must wait until the paperwork is processed, pay your $35.00 FCC Application Fee, and then wait until they issue you a call sign. This can take anywhere from five days to five weeks depending on where you took your exam and any special circumstances related to your application."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "I passed my exam, is there anything else I have to do?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The FCC now collects $35 for new amateur radio licenses. The fee was mandated by Congress and went into effect April 19, 2022. After you pass your first exam, the Volunteer Examiner Coordinator will submit your information to the FCC for processing. Once the FCC processes your application, you will receive a bill via email to pay the $35 online. The $35 must be paid within 10 days or your application will be dismissed, so be sure to check your spam folder, too! Currently there is no charge for address changes or upgrades. ALL OTHER SUBMISSIONS REQUIRE A $35.00 FEE!"
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Will my exam and area be recorded?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "When joining your meeting you are asked to consent with recording laws. You understand and agree that you have covered or removed anything that you do not wish to be recorded during the exam or room scan. Please remove any sensitive material from your test area that you do not wish to be recorded. A 360-degree scan of your room is needed along with a view of your work surface/desktop where you are testing. You agree to the recording, storage and distribution of video, images, and audio from the meeting. We would love to celebrate your success on our Website and Social Media pages. If you would like to send an email, we will post your comments with your permission. You are invited to go to our Facebook page and post your comments as well. NOTE: We do NOT post any information about our applicants publicly without them giving their permission. We value your privacy."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What applications are allowed on my computer?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "To ensure exam integrity, all non-essential running applications must be closed. These include but are not limited to Mail, Messaging, Alerts, Teams, TeamViewer, Discord, Steam, VNC, Remote Desktops, VPNs, etc. The exam team will check your device for the presence of these running applications. You can eliminate most of this by looking at your task bar for any dots (Apple products) or lines (PC products) under any applications. That means they are running. You should also check the (^) in the task bar and quit, close, end, or exit everything that is not necessary to run your computer. Kindly follow their short instructional queries as they help you prepare your computer. Only a Browser with single tab open, Zoom and a Calculator may be active during the exam."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do I need to remove any wearable technology?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Wearable technology such as Headsets / Earbuds / Headphones / Smart Watches / Smart Eyewear must be removed during the actual exam. Keep them on during setup, the exam team will tell you when to remove them. Put them back on when you select, “Grade Exam.” You also cannot wear any hats, wristbands or other articles of clothing that may obscure your face or any exam assisting devices such as bandanas, scarves, etc."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "I have a multi-screen set up for my computer, can I use this set up?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "You can only have one monitor operational in the room. If you are using a laptop, it cannot be docked to any other device. Please remove, turn around, or cover additional screens or monitors in the area. A simple shirt, blanket or towel works great for covering screens. During your exam, please concentrate on your exam, trying not to allow your vision or gaze to drift away from your own testing screen. A very handy place to test uninterrupted is in your bathroom! A smaller area, with minimal electronic distractions and the door can be locked, works nicely for your exam environment."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "I am 17 or under. Is there any program to help me pay for my amateur radio license?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "We are an officially recognized Testing Team for the ARRL VEC. If you test with us, you may be eligible for the ARRL Youth Licensing Grant Program. In effect since April 19, 2022, this program covers the one-time $35 application fee for new amateur radio license candidates younger than 18 years old who take tests administered under the ARRL Volunteer Examiner Coordinator (VEC) program. This program is funded by a special initiative that may be restricted or discontinued at any time. However, until any changes take effect, eligible youth who meet the requirements will receive reimbursement. You are not eligible if you did not test with the ARRL VEC or if you are over 17 years of age. After your exam, you will receive an email with a link to claim the reimbursement. Additionally, if you wish to test under special youth programs, discounts, or designated youth testing sessions, you must email youthprogram@parcradio.org at least seven days in advance to inquire and prequalify. This does not apply to the $35 ARRL reimbursement program mentioned above. ARRL Youth Licensing Grant Program Information"
-      }
-    }
-  ]
-}</script>
-
 </main>
 
 <footer class="site-footer">
-  <aside class="study-band" aria-label="Study partner">
+  <aside class="study-band" aria-label="Ham Radio Prep offer">
+    <img class="study-band__logo" src="../images/hamradioprep-logo-white.png" alt="" width="1080" height="209">
     <p><strong>Studying for your exam?</strong> Ham Radio Prep courses are
       <strong>20% off</strong> with code <span class="coupon">PARC</span> &mdash; <a href="https://study.hamradioprep.com/enroll/1972787?price_id=2681038&amp;coupon=parc" target="_blank" rel="noopener">Technician</a>, <a href="https://study.hamradioprep.com/enroll/2432887?price_id=3224428&amp;coupon=parc" target="_blank" rel="noopener">General</a>, <a href="https://study.hamradioprep.com/enroll/2935944?price_id=3784628&amp;coupon=parc" target="_blank" rel="noopener">Amateur Extra</a>, <a href="https://study.hamradioprep.com/enroll/405063?price_id=422572&amp;coupon=parc" target="_blank" rel="noopener">Tech + General</a>, <a href="https://study.hamradioprep.com/enroll/1701522?price_id=3096155&amp;coupon=parc" target="_blank" rel="noopener">All Access</a>.</p>
   </aside>

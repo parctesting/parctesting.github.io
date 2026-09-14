@@ -21,7 +21,8 @@
 <meta name="color-scheme" content="light">
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="stylesheet" href="../css/site.css">
-<link rel="preload" as="image" href="../images/banner-1600.jpg" fetchpriority="high">
+<link rel="preload" as="image" media="(min-width: 701px)" href="../images/banner-1600.jpg" imagesrcset="../images/banner-1600.jpg 1600w, ../images/banner-2400.jpg 2400w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" as="image" media="(max-width: 700px)" href="../images/banner-900.jpg" imagesrcset="../images/banner-900.jpg 900w, ../images/banner-1200.jpg 1200w" imagesizes="100vw" fetchpriority="high">
 
 <!-- Cloudflare Web Analytics -->
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86375f5cd0ea45a9a9083404b92011b6"}'></script>
@@ -34,9 +35,11 @@
 <header class="site-header">
   <a class="site-banner" href="../index.html" aria-label="PARC Radio &amp; Technology home">
     <picture>
-      <source media="(max-width: 700px)" srcset="../images/banner-900.jpg">
-      <img src="../images/banner-1600.jpg" width="1600" height="192" fetchpriority="high"
-           alt="PARC Radio &amp; Technology">
+      <source media="(max-width: 700px)" sizes="100vw"
+              srcset="../images/banner-900.jpg 900w, ../images/banner-1200.jpg 1200w">
+      <img src="../images/banner-1600.jpg" sizes="100vw"
+           srcset="../images/banner-1600.jpg 1600w, ../images/banner-2400.jpg 2400w"
+           width="1600" height="192" fetchpriority="high" alt="PARC Radio &amp; Technology">
     </picture>
   </a>
 
@@ -111,7 +114,9 @@
       <center><h7>Where and How to Study</h7></center>
 
 <aside class="partner-card" aria-labelledby="hrp-study">
-  <p class="partner-card__eyebrow">PARC study partner</p>
+  <div class="partner-card__brand">
+    <img src="../images/hamradioprep-logo-white.png" alt="" width="1080" height="209">
+  </div>
   <h2 class="partner-card__title" id="hrp-study">Study with Ham Radio Prep</h2>
   <p>Ham Radio Prep makes it fast and easy to pass your ham radio license exam, with an interactive
     online class of videos, text lessons, quizzes, and games. They’ve had over 60,000 successful
@@ -132,7 +137,7 @@
  
 
 <ul>
-<li>Practice for your exam: It is your responsibility to be fully prepared since you will be taking the time of volunteers and a time slot from a long list of candidates. Be sure you are consistently scoring above an 88% on 15 or more practice tests before you schedule an exam.</li> <li><a href="https://arrlexamreview.appspot.com">ARRL Exam Review for Ham Radio™</a>, a free site from the national group that you may want to join and use for referencing a wealth of information.</li> <li>For Practice go here, a free site with lots of tips. It has an inexpensive companion you can use on the go.
+<li>Practice for your exam: It is your responsibility to be fully prepared since you will be taking the time of volunteers and a time slot from a long list of candidates. Be sure you are consistently scoring above an 85% on 15 or more practice tests before you schedule an exam.</li> <li><a href="https://arrlexamreview.appspot.com">ARRL Exam Review for Ham Radio™</a>, a free site from the national group that you may want to join and use for referencing a wealth of information.</li> <li>For Practice go here, a free site with lots of tips. It has an inexpensive companion you can use on the go.
 <a href="https://hamstudy.org">https://HamStudy.org</a>
 
 <li>For classes:</li>
@@ -143,8 +148,7 @@
 	
 		  
 <nav class="page-links page-links--pager">
-  <a class="page-link page-link--back" href="Online_InstructionSeparation.html">Back</a>
-  <a class="page-link" href="Online_HowtoScheduleandRegister.html">How to Schedule and Register</a>
+  <a class="page-link page-link--back" href="Online_GeneralInfo.html">Back</a>
   <a class="page-link page-link--next" href="Online_HowtoScheduleandRegister.html">Next</a>
 </nav>
  </section>
@@ -153,10 +157,6 @@
 </main>
 
 <footer class="site-footer">
-  <aside class="study-band" aria-label="Study partner">
-    <p><strong>Studying for your exam?</strong> Ham Radio Prep courses are
-      <strong>20% off</strong> with code <span class="coupon">PARC</span> &mdash; <a href="https://study.hamradioprep.com/enroll/1972787?price_id=2681038&amp;coupon=parc" target="_blank" rel="noopener">Technician</a>, <a href="https://study.hamradioprep.com/enroll/2432887?price_id=3224428&amp;coupon=parc" target="_blank" rel="noopener">General</a>, <a href="https://study.hamradioprep.com/enroll/2935944?price_id=3784628&amp;coupon=parc" target="_blank" rel="noopener">Amateur Extra</a>, <a href="https://study.hamradioprep.com/enroll/405063?price_id=422572&amp;coupon=parc" target="_blank" rel="noopener">Tech + General</a>, <a href="https://study.hamradioprep.com/enroll/1701522?price_id=3096155&amp;coupon=parc" target="_blank" rel="noopener">All Access</a>.</p>
-  </aside>
   <div class="site-footer__inner">
     <div>
       <h2>Contact Us</h2>

@@ -21,7 +21,8 @@
 <meta name="color-scheme" content="light">
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="stylesheet" href="../css/site.css">
-<link rel="preload" as="image" href="../images/banner-1600.jpg" fetchpriority="high">
+<link rel="preload" as="image" media="(min-width: 701px)" href="../images/banner-1600.jpg" imagesrcset="../images/banner-1600.jpg 1600w, ../images/banner-2400.jpg 2400w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" as="image" media="(max-width: 700px)" href="../images/banner-900.jpg" imagesrcset="../images/banner-900.jpg 900w, ../images/banner-1200.jpg 1200w" imagesizes="100vw" fetchpriority="high">
 
 <!-- Cloudflare Web Analytics -->
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86375f5cd0ea45a9a9083404b92011b6"}'></script>
@@ -34,9 +35,11 @@
 <header class="site-header">
   <a class="site-banner" href="../index.html" aria-label="PARC Radio &amp; Technology home">
     <picture>
-      <source media="(max-width: 700px)" srcset="../images/banner-900.jpg">
-      <img src="../images/banner-1600.jpg" width="1600" height="192" fetchpriority="high"
-           alt="PARC Radio &amp; Technology">
+      <source media="(max-width: 700px)" sizes="100vw"
+              srcset="../images/banner-900.jpg 900w, ../images/banner-1200.jpg 1200w">
+      <img src="../images/banner-1600.jpg" sizes="100vw"
+           srcset="../images/banner-1600.jpg 1600w, ../images/banner-2400.jpg 2400w"
+           width="1600" height="192" fetchpriority="high" alt="PARC Radio &amp; Technology">
     </picture>
   </a>
 
@@ -107,28 +110,41 @@
     <h2 class="noDisplay">Main Content</h2>
  
 
-   <h1>What’s Next – Welcome to Amateur Radio!</h1> <p2><center>Clear instructions and useful links to guide you after passing your exam</center></p2> <ul>
+   <h1>What’s Next – Welcome to Amateur Radio!</h1> <p2><center>Clear instructions and useful links to guide you after passing your exam</center></p2>
 <nav class="page-links">
     <a class="page-link" href="#new">New Licensee</a>
     <a class="page-link" href="#upgrade">Upgrades</a>
     <a class="page-link" href="#restore">Restore Your Computer</a>
   </nav>
 
+<p>Passed with us? Congratulations. <a href="reviews.html">Leave a review</a> so the next candidate knows what to expect.</p>
 
-<strong>Disclaimer: </strong> We are not required to provide the following information and links. We do this to help and assist 
-you as we welcome you into the great hobby of Amateur Radio.
 
-<h6><center>WARNING: Do not make any changes to your records! Do not modify or edit for at least 30 days AFTER you received your call sign or upgrade. ** Do NOT apply for a vanity call sign! **</center></h6> <a id="new"></a>
-<h2>New Licensee</h2> <li><strong>Pay your $35 license fee as soon as the system allows it.</strong> Submit your payment promptly to secure your place in the queue.</li> 
-<li><strong>Watch your email closely.</strong> The FCC will send an email to the address listed on your Form 605 once their system begins processing. This email contains the payment instructions. Check your spam and junk folders regularly. Missing this email or failing to pay in time will result in your application being dismissed, and you will have to begin the process again.</li> 
-<li><strong>Felony documentation.</strong> If you have a felony conviction, submit the required documentation to the FCC. This process is strictly between you and the FCC &mdash; we cannot assist or intervene.</li> 
-<li><strong>Do not contact the FCC, ARRL, or us about your paperwork.</strong> The FCC’s public call center is operated by a contractor and may not have accurate information, so please be patient. If you have not received an email within ten days, email us to check on your application for you. </li>
+<p><strong>Disclaimer:</strong> We are not required to provide the following information and links. We do this to help and assist
+you as we welcome you into the great hobby of Amateur Radio.</p>
+
+<p class="booking-alert"><strong>WARNING: Do not make any changes to your records! Do not modify or edit for at least 30 days AFTER you received your call sign or upgrade. Do NOT apply for a vanity call sign!</strong></p> <a id="new"></a>
+<h2>New Licensee</h2>
+<ol>
+<li><strong>Pay your $35 license fee as soon as the system allows it.</strong> Submit your payment promptly to secure your place in the queue.</li>
 <li><strong>How to Pay Your FCC License Application Fee of 35 Dollars</strong> 
 Log in and pay as soon as the application is in the FCC system. CORES payment <a href="https://www.fcc.gov/payment-process-uls-individual-filers" target="new">instructions</a>.</li>
-<li><strong>Check CORES directly, not just your email.</strong> Starting two business days after your examination, check your <a href="https://apps.fcc.gov/CORES/userLogin.do" target="new">FCC CORES</a> account for your application and the payment option. FCC mail does not reliably reach Gmail, so check Inbox, Spam and Junk — but check CORES itself as well.</li></ol>
+<li><strong>Check CORES directly, not just your email.</strong> Starting two business days after your examination, check your <a href="https://apps.fcc.gov/CORES/userLogin.do" target="new">FCC CORES</a> account for your application and the payment option. FCC mail does not reliably reach Gmail, so check Inbox, Spam and Junk — but check CORES itself as well.</li>
+</ol>
 
-</ul>
-	  
+<a id="upgrade"></a>
+<h2>Upgrades</h2>
+<ol>
+<li><strong>There is no fee to upgrade currently.</strong> Only new licenses, renewals, and call sign changes require a fee.</li>
+</ol>
+
+<h2>New licenses and upgrades</h2>
+<ol>
+<li><strong>Watch your email closely.</strong> The FCC will send an email to the address listed on your Form 605 once their system begins processing. This email contains the payment instructions. Check your spam and junk folders regularly. Missing this email or failing to pay in time will result in your application being dismissed, and you will have to begin the process again.</li>
+<li><strong>Felony documentation.</strong> If you have a felony conviction, submit the required documentation to the FCC. This process is strictly between you and the FCC &mdash; we cannot assist or intervene.</li>
+<li><strong>Do not contact the FCC, ARRL, or us about your paperwork.</strong> The FCC’s public call center is operated by a contractor and may not have accurate information, so please be patient. If you have not received an email within ten days, email us to check on your application for you. </li>
+</ol>
+
 <h2>When to Expect Progress </h2>
 <ul><li>New licenses are issued in order of payment date.</li>
 <li>Upgrades and new licenses will process as soon as payment 
@@ -146,10 +162,10 @@ days, contact the FCC at their toll-free number (888) 225-5322. </li>
 FCC unnecessarily. It can take up to ten days. </li> 
 <li>Remember that backlogs are normal after system outages and shutdowns. Patience is key.</li></ul>
 
-<h2>Congratulations</h2><ol>
-You are now a licensed Amateur Radio Operator!
-
-The most important thing you can do now is to keep learning and stay active in the community. <ul>Here are some suggestions to help you get started:
+<h2>Congratulations</h2>
+<p>You are now a licensed Amateur Radio Operator!</p>
+<p>The most important thing you can do now is to keep learning and stay active in the community. Here are some suggestions to help you get started:</p>
+<ul>
 <li>Join a local amateur radio club and meet other hams. </li>
 <li>Attend hamfests and local events.</li> 
 <li>Consider joining the ARRL for resources and advocacy.</li> 
@@ -190,7 +206,7 @@ On Android
 <ul><li>Open Google Play Store -> Search for Telegram Messenger -> Install the app</li></ul> 
 On Computer 
 <ul><li>Go to telegram.org -> Download the Desktop version -> Install and open the application</li> </ul>
-<strong>Step 2: Create Your Account</strong> <ul><li>Open Telegram -> Select Start Messaging -> Enter your mobile phone number -> Enter the verification code sent to you by text</ul></li> 
+<strong>Step 2: Create Your Account</strong> <ul><li>Open Telegram -> Select Start Messaging -> Enter your mobile phone number -> Enter the verification code sent to you by text</li></ul> 
 <strong>Step 3: Set Your Name Properly</strong> When prompted for your name, enter:</p>
 <ul class="field-list">
   <li><strong>First name:</strong> the name you go by, followed by your call sign &mdash; for example, <span class="field-eg">Gary K4XYZ</span></li>
@@ -198,13 +214,13 @@ On Computer
 </ul>
 <p>
 
-This is important so members can immediately identify you. If you need to edit it later: <ul><li>Go to Settings -> Tap your name -> Edit and save </ul></li>
+This is important so members can immediately identify you. If you need to edit it later: <ul><li>Go to Settings -> Tap your name -> Edit and save </li></ul>
 <strong>Step 4: Set Your Username Properly </strong> Your username should follow this format: @Firstname_Callsign  Example: @Gary_K4XYZ To set your username:
-<ul><li>Go to Settings -> Tap Username -> Enter your username in the required format -> Save</ul></li> 
+<ul><li>Go to Settings -> Tap Username -> Enter your username in the required format -> Save</li></ul> 
 This allows others to find you without using your phone number.
 
 <strong>Step 5: Set Profile Photo Visibility</strong>
-<ul><li>Go to Settings -> Tap Privacy and Security -> Tap Profile Photos -> Set to Everybody</ul></li> 
+<ul><li>Go to Settings -> Tap Privacy and Security -> Tap Profile Photos -> Set to Everybody</li></ul> 
 <strong>Step 6: Adjust Phone Number Privacy (Recommended)</strong> For privacy: <ul><li>Go to Settings -> Tap Privacy and Security -> Tap Phone Number</li> 
 <li>Set “Who can see my phone number” to Nobody </li>
 <li>Set “Who can find me by my number” to My Contacts</li> </ul>
@@ -216,12 +232,18 @@ This allows others to find you without using your phone number.
 <li>You have successfully joined the group</li> </ul> If anyone has difficulty, they should reach out to a volunteer for assistance. 
 We also have a Facebook group that you are encouraged to join. <a href="https://www.facebook.com/groups/833919518104689">https://www.Facebook.com/groups/833919518104689</a>
 
-<p>Other Helpful Links:</p>
-
 <p>If you have been thinking about upgrading your license, now is a great time to do it. Advancing to the next level expands your operating privileges, gives you more frequency access, and allows you to get even more out of the hobby.</p>
 
+<div class="callout callout--next">
+  <h2>Ready for the next element?</h2>
+  <p>Book it on the schedule the same way as your first exam.</p>
+  <p class="callout__actions"><a class="btn" href="calendar.html">Book your next exam</a></p>
+</div>
+
 <aside class="partner-card" aria-labelledby="hrp-new">
-  <p class="partner-card__eyebrow">PARC study partner</p>
+  <div class="partner-card__brand">
+    <img src="../images/hamradioprep-logo-white.png" alt="" width="1080" height="209">
+  </div>
   <h2 class="partner-card__title" id="hrp-new">Ready for your next license? Study with Ham Radio Prep</h2>
   <p>Ham Radio Prep makes it fast and easy to pass your ham radio license exam, with an interactive
     online class of videos, text lessons, quizzes, and games. They’ve had over 60,000 successful
@@ -243,147 +265,31 @@ We also have a Facebook group that you are encouraged to join. <a href="https://
 <p>Click around on our website and find other useful information. 
 Please do come back and join us and tell all your friends about us. We only exist because of you! We look forward to seeing you earn that next license or hearing you on the air soon.</p>
 
-</ul></ul></ol>
-<a id="upgrade"></a>
-<ol>
-<h2>Upgrades</h2> <li><strong>There is no fee to upgrade currently. Only new licenses, renewals, and call sign changes require a fee. </strong></li> 
-<li><strong>Watch your email closely.</strong> The FCC will send an email to the address listed on your Form 605 once their system begins processing. This email contains the payment instructions. Check your spam and junk folders regularly. Missing this email or failing to pay in time will result in your application being dismissed, and you will have to begin the process again.</li> 
-<li><strong>Felony documentation.</strong> If you have a felony conviction, submit the required documentation to the FCC. This process is strictly between you and the FCC &mdash; we cannot assist or intervene.</li> 
-<li><strong>Do not contact the FCC, ARRL, or us about your paperwork.</strong> The FCC’s public call center is operated by a contractor and may not have accurate information, so please be patient. If you have not received an email within ten days, email us to check on your application for you. </li></ol></ul>
-	  
-<h2>When to Expect Progress </h2>
-<ul>
-<li>Upgrades and new licenses will process as soon as payment 
-and/or verification steps are complete.</li> 
-<li>You may see your call sign appear in the FCC ULS database 
-within days, or it may take several weeks, depending on the 
-backlog.</li>
-<li>If you have already paid and do not see your license after ten 
-days, contact the FCC at their toll-free number (888) 225-5322. </li>
-</ul>
-
-<h2>Helpful Tips </h2>
-<ul>
-<li>Keep monitoring email and FCC notices, but do not worry about contacting us or the 
-FCC unnecessarily. It can take up to ten days. </li> 
-<li>Remember that backlogs are normal after system outages and shutdowns. Patience is key.</li></ul>
-
-<h2>Congratulations</h2><ol>
-You are now a licensed Amateur Radio Operator!
-
-The most important thing you can do now is to keep learning and stay active in the community. <ul>Here are some suggestions to help you get started:
-<li>Join a local amateur radio club and meet other hams. </li>
-<li>Attend hamfests and local events.</li> 
-<li>Consider joining the ARRL for resources and advocacy.</li> 
-<li>Avoid buying low-cost handheld radios such as Baofeng or Wouxun, which can be 
-difficult to program and have limited range. </li>
-<li>Before buying any equipment, learn what others in your area use so you can make 
-informed choices that will serve you for years.</li>
-<li>** JOIN PARC ** PARC Radio & Technology hosts a monthly 
-meeting on Zoom with Amateur Radio News and Helpful Tips 
-as well as a special presentation on an interesting topic. Join 
-US in addition to your local club. We would love to have you 
-with us. </li></ul>
-
-<h2>Helpful Resources</h2> 
-<strong>Find an ARRL Affiliated Club:</strong> <a href="https://www.arrl.org/find-a-club">https://www.arrl.org/find-a-club</a> <strong>Equipment Reviews and Information:</strong> <a href="https://www.eham.net/reviews/">https://www.eham.net/reviews/</a> <strong>Join PARC Radio & Technology’s Online Worldwide Club:</strong> <a href="https://parcradio.org">https://parcradio.org</a> We use Telegram to communicate regularly and make club & contest announcements.
-
-<p><strong>If you already have Telegram, joining the group is simple.</strong> Open Telegram and paste this link into your browser or directly into Telegram: <a href="https://t.me/+d32UCpaXRLhiNjJh">https://t.me/+d32UCpaXRLhiNjJh</a> Tap Join.</p>
-
-<p>Before participating, make sure your profile is set correctly. Your display name should be the name you go by followed by your call sign, for example: Gary K4XYZ.</p>
-
-<p>Set your username in this format: @callsignfirstname (example: @K4XYZGary). 
-Go to Settings, then Privacy and Security, then Profile Photos, and set it to Everybody. Once that is done, you are all set.</p>
-
-<p><strong>If you do not have Telegram: Telegram Setup and Group Join Instructions</strong></p>
-
-<strong>Step 1: Download Telegram </strong> On iPhone
-<ul><li>Open the App Store -> Search for Telegram Messenger -> Install the app</li> </ul>
-On Android
-<ul><li>Open Google Play Store -> Search for Telegram Messenger -> Install the app</li></ul> 
-On Computer 
-<ul><li>Go to telegram.org -> Download the Desktop version -> Install and open the application</li> </ul>
-<strong>Step 2: Create Your Account</strong> <ul><li>Open Telegram -> Select Start Messaging -> Enter your mobile phone number -> Enter the verification code sent to you by text</ul></li> 
-<strong>Step 3: Set Your Name Properly</strong> When prompted for your name, enter:</p>
-<ul class="field-list">
-  <li><strong>First name:</strong> the name you go by, followed by your call sign &mdash; for example, <span class="field-eg">Gary K4XYZ</span></li>
-  <li><strong>Last name:</strong> optional, can be left blank</li>
-</ul>
-<p>
-
-This is important so members can immediately identify you. If you need to edit it later: <ul><li>Go to Settings -> Tap your name -> Edit and save </ul></li>
-<strong>Step 4: Set Your Username Properly </strong> Your username should follow this format: @Firstname_Callsign  Example: @Gary_K4XYZ To set your username:
-<ul><li>Go to Settings -> Tap Username -> Enter your username in the required format -> Save</ul></li> 
-This allows others to find you without using your phone number.
-
-<strong>Step 5: Set Profile Photo Visibility</strong>
-<ul><li>Go to Settings -> Tap Privacy and Security -> Tap Profile Photos -> Set to Everybody</ul></li> 
-<strong>Step 6: Adjust Phone Number Privacy (Recommended)</strong> For privacy: <ul><li>Go to Settings -> Tap Privacy and Security -> Tap Phone Number</li> 
-<li>Set “Who can see my phone number” to Nobody </li>
-<li>Set “Who can find me by my number” to My Contacts</li> </ul>
-<strong>Step 7: Join the Group</strong> Click or paste this link into your browser: <a href="https://t.me/+d32UCpaXRLhiNjJh">https://t.me/+d32UCpaXRLhiNjJh</a> Then tap or click Join. If you are already logged into Telegram, it will open automatically.
-
-<strong>Final Checklist </strong> Before you consider setup complete, verify: <ul><li>Your display name is First Name + Callsign</li> 
-<li>Your username is @callsignfirstname</li> 
-<li>Profile photo visibility is set to Everybody</li> 
-<li>You have successfully joined the group</li> </ul> If anyone has difficulty, they should reach out to a volunteer for assistance. 
-We also have a Facebook group that you are encouraged to join. <a href="https://www.facebook.com/groups/833919518104689">https://www.Facebook.com/groups/833919518104689</a>
-
-<p>Other Helpful Links:</p>
-
-<p>If you have been thinking about upgrading your license, now is a great time to do it. Advancing to the next level expands your operating privileges, gives you more frequency access, and allows you to get even more out of the hobby.</p>
-
-<aside class="partner-card" aria-labelledby="hrp-upgrade">
-  <p class="partner-card__eyebrow">PARC study partner</p>
-  <h2 class="partner-card__title" id="hrp-upgrade">Upgrading? Study with Ham Radio Prep</h2>
-  <p>Ham Radio Prep makes it fast and easy to pass your ham radio license exam, with an interactive
-    online class of videos, text lessons, quizzes, and games. They’ve had over 60,000 successful
-    students and offer the industry’s best 100% money-back guarantee if you don’t pass your exam
-    on the first try.</p>
-  <p>Use coupon code <span class="coupon">PARC</span> to take an additional <strong>20% off</strong>
-    your purchase. These links apply it for you:</p>
-  <ul class="partner-card__courses">
-    <li><a class="btn" href="https://study.hamradioprep.com/enroll/1972787?price_id=2681038&amp;coupon=parc" target="_blank" rel="noopener">Technician Course</a></li>
-    <li><a class="btn" href="https://study.hamradioprep.com/enroll/2432887?price_id=3224428&amp;coupon=parc" target="_blank" rel="noopener">General Course</a></li>
-    <li><a class="btn" href="https://study.hamradioprep.com/enroll/2935944?price_id=3784628&amp;coupon=parc" target="_blank" rel="noopener">Amateur Extra Course</a></li>
-    <li><a class="btn" href="https://study.hamradioprep.com/enroll/405063?price_id=422572&amp;coupon=parc" target="_blank" rel="noopener">Tech + General Bundle</a></li>
-    <li><a class="btn btn--primary" href="https://study.hamradioprep.com/enroll/1701522?price_id=3096155&amp;coupon=parc" target="_blank" rel="noopener">All Access License Pass</a></li>
-  </ul>
-  <p class="partner-card__more">Or sign up at <a href="https://hamradioprep.com/" target="_blank" rel="noopener">HamRadioPrep.com</a>
-    and enter code PARC at checkout.</p>
-</aside>
-
-<p>Click around on our website and find other useful information.</p>
-
-<p>Please do come back and join us and tell all your friends about us. We only exist because of you! We look forward to seeing you earn that next license or hearing you on the air soon.</p>
-
-</ul></ul></ol>
-
 <a id="restore"></a>
 <h2>After Your Examination — Restore Your Computer</h2>
 
 <p>To take the exam, you changed some settings and closed programs you would normally keep
 running. Put your computer back the way you had it before you return to using it.
-<strong>Start by shutting the computer completely off and turning it back on.</strong></p>
+<strong>Start by shutting the computer completely off and turning it back on.</strong> That reloads
+your normal startup programs: the system tray on Windows, Finder and the menu bar on a Mac.</p>
+
+<h3>On any computer</h3>
+<ul>
+  <li><strong>Browser:</strong> close the guest or private examination browser.</li>
+  <li><strong>Bluetooth:</strong> turn it back on if you normally use it.</li>
+  <li><strong>Do Not Disturb or Focus:</strong> turn it back off.</li>
+</ul>
 
 <h3>Windows</h3>
 <ul>
   <li><strong>Desktop icons:</strong> right-click the desktop → <strong>View</strong> → <strong>Show desktop icons</strong>.</li>
-  <li><strong>Do Not Disturb:</strong> turn <strong>Do Not Disturb</strong> or <strong>Focus</strong> back off.</li>
-  <li><strong>Bluetooth:</strong> turn it back on if you normally use it.</li>
-  <li><strong>Browser:</strong> close the guest or private examination browser.</li>
-  <li><strong>Restart:</strong> restart the computer to reload your normal startup and system-tray programs.</li>
 </ul>
 
 <h3>Mac</h3>
 <ul>
   <li><strong>Desktop icons:</strong> restore your normal desktop icon display.</li>
   <li><strong>Stacks:</strong> click the desktop → <strong>View</strong> → uncheck <strong>Use Stacks</strong> if you normally keep individual icons.</li>
-  <li><strong>Focus:</strong> turn <strong>Focus</strong> or <strong>Do Not Disturb</strong> back off.</li>
-  <li><strong>Bluetooth:</strong> turn it back on if you normally use it.</li>
-  <li><strong>Browser:</strong> close the guest or private examination browser.</li>
   <li><strong>Applications:</strong> reopen anything that was force-quit during the exam.</li>
-  <li><strong>Restart:</strong> restart your Mac to reload Finder, menu-bar items, and normal background programs.</li>
 </ul>
 
 </div>
@@ -393,10 +299,6 @@ running. Put your computer back the way you had it before you return to using it
 </main>
 
 <footer class="site-footer">
-  <aside class="study-band" aria-label="Study partner">
-    <p><strong>Studying for your exam?</strong> Ham Radio Prep courses are
-      <strong>20% off</strong> with code <span class="coupon">PARC</span> &mdash; <a href="https://study.hamradioprep.com/enroll/1972787?price_id=2681038&amp;coupon=parc" target="_blank" rel="noopener">Technician</a>, <a href="https://study.hamradioprep.com/enroll/2432887?price_id=3224428&amp;coupon=parc" target="_blank" rel="noopener">General</a>, <a href="https://study.hamradioprep.com/enroll/2935944?price_id=3784628&amp;coupon=parc" target="_blank" rel="noopener">Amateur Extra</a>, <a href="https://study.hamradioprep.com/enroll/405063?price_id=422572&amp;coupon=parc" target="_blank" rel="noopener">Tech + General</a>, <a href="https://study.hamradioprep.com/enroll/1701522?price_id=3096155&amp;coupon=parc" target="_blank" rel="noopener">All Access</a>.</p>
-  </aside>
   <div class="site-footer__inner">
     <div>
       <h2>Contact Us</h2>
