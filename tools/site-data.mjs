@@ -362,7 +362,7 @@ export const PAGES = {
  *  locked shell shows a generic title so the URL alone doesn't reveal which
  *  script sits behind it. */
 export const VE_TITLES = {
-  'team-submit.html': 'Add Yourself to the Team Page',
+  'team-submit.html': 'Add or Update Your Team Profile',
   'script.html': 'Single Room Script',
   'script2.html': 'Single Room Script (Shutdown)',
   'scriptnospace.html': 'Single Room Script — No Space',

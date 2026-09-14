@@ -351,8 +351,9 @@
     codeBox.innerHTML = '<p class="team-code-box__title">Your edit code</p>'
       + '<p class="team-code-box__code"><code></code>'
       + '<button type="button" class="btn">Copy</button></p>'
-      + '<p class="team-code-box__note">Keep it somewhere safe. It is how you change your '
-      + 'profile later: choose Update my profile and enter it. This browser remembers it too.</p>';
+      // What the code is for is said once, in the page's introduction.
+      + '<p class="team-code-box__note">This browser remembers it, but keep a copy somewhere '
+      + 'safe in case you use another device.</p>';
     result.parentNode.insertBefore(codeBox, result.nextSibling);
     codeValue = codeBox.querySelector('code');
     copyBtn = codeBox.querySelector('button');
@@ -395,8 +396,7 @@
       + '<input class="review-input review-input--code" id="team-edit-code" type="text" maxlength="24"'
       + ' autocomplete="off" autocapitalize="characters" spellcheck="false"'
       + ' placeholder="XXXX-XXXX-XXXX" aria-describedby="team-edit-code-hint">'
-      + '<p class="review-hint" id="team-edit-code-hint">The code you were given with your profile. '
-      + 'No code, or lost it? Ask and a new one can be sent to you.</p>'
+      + '<p class="review-hint" id="team-edit-code-hint">No code, or lost it? Ask and a new one can be sent to you.</p>'
       + '<p class="review-hint team-code-remembered" hidden>This browser remembered your code. '
       + '<button type="button" class="team-link-btn">Forget it</button></p>';
     form.insertBefore(entry, fields);
