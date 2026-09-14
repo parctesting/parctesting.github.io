@@ -21,7 +21,8 @@
 <meta name="color-scheme" content="light">
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="stylesheet" href="../css/site.css">
-<link rel="preload" as="image" href="../images/banner-1600.jpg" fetchpriority="high">
+<link rel="preload" as="image" media="(min-width: 701px)" href="../images/banner-1600.jpg" imagesrcset="../images/banner-1600.jpg 1600w, ../images/banner-2400.jpg 2400w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" as="image" media="(max-width: 700px)" href="../images/banner-900.jpg" imagesrcset="../images/banner-900.jpg 900w, ../images/banner-1200.jpg 1200w" imagesizes="100vw" fetchpriority="high">
 
 <!-- Cloudflare Web Analytics -->
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86375f5cd0ea45a9a9083404b92011b6"}'></script>
@@ -34,9 +35,11 @@
 <header class="site-header">
   <a class="site-banner" href="../index.html" aria-label="PARC Radio &amp; Technology home">
     <picture>
-      <source media="(max-width: 700px)" srcset="../images/banner-900.jpg">
-      <img src="../images/banner-1600.jpg" width="1600" height="192" fetchpriority="high"
-           alt="PARC Radio &amp; Technology">
+      <source media="(max-width: 700px)" sizes="100vw"
+              srcset="../images/banner-900.jpg 900w, ../images/banner-1200.jpg 1200w">
+      <img src="../images/banner-1600.jpg" sizes="100vw"
+           srcset="../images/banner-1600.jpg 1600w, ../images/banner-2400.jpg 2400w"
+           width="1600" height="192" fetchpriority="high" alt="PARC Radio &amp; Technology">
     </picture>
   </a>
 
@@ -127,7 +130,7 @@ No matter what you see on the phone screen, please do not touch it; we will brin
 <li>You must have an Internet-connected cell phone with <strong>built-in camera</strong>.</li> <li>Be sure the cell phone is <strong>fully charged</strong> or plugged in.</li> <li><p2>Learn how to <strong>reverse the video</strong> from “selfie” mode to rear camera view and how to hold the camera in horizontal orientation.</p2>
 </li></ul>
 
-<center><img src="../images/mount.jpg" width="310" height="202" alt="A phone held upright in a clip-style stand on a desk, positioned to view the candidate and their workspace during the exam."/><img src="../images/SS2.jpg" width="350" height="200" alt="Second-device camera view of a candidate at their desk, showing the keyboard, monitor, and the candidate’s hands from a front and side angle."/><img src="../images/rotation.png" width="310" height="200" alt="Two phones side by side: one turned on its side labeled Horizontal, one upright labeled Vertical. The exam requires the horizontal orientation."/></center> <center>
+<center><img src="../images/mount.jpg" width="310" height="202" alt="A phone held upright in a clip-style stand on a desk, positioned to view the candidate and their workspace during the exam."/><img src="../images/SS2.jpg" width="350" height="220" alt="Second-device camera view of a candidate at their desk, showing the keyboard, monitor, and the candidate’s hands from a front and side angle."/><img src="../images/rotation.png" width="310" height="200" alt="Two phones side by side: one turned on its side labeled Horizontal, one upright labeled Vertical. The exam requires the horizontal orientation."/></center> <center>
 </center>
 <ul>
 <li>You will use the camera to <strong>scan the room</strong>, the computer, and your hands for security compliance, then use the camera to observe you during the session.</li> <li><p2>Find a way to prop the phone up to see the computers keyboard and monitor from a front & side view for the duration of the exam.</p2>
@@ -137,8 +140,7 @@ No matter what you see on the phone screen, please do not touch it; we will brin
 	  
 		  <p>
 <nav class="page-links page-links--pager">
-  <a class="page-link page-link--back" href="Online_Preparation.html">Back</a>
-  <a class="page-link" href="Online_Rules_IQ.html">Rules</a>
+  <a class="page-link page-link--back" href="Online_Prep_Computer.html">Back</a>
   <a class="page-link page-link--next" href="Online_Rules_IQ.html">Next</a>
 </nav>
  </section> 
@@ -147,7 +149,8 @@ No matter what you see on the phone screen, please do not touch it; we will brin
 </main>
 
 <footer class="site-footer">
-  <aside class="study-band" aria-label="Study partner">
+  <aside class="study-band" aria-label="Ham Radio Prep offer">
+    <img class="study-band__logo" src="../images/hamradioprep-logo-white.png" alt="" width="1080" height="209">
     <p><strong>Studying for your exam?</strong> Ham Radio Prep courses are
       <strong>20% off</strong> with code <span class="coupon">PARC</span> &mdash; <a href="https://study.hamradioprep.com/enroll/1972787?price_id=2681038&amp;coupon=parc" target="_blank" rel="noopener">Technician</a>, <a href="https://study.hamradioprep.com/enroll/2432887?price_id=3224428&amp;coupon=parc" target="_blank" rel="noopener">General</a>, <a href="https://study.hamradioprep.com/enroll/2935944?price_id=3784628&amp;coupon=parc" target="_blank" rel="noopener">Amateur Extra</a>, <a href="https://study.hamradioprep.com/enroll/405063?price_id=422572&amp;coupon=parc" target="_blank" rel="noopener">Tech + General</a>, <a href="https://study.hamradioprep.com/enroll/1701522?price_id=3096155&amp;coupon=parc" target="_blank" rel="noopener">All Access</a>.</p>
   </aside>

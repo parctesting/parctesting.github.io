@@ -30,6 +30,7 @@
   var tsBox = document.getElementById('review-turnstile');
   var SITEKEY = (root.getAttribute('data-turnstile-sitekey') || '').trim();
   var tsWidget = null;
+  var tsFailed = false;
   var rating = 0;
 
   function esc(s) {
@@ -142,6 +143,7 @@
            rather than fail them at the moment they press submit. */
         'refresh-expired': 'auto',
         'error-callback': function () {
+          tsFailed = true;
           tsBox.innerHTML = '<p class="review-form-note">The human check could not run. '
             + 'If you use a content blocker, allow challenges.cloudflare.com and reload.</p>';
         },
@@ -157,10 +159,42 @@
        refuses tokenless submissions, so say why rather than leaving a dead
        form. */
     s.onerror = function () {
+      tsFailed = true;
       tsBox.innerHTML = '<p class="review-form-note">The human check could not load. '
         + 'If you use a content blocker, allow challenges.cloudflare.com and reload.</p>';
     };
     document.head.appendChild(s);
+  }
+
+  /* Start the human check only when someone begins a review: a click or tap in
+     the form, or tabbing into it. It used to start as the page loaded, and its
+     challenge was the heaviest work on the page, run for every visitor, most of
+     whom only read. Room for the widget is kept from the start, so Submit does
+     not jump down when it appears. */
+  function startTurnstileOnUse() {
+    if (!SITEKEY || !tsBox || !form) return;
+    tsBox.classList.add('is-reserved');
+    var events = ['focusin', 'pointerdown', 'keydown'];
+    function start() {
+      events.forEach(function (t) { form.removeEventListener(t, start); });
+      initTurnstile();
+    }
+    events.forEach(function (t) { form.addEventListener(t, start); });
+  }
+
+  /* Calls back once the human check has handed over a token. Because the check
+     now starts with the form, a quick review can reach Submit first; waiting
+     beats sending without a token and being refused. Gives up after 20 seconds,
+     or at once if the check could not load, and the Worker's answer is shown as
+     before. */
+  function whenTokenReady(then) {
+    if (!SITEKEY) { then(); return; }
+    var waited = 0;
+    (function poll() {
+      if (turnstileToken() || tsFailed || waited >= 20000) { then(); return; }
+      waited += 250;
+      setTimeout(poll, 250);
+    })();
   }
 
   function turnstileToken() {
@@ -189,50 +223,53 @@
 
       submit.disabled = true;
       var origLabel = submit.textContent;
-      submit.textContent = 'Sending…';
+      submit.textContent = turnstileToken() || !SITEKEY || tsFailed ? 'Sending…' : 'Checking…';
 
-      fetch(ENDPOINT + '/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          rating: rating,
-          name: document.getElementById('review-name').value,
-          text: textEl.value,
-          website: document.getElementById('review-website').value,
-          turnstile: turnstileToken(),
-        }),
-      })
-        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
-        .then(function (res) {
-          submit.disabled = false;
-          submit.textContent = origLabel;
-          if (!res.ok) {
-            /* The token is spent either way, so a retry needs a fresh one. */
-            turnstileReset();
-            result.className = 'review-result is-error';
-            result.textContent = res.d.error || 'That did not send. Please try again.';
-            return;
-          }
-          form.reset();
-          rating = 0; paint();
-          turnstileReset();
-          if (remaining) remaining.textContent = '1200';
-          result.className = 'review-result is-ok';
-          result.textContent = res.d.message || 'Thank you — your review is on the page.';
-          /* Re-read rather than splice the new one in by hand, so the average and
-             the ordering come from the same place they always do. The cache
-             buster is needed because the list is served with a short max-age. */
-          load(true);
+      whenTokenReady(function () {
+        submit.textContent = 'Sending…';
+        fetch(ENDPOINT + '/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            rating: rating,
+            name: document.getElementById('review-name').value,
+            text: textEl.value,
+            website: document.getElementById('review-website').value,
+            turnstile: turnstileToken(),
+          }),
         })
-        .catch(function () {
-          submit.disabled = false;
-          submit.textContent = origLabel;
-          result.className = 'review-result is-error';
-          result.textContent = 'That did not send. Please check your connection and try again.';
-        });
+          .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+          .then(function (res) {
+            submit.disabled = false;
+            submit.textContent = origLabel;
+            if (!res.ok) {
+              /* The token is spent either way, so a retry needs a fresh one. */
+              turnstileReset();
+              result.className = 'review-result is-error';
+              result.textContent = res.d.error || 'That did not send. Please try again.';
+              return;
+            }
+            form.reset();
+            rating = 0; paint();
+            turnstileReset();
+            if (remaining) remaining.textContent = '1200';
+            result.className = 'review-result is-ok';
+            result.textContent = res.d.message || 'Thank you — your review is on the page.';
+            /* Re-read rather than splice the new one in by hand, so the average and
+               the ordering come from the same place they always do. The cache
+               buster is needed because the list is served with a short max-age. */
+            load(true);
+          })
+          .catch(function () {
+            submit.disabled = false;
+            submit.textContent = origLabel;
+            result.className = 'review-result is-error';
+            result.textContent = 'That did not send. Please check your connection and try again.';
+          });
+      });
     });
   }
 
-  initTurnstile();
+  startTurnstileOnUse();
   load();
 })();

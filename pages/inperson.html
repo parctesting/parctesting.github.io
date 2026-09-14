@@ -21,7 +21,8 @@
 <meta name="color-scheme" content="light">
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="stylesheet" href="../css/site.css">
-<link rel="preload" as="image" href="../images/banner-1600.jpg" fetchpriority="high">
+<link rel="preload" as="image" media="(min-width: 701px)" href="../images/banner-1600.jpg" imagesrcset="../images/banner-1600.jpg 1600w, ../images/banner-2400.jpg 2400w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" as="image" media="(max-width: 700px)" href="../images/banner-900.jpg" imagesrcset="../images/banner-900.jpg 900w, ../images/banner-1200.jpg 1200w" imagesizes="100vw" fetchpriority="high">
 
 <!-- Cloudflare Web Analytics -->
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86375f5cd0ea45a9a9083404b92011b6"}'></script>
@@ -34,9 +35,11 @@
 <header class="site-header">
   <a class="site-banner" href="../index.html" aria-label="PARC Radio &amp; Technology home">
     <picture>
-      <source media="(max-width: 700px)" srcset="../images/banner-900.jpg">
-      <img src="../images/banner-1600.jpg" width="1600" height="192" fetchpriority="high"
-           alt="PARC Radio &amp; Technology">
+      <source media="(max-width: 700px)" sizes="100vw"
+              srcset="../images/banner-900.jpg 900w, ../images/banner-1200.jpg 1200w">
+      <img src="../images/banner-1600.jpg" sizes="100vw"
+           srcset="../images/banner-1600.jpg 1600w, ../images/banner-2400.jpg 2400w"
+           width="1600" height="192" fetchpriority="high" alt="PARC Radio &amp; Technology">
     </picture>
   </a>
 
@@ -137,7 +140,7 @@ NEEDED FOR EXAM: <ol>Things you need to do for the test session:
 <li>You must have a government-issued photo identification card with you. </li> <li>You will need to have any prior issued CSCE or your license and a copy to leave with us if you are upgrading at this session. </li> <li>Bring the $15.00 testing fee in exact cash for each person testing. We do not have change available. The ARRL sets the fee annually; this is the current testing fee. If you fail the test, we can sometimes provide an additional test for an additional cost. The test will be different from the one previously taken. </li> <li>You must email us your mailing address and phone number to confirm your appointment.</li> <li>Please email a recent photo of yourself (or a selfie) to us if you can; it makes it easier for us to recognize you at the testing location. </li> <li>You cannot use, answer a call, text, or look at a cell phone or smartwatch during the test. </li> <li>Bring an ink pen and a number 2 pencil for the test. A clipboard could be helpful, especially if the test is held outside.</li> <li>All scratch work can be done on the back of the answer sheet. </li> <li>You may bring a standard nonprogrammable calculator with you. No programmable calculators, smart watches, or cell phones (you must turn off your phone completely and put it away). </li> <li>Come relaxed and take your time. Testing can take anywhere from 5 minutes to a half hour.</li> </ol><p>
 Some exams are held outdoors. Only one person every six feet due to social distancing. You may not bring anyone with you to the exam. They will need to wait in your vehicle, not in or at the location of the exam. A clipboard can be helpful if it is a park or other outside area to prevent papers from blowing in the wind. A subsequent exam will be provided if advance notice and approval is given. Weather may cause a date, time, or location change.
 
-<p>*** EMAIL us your name, address, mobile number, self-photo (if possible), license class(es) you will be testing for, and your call sign (if any). ***</p>
+
 
 STUDY FOR EXAM: Plenty of test materials are available, and the questions all come from the NCVEC test bank. Here are some links to test questions and sample tests: <ul><a href="http://www.arrl.org/question-pools">http://www.arrl.org/question-pools</a> <a href="http://www.eham.net/exams/">http://www.eham.net/exams/</a> <a href="http://hamexam.org/">http://hamexam.org/</a> <a href="http://www.hamtesting.com/pbMain.php">http://www.hamtesting.com/pbMain.php</a> <a href="https://www.qrz.com/hamtest/">https://www.qrz.com/hamtest/</a> </ul> <p>
 ABOUT THE TEAM: We have been providing tests for new and old hams for many years. Every team member is an Extra class ham and can provide testing for all classes of licenses. The group began with myself, my wife, and my three sons giving tests to help others enjoy this wonderful hobby.
@@ -150,11 +153,11 @@ ABOUT THE TEAM: We have been providing tests for new and old hams for many years
 
 <p>CONFIRM YOUR APPOINTMENT: *** DO NOT FORGET TO CONFIRM YOUR APPOINTMENT BY EMAIL *** Failure to confirm your appointment may result in no one being scheduled to be at the test session, and it will be canceled without notice. We only travel to test sites with a confirmed appointment with a candidate.</p>
 
-<p>*** For an appointment, EMAIL us your name, address, cell phone number, self-photo, license class(es) you will be testing for, and your call sign (if any). Please confirm the location, date, and time of the test session you are confirming an appointment for with your email. ***</p>
-
 <p>You will be emailed a confirmation of appointment for your exam date within a day or so of receipt. Many people do not realize that test sessions are held for an individual or group of individuals. Unless a test session is held at a hamfest, it is only held if someone signs up to take the test. All the VEs are volunteers, and we enjoy giving people tests and helping them enter the hobby or advance their knowledge. We are happy to meet to test just one person or one hundred people. Since we host test sessions in many locations, we mean it when we say we are happy to give you and only you a test. Many of our sessions are held where there is a restaurant, and you are welcome to eat and drink while you test. If you have special requests or need a test on a different date or time, we may be able to accommodate your request. Please remember that you may be the only one testing. If something happens and you cannot make it, please give us at least 24 hours’ notice.</p>
 
 <p>We look forward to seeing you at the test. Thanks.</p>
+
+<p>Would you rather test from home? <a href="online.html">See how online exams work</a>.</p>
 
 </div>
 
@@ -163,7 +166,8 @@ ABOUT THE TEAM: We have been providing tests for new and old hams for many years
 </main>
 
 <footer class="site-footer">
-  <aside class="study-band" aria-label="Study partner">
+  <aside class="study-band" aria-label="Ham Radio Prep offer">
+    <img class="study-band__logo" src="../images/hamradioprep-logo-white.png" alt="" width="1080" height="209">
     <p><strong>Studying for your exam?</strong> Ham Radio Prep courses are
       <strong>20% off</strong> with code <span class="coupon">PARC</span> &mdash; <a href="https://study.hamradioprep.com/enroll/1972787?price_id=2681038&amp;coupon=parc" target="_blank" rel="noopener">Technician</a>, <a href="https://study.hamradioprep.com/enroll/2432887?price_id=3224428&amp;coupon=parc" target="_blank" rel="noopener">General</a>, <a href="https://study.hamradioprep.com/enroll/2935944?price_id=3784628&amp;coupon=parc" target="_blank" rel="noopener">Amateur Extra</a>, <a href="https://study.hamradioprep.com/enroll/405063?price_id=422572&amp;coupon=parc" target="_blank" rel="noopener">Tech + General</a>, <a href="https://study.hamradioprep.com/enroll/1701522?price_id=3096155&amp;coupon=parc" target="_blank" rel="noopener">All Access</a>.</p>
   </aside>

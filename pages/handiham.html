@@ -21,7 +21,8 @@
 <meta name="color-scheme" content="light">
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="stylesheet" href="../css/site.css">
-<link rel="preload" as="image" href="../images/banner-1600.jpg" fetchpriority="high">
+<link rel="preload" as="image" media="(min-width: 701px)" href="../images/banner-1600.jpg" imagesrcset="../images/banner-1600.jpg 1600w, ../images/banner-2400.jpg 2400w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" as="image" media="(max-width: 700px)" href="../images/banner-900.jpg" imagesrcset="../images/banner-900.jpg 900w, ../images/banner-1200.jpg 1200w" imagesizes="100vw" fetchpriority="high">
 
 <!-- Cloudflare Web Analytics -->
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86375f5cd0ea45a9a9083404b92011b6"}'></script>
@@ -34,9 +35,11 @@
 <header class="site-header">
   <a class="site-banner" href="../index.html" aria-label="PARC Radio &amp; Technology home">
     <picture>
-      <source media="(max-width: 700px)" srcset="../images/banner-900.jpg">
-      <img src="../images/banner-1600.jpg" width="1600" height="192" fetchpriority="high"
-           alt="PARC Radio &amp; Technology">
+      <source media="(max-width: 700px)" sizes="100vw"
+              srcset="../images/banner-900.jpg 900w, ../images/banner-1200.jpg 1200w">
+      <img src="../images/banner-1600.jpg" sizes="100vw"
+           srcset="../images/banner-1600.jpg 1600w, ../images/banner-2400.jpg 2400w"
+           width="1600" height="192" fetchpriority="high" alt="PARC Radio &amp; Technology">
     </picture>
   </a>
 
@@ -108,7 +111,7 @@
     <h2 class="noDisplay">Main Content</h2>
 
 <center>
-   <img src="../images/Handiham_Logo.png" width="500" height="" alt="HandiHam logo"/>
+   <img src="../images/Handiham_Logo.png" width="500" height="340" alt="HandiHam logo"/>
  </center> <strong>Amateur Radio for People with Disabilities</strong>
 
 <p>Amateur radio is for everyone. No matter your physical ability, hearing or vision, you have a place in this community. We believe that radio is a powerful way to connect with others, learn new skills, and be part of a worldwide network of support and friendship.</p>
@@ -130,7 +133,8 @@
 <li>One-on-one support from mentors and volunteers</li>
 </ul> If you need help or specific accommodations for your exam, let us know. We will work with you and the Volunteer Examiner team to make sure you get the support you need to test with confidence.
 
-<p>We Are Here for You You are welcome here. We believe amateur radio is stronger when it includes everyone. We will do our part to support you, answer your questions, and walk with you through every step of your journey—from first learning about radio to earning your license and beyond.</p>
+<h2>We Are Here for You</h2>
+<p>You are welcome here. We believe amateur radio is stronger when it includes everyone. We will do our part to support you, answer your questions, and walk with you through every step of your journey—from first learning about radio to earning your license and beyond.</p>
 
 <p>If you are interested or need assistance, please contact us. We will connect you with a friendly volunteer who understands your needs and will help guide you through the process.</p>
 
@@ -150,12 +154,22 @@
 <li>A quiet, private room (not a car or outdoors).</li>
 <li>Clear your desk and background of anything suspicious or distracting.</li>
 <li>Be ready to share your full screen via Zoom.</li></ul>
+
+<div class="callout callout--next">
+  <h2>Testing with PARC?</h2>
+  <p>If a disability means the exam needs adjusting, ask before you book.</p>
+  <p class="callout__actions">
+    <a class="btn btn--primary" href="Online_Handicapped.html">Read about accommodations</a>
+    <a class="btn" href="calendar.html">See the schedule</a>
+  </p>
+</div>
 </div>
 
 </main>
 
 <footer class="site-footer">
-  <aside class="study-band" aria-label="Study partner">
+  <aside class="study-band" aria-label="Ham Radio Prep offer">
+    <img class="study-band__logo" src="../images/hamradioprep-logo-white.png" alt="" width="1080" height="209">
     <p><strong>Studying for your exam?</strong> Ham Radio Prep courses are
       <strong>20% off</strong> with code <span class="coupon">PARC</span> &mdash; <a href="https://study.hamradioprep.com/enroll/1972787?price_id=2681038&amp;coupon=parc" target="_blank" rel="noopener">Technician</a>, <a href="https://study.hamradioprep.com/enroll/2432887?price_id=3224428&amp;coupon=parc" target="_blank" rel="noopener">General</a>, <a href="https://study.hamradioprep.com/enroll/2935944?price_id=3784628&amp;coupon=parc" target="_blank" rel="noopener">Amateur Extra</a>, <a href="https://study.hamradioprep.com/enroll/405063?price_id=422572&amp;coupon=parc" target="_blank" rel="noopener">Tech + General</a>, <a href="https://study.hamradioprep.com/enroll/1701522?price_id=3096155&amp;coupon=parc" target="_blank" rel="noopener">All Access</a>.</p>
   </aside>

@@ -62,6 +62,10 @@ export const SITE = {
      the Technician course, which is the drift that check is there to catch. */
   hamRadioPrep: {
     home: 'https://hamradioprep.com/',
+    // Their own horizontal logo, supplied by the owner. White, for dark backgrounds.
+    // PNG, not the WebP it came as: Safari on macOS 10.15 and older, and iOS 13 and
+    // older, cannot show WebP at all. Same pixels either way.
+    logo: { src: '/images/hamradioprep-logo-white.png', width: 1080, height: 209 },
     code: 'PARC',
     percent: 20,
     courses: [
@@ -75,6 +79,11 @@ export const SITE = {
   paypalButton: 'FG837WNAHF4P4',
   banner: '/images/banner-1600.jpg',
   bannerMobile: '/images/banner-900.jpg',
+  // Same crops at higher resolution, for 2x screens and monitors wider than 1600px.
+  // Cut from the 3000x720 original (git ad484bab^:Documents/Banner.jpg): desktop is
+  // the strip y=180..540, the phone crop its centred 1200px.
+  bannerLarge: '/images/banner-2400.jpg',
+  bannerMobileLarge: '/images/banner-1200.jpg',
   ogImage: '/images/og-parc.jpg',
   /* Ownership of parcradio.org is verified in Search Console as a DNS *domain*
      property, which covers every subdomain and both protocols - stronger than a
@@ -274,6 +283,9 @@ export const PAGES = {
     title: 'Online Ham Radio Exam Rules',
     desc: 'The rules every candidate agrees to for a remote amateur radio license exam with PARC, and what will end a session early.',
     h1: 'Exam Rules',
+    // An older copy of Online_Rules_IQ.html that still said no passports. It now only points
+    // there, and stays out of search and the sitemap; the page is kept so old links land somewhere.
+    noindex: true,
   },
   'pages/Online_Rules_IQ.html': {
     title: 'Online Exam Rules and Requirements',

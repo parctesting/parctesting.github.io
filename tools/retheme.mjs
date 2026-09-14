@@ -109,7 +109,7 @@ ${buildHead(rel, meta)}
 ${buildHeader(rel)}
 ${pageH1}
 ${content}
-${buildFooter(rel)}
+${buildFooter(rel, { studyBand: !content.includes('class="partner-card"') })}
 
 <script src="${link(rel, '/js/site.js')}" defer></script>
 <script src="${link(rel, '/js/search.js')}" defer></script>

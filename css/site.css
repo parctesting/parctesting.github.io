@@ -43,6 +43,10 @@
   --page:       #F1F3F5;
   --line:       #DFE4E9;
   --line-2:     #C9D1D8;
+  /* An unfilled rating star. It is still part of the rating, so it needs 3:1
+     like any meaningful graphic: 3.3-3.5:1 on page, card and surface. --line-2
+     was 1.5:1, and the empty stars all but vanished. */
+  --star-empty: #7F8891;
 
   /* Navigation sits directly beneath an already-red banner. A second
      full-width red band doubled the amount of saturated red on every page.
@@ -528,8 +532,11 @@ th { background: var(--surface-2); font-weight: 700; }
    The navigation grids used to be a separate component with 2px borders, a
    larger radius and uppercase labels, so the same kind of action looked
    different depending which page you were on. */
+/* text-align as well as justify-content: a label that wraps on a narrow screen
+   ("Printable checklist (PDF)" at 320px) otherwise sits left-aligned inside a
+   centred button. The phone menu sets its own left alignment. */
 button, .btn, .page-link {
-  font: inherit; font-weight: 600; cursor: pointer;
+  font: inherit; font-weight: 600; cursor: pointer; text-align: center;
   display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2);
   padding: var(--sp-3) var(--sp-5);
   border-radius: var(--radius-sm); border: 1px solid var(--line-2);
@@ -698,6 +705,12 @@ a.dropbtn--team:focus-visible {
 .callout dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: var(--sp-2) var(--sp-4); }
 .callout dt { font-weight: 700; color: var(--ink-2); }
 .callout dd { margin: 0; }
+/* The next thing to do at the end of a step: the same box, with one main action and
+   at most one quiet one beside it. The exam-type pages used to stop dead, or send
+   the candidate back to the start of the instructions. */
+.callout--next { margin: var(--sp-6) 0 var(--sp-5); }
+.callout--next p { margin: 0 0 var(--sp-3); }
+.callout--next .callout__actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin: var(--sp-4) 0 0; }
 
 /* The homepage's first words to a nervous candidate: reassurance before the
    detail. Deliberately calmer than the "5-7 business days" highlight just above
@@ -726,11 +739,16 @@ a.dropbtn--team:focus-visible {
   border: 1px solid var(--line); border-left: 4px solid var(--parc-red);
   border-radius: var(--radius); box-shadow: var(--shadow-1);
   padding: var(--sp-5); margin: var(--sp-5) 0 var(--sp-6);
+  overflow: hidden;   /* keeps the logo strip inside the rounded corners */
 }
-.partner-card .partner-card__eyebrow {
-  margin: 0 0 var(--sp-1); font-size: var(--step--1); font-weight: 700;
-  letter-spacing: .06em; text-transform: uppercase; color: var(--parc-700);
+/* Ham Radio Prep's logo is white, made for dark backgrounds, so it sits on a dark
+   strip across the top of the card rather than being recolored. */
+.partner-card .partner-card__brand {
+  background: var(--ink);
+  margin: calc(-1 * var(--sp-5)) calc(-1 * var(--sp-5)) var(--sp-4);
+  padding: var(--sp-3) var(--sp-5);
 }
+.partner-card .partner-card__brand img { display: block; height: 40px; width: auto; max-width: 100%; }
 .partner-card .partner-card__title { margin: 0 0 var(--sp-3); font-size: var(--step-2); color: var(--ink); }
 .partner-card p { margin: 0 0 var(--sp-3); max-width: 72ch; }
 .partner-card .partner-card__courses {
@@ -756,8 +774,10 @@ a.dropbtn--team:focus-visible {
 .study-band {
   max-width: var(--wrap); margin: 0 auto var(--sp-6);
   padding-bottom: var(--sp-5); border-bottom: 1px solid rgba(255, 255, 255, .15);
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2) var(--sp-5);
 }
-.study-band p { margin: 0; line-height: 1.7; }
+.study-band p { margin: 0; line-height: 1.7; flex: 1 1 22rem; }
+.study-band__logo { display: block; height: 26px; width: auto; }
 .site-footer .study-band .coupon { background: transparent; border-color: rgba(255, 255, 255, .7); color: #fff; }
 @media (max-width: 600px) { .welcome { padding: var(--sp-4); } }
 
@@ -975,7 +995,9 @@ a.dropbtn--team:focus-visible {
   background: var(--surface); font: inherit; padding: 0;
 }
 .cal-cell.is-empty { border: 0; background: none; }
-.cal-cell.is-none { color: var(--line-2); background: var(--surface-2); }
+/* Days with no times stay quieter than bookable ones, but the date must still
+   be readable: --line-2 made the numbers 1.44:1. */
+.cal-cell.is-none { color: var(--muted); background: var(--surface-2); }
 .cal-cell__num { font-size: var(--step--1); font-weight: 600; }
 .cal-cell__count { font-size: .7rem; font-weight: 700; line-height: 1; }
 
@@ -1180,7 +1202,7 @@ a.dropbtn--team:focus-visible {
 .reviews-count { color: var(--muted); font-size: var(--step--1); }
 
 .stars-inline { display: inline-flex; gap: 1px; }
-.star-mark { color: var(--line-2); font-size: 1.15em; line-height: 1; }
+.star-mark { color: var(--star-empty); font-size: 1.15em; line-height: 1; }
 /* Amber reads as a rating; red would read as an error. Dark enough to clear
    3:1 against the page, which WCAG requires of graphics that carry meaning —
    these stars ARE the rating. */
@@ -1206,7 +1228,7 @@ a.dropbtn--team:focus-visible {
 .rating-stars { display: flex; gap: var(--sp-1); }
 .star {
   background: none; border: 0; cursor: pointer; padding: var(--sp-1) 2px;
-  font-size: 2rem; line-height: 1; color: var(--line-2);
+  font-size: 2rem; line-height: 1; color: var(--star-empty);
   transition: color .12s ease, transform .06s ease;
 }
 .star:hover, .star.is-on { color: #C07D14; }
@@ -1236,6 +1258,12 @@ textarea.review-input { resize: vertical; min-height: 7rem; }
 /* Turnstile draws its own fixed-size iframe; this only gives it room. It is
    empty until the widget renders, so it must not reserve space of its own. */
 .review-turnstile:not(:empty) { margin: var(--sp-4) 0; }
+/* The widget now appears only once the form is used; keep its 65px from the start
+   so Submit does not move under the visitor's finger. Its frame is inline, so the
+   line height hung an extra 8px under it; line-height 0 removes that, and the note
+   shown when the check cannot run gets ordinary line spacing back. */
+.review-turnstile.is-reserved { min-height: 65px; margin: var(--sp-4) 0; line-height: 0; }
+.review-turnstile .review-form-note { line-height: 1.5; }
 .review-turnstile { max-width: 100%; }
 
 /* The widget is a hard 300px wide. On a 320px phone the content column is about
@@ -1715,7 +1743,9 @@ a.skip-link:focus {
    a single side-by-side drawing would shrink until neither half was legible. */
 .compare-figs {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  /* min(): a 320px-wide phone (or an iPhone on Larger Text zoom) has less than
+     19rem to give, and a fixed minimum pushed the page sideways there. */
+  grid-template-columns: repeat(auto-fit, minmax(min(19rem, 100%), 1fr));
   gap: var(--sp-4);
   margin: var(--sp-5) 0;
 }
@@ -1847,8 +1877,22 @@ h2.doc-section {
 .page-link:visited { border-color: var(--parc-red); color: var(--parc-700); }
 
 /* The shared base is inline-flex, which shrinks to its text. Inside a grid the
-   cells should be equal, so stretch them. */
-.page-links .page-link { display: flex; width: 100%; }
+   cells should be equal, so stretch them.
+   A cell can be as narrow as 11rem (178px in the 750px text column), and the base
+   button's 1.5rem each side left too little room for a long word: "Accommodations"
+   (153px at desktop type size) ran into the padding in every browser and over the
+   border in Firefox. 0.5rem each side leaves it about 8px to spare.
+   No hyphens:auto or overflow-wrap:anywhere here: tried as a safety net, they split
+   "Accommodation / s" in Chromium and Firefox and "Multiple Candid- / ates" in
+   WebKit, which reads worse than a word sitting close to the border would. */
+.page-links .page-link { display: flex; width: 100%; padding-inline: var(--sp-2); }
+/* The two ways into the online instructions: each button with its caption
+   underneath. They were a button and then a line starting with a colon, because
+   the nav sat inside a paragraph and the browser split them apart. */
+.instruction-choice { margin-top: var(--sp-4); }
+/* The first heading under the page title, so an h2, but kept at the h3 size it was designed at. */
+.instruction-choice__title { font-size: var(--step-2); }
+.instruction-choice__item p { margin: var(--sp-2) 0 0; font-size: var(--step--1); color: var(--ink-2); }
 .page-link:hover,
 .page-link:focus-visible { background: var(--parc-red); border-color: var(--parc-red); color: #fff; }
 

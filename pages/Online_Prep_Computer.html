@@ -21,7 +21,8 @@
 <meta name="color-scheme" content="light">
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="stylesheet" href="../css/site.css">
-<link rel="preload" as="image" href="../images/banner-1600.jpg" fetchpriority="high">
+<link rel="preload" as="image" media="(min-width: 701px)" href="../images/banner-1600.jpg" imagesrcset="../images/banner-1600.jpg 1600w, ../images/banner-2400.jpg 2400w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" as="image" media="(max-width: 700px)" href="../images/banner-900.jpg" imagesrcset="../images/banner-900.jpg 900w, ../images/banner-1200.jpg 1200w" imagesizes="100vw" fetchpriority="high">
 
 <!-- Cloudflare Web Analytics -->
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86375f5cd0ea45a9a9083404b92011b6"}'></script>
@@ -34,9 +35,11 @@
 <header class="site-header">
   <a class="site-banner" href="../index.html" aria-label="PARC Radio &amp; Technology home">
     <picture>
-      <source media="(max-width: 700px)" srcset="../images/banner-900.jpg">
-      <img src="../images/banner-1600.jpg" width="1600" height="192" fetchpriority="high"
-           alt="PARC Radio &amp; Technology">
+      <source media="(max-width: 700px)" sizes="100vw"
+              srcset="../images/banner-900.jpg 900w, ../images/banner-1200.jpg 1200w">
+      <img src="../images/banner-1600.jpg" sizes="100vw"
+           srcset="../images/banner-1600.jpg 1600w, ../images/banner-2400.jpg 2400w"
+           width="1600" height="192" fetchpriority="high" alt="PARC Radio &amp; Technology">
     </picture>
   </a>
 
@@ -122,11 +125,10 @@
 <li>ALREADY HAVE A Zoom ACCOUNT? MAKE SURE YOU FOLLOW THESE INSTRUCTIONS: If you already have a Zoom account, please LOG OUT of your Zoom account before clicking our link to join the exam.
 Otherwise you will be connected via your own Zoom account.   You will not be offered the opportunity to correctly set the "name - computer/phone" as required in the instructions.   
 First, open the app on both of your device(s), and sign out from your account prior to clicking on the Exam Session link.
-Then, join using our link in the email for both of your devices. You will then be given the opportunity to put in your name before joining the session. This is where you put your name and whether it is computer or phone. Then select to continue and join session.</li> <li>Turn on video when in Waiting Room on both your computer and your cellular phone. Turn on the audio and unmute your microphone on the computer only. DO NOT accept audio on your cellular phone. Again, it is VERY IMPORTANT that you decline/deny audio on your cellular phone before joining or when in the waiting room if you can. If not, we will bring your phone in and out of the main room to disconnect audio. Do NOT put your hands on your phone while we are doing this; we are turning off your audio to prevent feedback. No matter what you see on the screen, do NOT pick up your phone. Pay attention to your computer only. Put your phone down.</li> </ul>
+Then, join using our link in the email for both of your devices. You will then be given the opportunity to put in your name before joining the session. This is where you put your name and whether it is computer or phone. Then select to continue and join session.</li> <li>Turn on video when in Waiting Room on both your computer and your cellular phone. Turn on the audio and unmute your microphone on the computer only. DO NOT accept audio on your cellular phone. Again, it is VERY IMPORTANT that you decline/deny audio on your cellular phone before joining or when in the waiting room if you can. If not, we will bring your phone in and out of the main room to disconnect audio. Do NOT put your hands on your phone while we are doing this; we are turning off your audio to prevent feedback. No matter what you see on the screen, do NOT pick up your phone. Put your phone down.</li> </ul>
 		  <p>
 <nav class="page-links page-links--pager">
-  <a class="page-link page-link--back" href="Online_Preparation.html">Back</a>
-  <a class="page-link" href="Online_Prep_2ndDevice.html">2nd Device</a>
+  <a class="page-link page-link--back" href="Online_Prep_Room.html">Back</a>
   <a class="page-link" href="Online_Rules_IQ.html">Rules</a>
   <a class="page-link page-link--next" href="Online_Prep_2ndDevice.html">Next</a>
 </nav>
@@ -136,7 +138,8 @@ Then, join using our link in the email for both of your devices. You will then b
 </main>
 
 <footer class="site-footer">
-  <aside class="study-band" aria-label="Study partner">
+  <aside class="study-band" aria-label="Ham Radio Prep offer">
+    <img class="study-band__logo" src="../images/hamradioprep-logo-white.png" alt="" width="1080" height="209">
     <p><strong>Studying for your exam?</strong> Ham Radio Prep courses are
       <strong>20% off</strong> with code <span class="coupon">PARC</span> &mdash; <a href="https://study.hamradioprep.com/enroll/1972787?price_id=2681038&amp;coupon=parc" target="_blank" rel="noopener">Technician</a>, <a href="https://study.hamradioprep.com/enroll/2432887?price_id=3224428&amp;coupon=parc" target="_blank" rel="noopener">General</a>, <a href="https://study.hamradioprep.com/enroll/2935944?price_id=3784628&amp;coupon=parc" target="_blank" rel="noopener">Amateur Extra</a>, <a href="https://study.hamradioprep.com/enroll/405063?price_id=422572&amp;coupon=parc" target="_blank" rel="noopener">Tech + General</a>, <a href="https://study.hamradioprep.com/enroll/1701522?price_id=3096155&amp;coupon=parc" target="_blank" rel="noopener">All Access</a>.</p>
   </aside>
