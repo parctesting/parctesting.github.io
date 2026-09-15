@@ -50,12 +50,16 @@
       </button>
       <ul class="nav-menu" id="nav-menu">
         <li><a href="../index.html">Home</a></li>
+        <li><a href="../pages/online.html">Online Testing</a></li>
+        <li><a href="../pages/inperson.html">In-Person Testing</a></li>
+        <li><a href="../pages/calendar.html">Schedule</a></li>
+        <li><a href="../pages/faq.html">FAQ</a></li>
         <li class="has-sub">
           <button type="button" class="nav-sub-toggle" aria-expanded="false">Helpful Links</button>
           <ul class="nav-sub">
             <li><a href="../pages/whatnext.html">What's Next</a></li>
             <li><a href="../pages/handiham.html">Accessible Testing / HandiHam</a></li>
-            <li><a href="../pages/govshutdown.html">Government Shutdown</a></li>
+            <li><a href="../pages/troubleshooting.html">Troubleshooting</a></li>
             <li><a href="https://www.arrl.org" target="_blank" rel="noopener">ARRL</a></li>
             <li><a href="https://www.eham.net" target="_blank" rel="noopener">eHam</a></li>
             <li><a href="https://wireless2.fcc.gov" target="_blank" rel="noopener">FCC License Search</a></li>
@@ -65,10 +69,6 @@
             <li><a href="https://www.ylrl.net" target="_blank" rel="noopener">Young Ladies Radio League</a></li>
           </ul>
         </li>
-        <li><a href="../pages/Online_InstructionSeparation.html">Online Testing</a></li>
-        <li><a href="../pages/inperson.html">In-Person Testing</a></li>
-        <li><a href="../pages/faq.html">FAQ</a></li>
-        <li><a href="../pages/calendar.html">Schedule</a></li>
         <li><a href="../pages/reviews.html" aria-current="page">Reviews</a></li>
         <li><a href="../pages/team.html">Our Team</a></li>
       </ul>
@@ -110,8 +110,8 @@
 
   <h1>Reviews</h1>
 
-  <p>PARC is run entirely by volunteers. Hearing how a session went helps us
-    improve, and helps the next candidate know what to expect.</p>
+  <p>PARC is operated entirely by volunteers. Reviews help PARC improve its sessions and
+    inform future candidates about the examination experience.</p>
 
   <div id="reviews"
      data-turnstile-sitekey="0x4AAAAAAEdTSpiOH_-p-yFA"
@@ -122,10 +122,10 @@
     <p class="reviews-status" id="reviews-status" role="status" aria-live="polite"></p>
 
     <section class="review-form-wrap" id="review-form-wrap">
-      <h2>Leave a review</h2>
-      <p class="review-form-note">Your review appears on this page right away.
-        Please don&rsquo;t include your address, phone number, or email &mdash; this
-        page is public, and anything with contact details in it will be refused.</p>
+      <h2>Leave a Review</h2>
+      <p class="review-form-note">Reviews are published on this page immediately. Do not
+        include an address, telephone number or email address; this page is public, and
+        reviews containing contact details are refused.</p>
 
       <form id="review-form" novalidate>
         <fieldset class="rating-field">
@@ -142,11 +142,11 @@
         <label class="review-label" for="review-name">Your name <span class="review-optional">(optional)</span></label>
         <input class="review-input" id="review-name" name="name" type="text" maxlength="60"
                aria-describedby="review-name-hint" placeholder="First name or call sign">
-        <p class="review-hint" id="review-name-hint">Leave blank to stay anonymous.</p>
+        <p class="review-hint" id="review-name-hint">Leave this field blank to remain anonymous.</p>
 
         <label class="review-label" for="review-text">Your review</label>
         <textarea class="review-input" id="review-text" name="text" rows="5" maxlength="1200"
-                  placeholder="How did your exam session go?"></textarea>
+                  placeholder="Describe your examination session."></textarea>
         <p class="review-count"><span id="review-remaining">1200</span> characters left</p>
 
         <!-- Honeypot: hidden from people, tempting to bots. -->
@@ -160,12 +160,12 @@
              makes no third-party request at all. -->
         <div class="review-turnstile" id="review-turnstile"></div>
 
-        <button class="btn btn--primary" type="submit" id="review-submit">Submit review</button>
+        <button class="btn btn--primary" type="submit" id="review-submit">Submit Review</button>
         <p class="review-result" id="review-result" role="status" aria-live="polite"></p>
       </form>
     </section>
 
-    <p>Have not tested with us yet? <a href="calendar.html">Schedule an exam</a>.</p>
+    <p class="btn-row"><a class="btn" href="calendar.html">Schedule an Exam</a></p>
 
   </div>
 
@@ -177,7 +177,7 @@
 <footer class="site-footer">
   <aside class="study-band" aria-label="Ham Radio Prep offer">
     <img class="study-band__logo" src="../images/hamradioprep-logo-white.png" alt="" width="1080" height="209">
-    <p><strong>Studying for your exam?</strong> Ham Radio Prep courses are
+    <p><strong>Ham Radio Prep courses:</strong>
       <strong>20% off</strong> with code <span class="coupon">PARC</span> &mdash; <a href="https://study.hamradioprep.com/enroll/1972787?price_id=2681038&amp;coupon=parc" target="_blank" rel="noopener">Technician</a>, <a href="https://study.hamradioprep.com/enroll/2432887?price_id=3224428&amp;coupon=parc" target="_blank" rel="noopener">General</a>, <a href="https://study.hamradioprep.com/enroll/2935944?price_id=3784628&amp;coupon=parc" target="_blank" rel="noopener">Amateur Extra</a>, <a href="https://study.hamradioprep.com/enroll/405063?price_id=422572&amp;coupon=parc" target="_blank" rel="noopener">Tech + General</a>, <a href="https://study.hamradioprep.com/enroll/1701522?price_id=3096155&amp;coupon=parc" target="_blank" rel="noopener">All Access</a>.</p>
   </aside>
   <div class="site-footer__inner">
@@ -194,9 +194,10 @@
       <h2>Exams</h2>
       <ul>
         <li><a href="../pages/calendar.html">Schedule an exam</a></li>
-        <li><a href="../pages/Online_InstructionSeparation.html">Online testing</a></li>
+        <li><a href="../pages/online.html">Online testing</a></li>
         <li><a href="../pages/inperson.html">In-person testing</a></li>
         <li><a href="../pages/faq.html">FAQ</a></li>
+        <li><a href="../pages/troubleshooting.html">Troubleshooting</a></li>
       </ul>
     </div>
     <div>

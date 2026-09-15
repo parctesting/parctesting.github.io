@@ -197,7 +197,7 @@ function studyBand(rel) {
     ? `\n    <img class="study-band__logo" src="${esc(link(rel, p.logo.src))}" alt="" width="${p.logo.width}" height="${p.logo.height}">`
     : '';
   return `  <aside class="study-band" aria-label="Ham Radio Prep offer">${logo}
-    <p><strong>Studying for your exam?</strong> Ham Radio Prep courses are
+    <p><strong>Ham Radio Prep courses:</strong>
       <strong>${p.percent}% off</strong> with code <span class="coupon">${esc(p.code)}</span> &mdash; ${links}.</p>
   </aside>
 `;
@@ -224,9 +224,10 @@ ${opts.studyBand === false ? '' : studyBand(rel)}  <div class="site-footer__inne
       <h2>Exams</h2>
       <ul>
         <li><a href="${link(rel, '/pages/calendar.html')}">Schedule an exam</a></li>
-        <li><a href="${link(rel, '/pages/Online_InstructionSeparation.html')}">Online testing</a></li>
+        <li><a href="${link(rel, '/pages/online.html')}">Online testing</a></li>
         <li><a href="${link(rel, '/pages/inperson.html')}">In-person testing</a></li>
         <li><a href="${link(rel, '/pages/faq.html')}">FAQ</a></li>
+        <li><a href="${link(rel, '/pages/troubleshooting.html')}">Troubleshooting</a></li>
       </ul>
     </div>
     <div>

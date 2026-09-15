@@ -52,6 +52,7 @@ trap 'git checkout -q "$RETURN_TO" 2>/dev/null || true' EXIT
 git checkout -q "$NET"
 
 build() {
+  node tools/build-instructions.mjs >/dev/null
   SITE_ORIGIN="https://$DOMAIN" node tools/retheme.mjs >/dev/null
   node tools/fix-alt.mjs >/dev/null 2>&1 || true
   SITE_ORIGIN="https://$DOMAIN" node tools/build-seo.mjs >/dev/null

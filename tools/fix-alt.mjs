@@ -47,9 +47,9 @@ const ALT = {
   'exam4.png':
     'Screenshot of the certification bullet points the candidate agrees to when signing.',
   'controlcenter.png':
-    'Screenshot of the phone Control Center, used to turn on Do Not Disturb before the exam.',
+    'Control Center icon',
   'dnd.png':
-    'Screenshot of the Do Not Disturb setting switched on.',
+    'Do Not Disturb moon symbol',
   'PAUSE_BANNER.png':
     'Notice banner announcing that exam sessions are temporarily paused.',
   'Handiham_Logo.png': 'HandiHam logo',

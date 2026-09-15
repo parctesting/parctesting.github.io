@@ -1,0 +1,180 @@
+#!/usr/bin/env node
+/**
+ * Builds the Complete Text instructions, pages/Online_InstructionSeparation.html,
+ * from the step-by-step pages.
+ *
+ *   node tools/build-instructions.mjs          # rewrite the page's content
+ *   node tools/build-instructions.mjs --check  # exit 1 if it is out of date
+ *
+ * Until 2026-09-15 that page was a second copy of the steps, kept by hand. The two
+ * copies drifted until they disagreed about when to join Zoom, which ID a minor
+ * needs, how to name devices, when the CSCE arrives and more. Now there is one
+ * copy: edit the step pages, then run this. Only the content zone is written, so
+ * run tools/retheme.mjs afterwards (the sync scripts and deploy.mjs do both).
+ *
+ * From each step page it takes the <section> content and:
+ *   - drops the Back/Next pager and the "next step" callout, which only make
+ *     sense one page at a time, and anything between <!-- step-only --> markers
+ *   - moves every heading down a level, so each page's h1 becomes a section h2
+ *   - turns links to pages that are included here into links within this page
+ */
+import { readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+const ROOT = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
+const PAGES_DIR = join(ROOT, 'pages');
+const TARGET = join(PAGES_DIR, 'Online_InstructionSeparation.html');
+
+/* Order is the order a candidate needs them. The ids keep links from before
+   the rebuild working: #before-you-book, #registering, #what-to-prepare,
+   #identification, #the-rules and #the-protocol all existed then. */
+const SECTIONS = [
+  { file: 'Online_GeneralInfo.html', id: 'before-you-book' },
+  { file: 'Online_WhereandHowtoStudy.html', id: 'study' },
+  { file: 'Online_HowtoScheduleandRegister.html', id: 'registering' },
+  {
+    title: 'Your situation', id: 'situation', parts: [
+      { file: 'Online_SingleExam.html', id: 'one-exam' },
+      { file: 'Online_MultiExam.html', id: 'multiple-exams' },
+      { file: 'Online_MultiCandidate.html', id: 'multiple-candidates' },
+      { file: 'Online_Handicapped.html', id: 'accommodations' },
+    ],
+  },
+  { file: 'ID.html', id: 'identification' },
+  { file: 'Online_Prep_Room.html', id: 'what-to-prepare' },
+  { file: 'Online_Prep_Computer.html', id: 'computer' },
+  { file: 'Online_Prep_2ndDevice.html', id: 'second-device' },
+  { file: 'Online_Rules_IQ.html', id: 'the-rules' },
+  { file: 'Online_Protocol.html', id: 'the-protocol' },
+  { file: 'Online_CSCE_605.html', id: 'csce' },
+];
+
+const flat = SECTIONS.flatMap((s) => (s.parts ? s.parts : [s]));
+const anchorFor = new Map(flat.map((s) => [s.file, s.id]));
+
+function stepContent(file) {
+  const html = readFileSync(join(PAGES_DIR, file), 'utf8');
+  const container = html.indexOf('<div class="container">');
+  const start = html.indexOf('<section>', container);
+  const end = html.lastIndexOf('</section>', html.search(/<footer\b/));
+  if (container === -1 || start === -1 || end <= start) {
+    throw new Error(`${file}: expected <div class="container"><section>…</section>`);
+  }
+  return html.slice(start + '<section>'.length, end);
+}
+
+function transform(file, id, shift) {
+  let s = stepContent(file)
+    .replace(/<!-- step-only[\s\S]*?<!-- \/step-only -->\s*/g, '')
+    .replace(/<nav class="page-links page-links--pager">[\s\S]*?<\/nav>\s*/g, '')
+    .replace(/<div class="callout callout--next">[\s\S]*?<\/div>\s*/g, '');
+
+  if (!/<h1>/.test(s)) throw new Error(`${file}: no <h1> to become the section heading`);
+  s = s.replace(/<(\/?)h([1-6])\b/g, (m, slash, n) => `<${slash}h${Math.min(6, Number(n) + shift)}`);
+  const level = 1 + shift;
+  s = s.replace(`<h${level}>`, `<h${level} id="${id}" class="doc-section">`);
+
+  s = s.replace(/href="([A-Za-z0-9_]+\.html)(#[^"]*)?"/g, (m, target, frag) => {
+    if (!anchorFor.has(target)) return m;
+    return `href="${frag || '#' + anchorFor.get(target)}"`;
+  });
+  return s.trim();
+}
+
+function title(file) {
+  const m = stepContent(file).match(/<h1>([\s\S]*?)<\/h1>/);
+  return m ? m[1].trim() : file;
+}
+
+function build() {
+  const blocks = [];
+  const toc = [];
+  for (const sec of SECTIONS) {
+    if (sec.parts) {
+      blocks.push(`<h2 id="${sec.id}" class="doc-section">${sec.title}</h2>`);
+      for (const part of sec.parts) blocks.push(transform(part.file, part.id, 2));
+      toc.push(`    <a class="page-link" href="#${sec.id}">${sec.title}</a>`);
+    } else {
+      blocks.push(transform(sec.file, sec.id, 1));
+      toc.push(`    <a class="page-link" href="#${sec.id}">${title(sec.file)}</a>`);
+    }
+  }
+  const body = blocks.join('\n\n');
+
+  const ids = [...body.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
+  const dupes = ids.filter((v, i) => ids.indexOf(v) !== i);
+  if (dupes.length) throw new Error(`duplicate ids on the combined page: ${[...new Set(dupes)].join(', ')}`);
+
+  return `<div class="container">
+<section>
+
+<!-- Generated by tools/build-instructions.mjs from the step-by-step pages.
+     Edit those pages, not this one: changes made here are overwritten. -->
+
+<h1>Online Exam Instructions</h1>
+
+<h2 class="instruction-choice__title">Choose an Instruction Format</h2>
+<nav class="page-links instruction-choice" aria-label="Choose how to read the instructions">
+  <div class="instruction-choice__item">
+    <a class="page-link" href="Online_GeneralInfo.html">Step-by-Step Instructions</a>
+    <p>One step per page, with a Next button at the end of each page.</p>
+  </div>
+  <div class="instruction-choice__item">
+    <a class="page-link" href="#before-you-book">Complete Text Instructions</a>
+    <p>All steps on this page, below, for reading in full or printing.</p>
+  </div>
+</nav>
+<p>Candidates new to online examinations should first read the overview.</p>
+<p class="btn-row"><a class="btn" href="online.html">Online Testing Overview</a></p>
+
+<nav class="doc-toc" aria-label="On this page">
+  <h2>Contents</h2>
+  <div class="page-links">
+${toc.join('\n')}
+  </div>
+  <p class="doc-toc__note">This page contains the complete requirements for online examinations. Select a section above to go directly to it.</p>
+</nav>
+
+<p class="checklist-cta"><a class="btn" href="Online_Preparation.html#checklist">Pre-Exam Checklist</a>
+  <span>The same requirements as a printable checklist.</span></p>
+
+${body}
+
+<div class="callout callout--next">
+  <h2>Book Your Exam</h2>
+  <p>Select a time on the schedule. After the examination, refer to What&rsquo;s Next.</p>
+  <p class="callout__actions">
+    <a class="btn btn--primary" href="calendar.html">Book Your Exam</a>
+    <a class="btn" href="whatnext.html">What&rsquo;s Next</a>
+  </p>
+</div>
+
+</section>
+</div>
+
+</main>
+
+
+`;
+}
+
+const html = readFileSync(TARGET, 'utf8');
+const zoneStart = html.indexOf('<div class="container">');
+const zoneEnd = html.search(/<footer\b/);
+if (zoneStart === -1 || zoneEnd <= zoneStart) throw new Error('Online_InstructionSeparation.html: no content zone');
+
+const next = html.slice(0, zoneStart) + build() + html.slice(zoneEnd);
+if (process.argv.includes('--check')) {
+  /* Compare content zones only: retheme owns the head and footer, and strips
+     the <main> tags this writes, so whole-file equality would never hold. */
+  const zoneOf = (h) => h.slice(h.indexOf('<div class="container">'), h.search(/<footer\b/))
+    .replace(/<\/?main\b[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  if (zoneOf(next) !== zoneOf(html)) {
+    console.error('Online_InstructionSeparation.html is out of date: run node tools/build-instructions.mjs');
+    process.exit(1);
+  }
+  console.log('Online_InstructionSeparation.html matches the step pages');
+} else {
+  writeFileSync(TARGET, next);
+  console.log(`Online_InstructionSeparation.html rebuilt from ${flat.length} step pages`);
+}

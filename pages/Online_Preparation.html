@@ -50,12 +50,16 @@
       </button>
       <ul class="nav-menu" id="nav-menu">
         <li><a href="../index.html">Home</a></li>
+        <li><a href="../pages/online.html">Online Testing</a></li>
+        <li><a href="../pages/inperson.html">In-Person Testing</a></li>
+        <li><a href="../pages/calendar.html">Schedule</a></li>
+        <li><a href="../pages/faq.html">FAQ</a></li>
         <li class="has-sub">
           <button type="button" class="nav-sub-toggle" aria-expanded="false">Helpful Links</button>
           <ul class="nav-sub">
             <li><a href="../pages/whatnext.html">What's Next</a></li>
             <li><a href="../pages/handiham.html">Accessible Testing / HandiHam</a></li>
-            <li><a href="../pages/govshutdown.html">Government Shutdown</a></li>
+            <li><a href="../pages/troubleshooting.html">Troubleshooting</a></li>
             <li><a href="https://www.arrl.org" target="_blank" rel="noopener">ARRL</a></li>
             <li><a href="https://www.eham.net" target="_blank" rel="noopener">eHam</a></li>
             <li><a href="https://wireless2.fcc.gov" target="_blank" rel="noopener">FCC License Search</a></li>
@@ -65,10 +69,6 @@
             <li><a href="https://www.ylrl.net" target="_blank" rel="noopener">Young Ladies Radio League</a></li>
           </ul>
         </li>
-        <li><a href="../pages/Online_InstructionSeparation.html">Online Testing</a></li>
-        <li><a href="../pages/inperson.html">In-Person Testing</a></li>
-        <li><a href="../pages/faq.html">FAQ</a></li>
-        <li><a href="../pages/calendar.html">Schedule</a></li>
         <li><a href="../pages/reviews.html">Reviews</a></li>
         <li><a href="../pages/team.html">Our Team</a></li>
       </ul>
@@ -106,115 +106,98 @@
 <main id="main">
 
 <div class="container">
-  <section>
-    <h2 class="noDisplay">Main Content</h2>
+<section>
 
-<h1>Preparing for your session</h1>
+<h1>Preparing for Your Session</h1>
 
-<p class="lede prep-hub">Four things to get right before your session: the room you
-  sit in, the computer you test on, the second device that watches the room, and
-  the identification you bring. Work through them in order &mdash; each one takes a
-  few minutes, and an examiner will check all four before the exam starts.</p>
+<p class="lede prep-hub">Four areas must be prepared before the session: the room, the
+  computer used for the examination, the second device, and the candidate&rsquo;s
+  identification. An examiner verifies all four before the examination begins.</p>
 
-<ul class="prep-list">
-  <li><a href="Online_Prep_Room.html"><strong>Your room</strong></a> &mdash; a door you can
-    close, a clear desk, nobody else present.</li>
-  <li><a href="Online_Prep_Computer.html"><strong>Your computer</strong></a> &mdash; Windows or
-    Mac, one screen, notifications off, everything else closed.</li>
-  <li><a href="Online_Prep_2ndDevice.html"><strong>Your second device</strong></a> &mdash; a phone
-    or tablet on a stand, at ninety degrees to your side.</li>
-  <li><a href="ID.html"><strong>Your identification</strong></a> &mdash; what counts, and what to
-    bring if you are under 18.</li>
-</ul>
+<nav class="page-links instruction-choice step-list" aria-label="Preparation">
+  <div class="instruction-choice__item">
+    <a class="page-link" href="Online_Prep_Room.html">Room</a>
+    <p>A door that closes, a clear desk, and no other persons present.</p>
+  </div>
+  <div class="instruction-choice__item">
+    <a class="page-link" href="Online_Prep_Computer.html">Computer</a>
+    <p>Windows or Mac, one screen, notifications off, and all other applications closed.</p>
+  </div>
+  <div class="instruction-choice__item">
+    <a class="page-link" href="Online_Prep_2ndDevice.html">Second Device</a>
+    <p>A phone or tablet on a stand, at ninety degrees to one side.</p>
+  </div>
+  <div class="instruction-choice__item">
+    <a class="page-link" href="ID.html">Identification</a>
+    <p>Acceptable documents, including the requirements for candidates under 18.</p>
+  </div>
+</nav>
 
 <section class="checklist-block" id="checklist">
   <div class="checklist-head">
-    <h2>Pre-exam checklist</h2>
-    <p>Work through this the day before, not five minutes beforehand. An examiner
-      checks every one of these before the exam starts, and a session cannot go
-      ahead if something is missing.</p>
+    <h2>Pre-Exam Checklist</h2>
+    <p>Complete this checklist the day before the examination. An examiner verifies each
+      item before the examination begins, and the session cannot proceed if any item is
+      missing.</p>
     <div class="checklist-actions no-print">
-        <button type="button" class="btn btn--primary" id="print-checklist">Print this checklist</button>
-        <button type="button" class="btn" id="checklist-reset" hidden>Clear my checkmarks</button>
+        <button type="button" class="btn btn--primary" id="print-checklist">Print This Checklist</button>
+        <button type="button" class="btn" id="checklist-reset" hidden>Clear My Checkmarks</button>
       </div>
   </div>
 
-  <h3>Your room</h3>
+  <h3>Room</h3>
   <ul class="checklist">
-    <li><label><input type="checkbox"><span>A room with a door you can close, and nobody else in it.</span></label></li>
-    <li><label><input type="checkbox"><span>Desk clear: no paper, pens, pencils, notes, charts or formulas.</span></label></li>
-    <li><label><input type="checkbox"><span>Nothing ham-related visible &mdash; radios, QSL cards, posters.</span></label></li>
-    <li><label><input type="checkbox"><span>A chair that does not rock or recline. Not a couch.</span></label></li>
+    <li><label><input type="checkbox"><span>A room with a door that closes and no other persons present.</span></label></li>
+    <li><label><input type="checkbox"><span>A clear desk: no paper, pens, pencils, notes, charts or formulas.</span></label></li>
+    <li><label><input type="checkbox"><span>No amateur radio items in view, such as radios, QSL cards or posters.</span></label></li>
+    <li><label><input type="checkbox"><span>A stable chair that does not rock or recline. Beds and couches are not permitted.</span></label></li>
   </ul>
 
-  <h3>Your computer</h3>
+  <h3>Computer</h3>
   <ul class="checklist">
-    <li><label><input type="checkbox"><span>A Windows or Mac laptop or desktop. Not an iPad, Chromebook or notebook.</span></label></li>
-    <li><label><input type="checkbox"><span>One screen only. Additional monitors turned off, turned around or covered.</span></label></li>
-    <li><label><input type="checkbox"><span>The Zoom app installed &mdash; Zoom in a browser will not work.</span></label></li>
-    <li><label><input type="checkbox"><span>Every other application closed: mail, messaging, Teams, Discord, Steam,
-      remote-desktop tools.</span></label></li>
-    <li><label><input type="checkbox"><span>Do Not Disturb switched on, Bluetooth off.</span></label></li>
+    <li><label><input type="checkbox"><span>A Windows 10 (or later) or Mac laptop or desktop computer. Chromebooks, iPads and other tablets are not permitted.</span></label></li>
+    <li><label><input type="checkbox"><span>One screen only. Additional monitors turned off, turned away or covered.</span></label></li>
+    <li><label><input type="checkbox"><span>Reliable internet service, without a VPN or a phone hotspot.</span></label></li>
+    <li><label><input type="checkbox"><span>The Zoom application installed. Zoom in a web browser is not supported.</span></label></li>
+    <li><label><input type="checkbox"><span>All other applications closed, including browsers, email, messaging, Teams, Discord,
+      Steam and remote-desktop tools.</span></label></li>
+    <li><label><input type="checkbox"><span>Do Not Disturb turned on and Bluetooth turned off.</span></label></li>
     <li><label><input type="checkbox"><span>No external mouse or keyboard connected to a laptop.</span></label></li>
   </ul>
 
-  <h3>Your second device</h3>
+  <h3>Second Device</h3>
   <ul class="checklist">
-    <li><label><input type="checkbox"><span>A phone or tablet with a working camera, and the Zoom app installed.</span></label></li>
-    <li><label><input type="checkbox"><span>Something to stand it on, at ninety degrees to your left or right.</span></label></li>
-    <li><label><input type="checkbox"><span>Charged, or plugged in. It has to last the whole session.</span></label></li>
-    <li><label><input type="checkbox"><span>Both devices renamed in Zoom to your name plus &ldquo;computer&rdquo; or
-      &ldquo;phone&rdquo;. You cannot rename them from the waiting room, so do it
-      beforehand.</span></label></li>
+    <li><label><input type="checkbox"><span>A phone or tablet with a working camera and the Zoom application installed.</span></label></li>
+    <li><label><input type="checkbox"><span>A stand that holds the device horizontally, at ninety degrees to the left or right.</span></label></li>
+    <li><label><input type="checkbox"><span>Fully charged or connected to power for the entire session.</span></label></li>
+    <li><label><input type="checkbox"><span>Zoom on the device set not to join audio automatically.</span></label></li>
   </ul>
 
-  <h3>You</h3>
+  <h3>Candidate</h3>
   <ul class="checklist">
-    <li><label><input type="checkbox"><span>Your photo identification on hand &mdash;
-      <a href="ID.html">different rules apply under 18</a>.</span></label></li>
-    <li><label><input type="checkbox"><span>Your FRN. Not an FCC username.</span></label></li>
-    <li><label><input type="checkbox"><span>Watches, earbuds, headphones and smart glasses ready to take off. Keep them
-      on during setup; the team will say when.</span></label></li>
-    <li><label><input type="checkbox"><span>The same email address you used to book and pay.</span></label></li>
+    <li><label><input type="checkbox"><span>Registration completed from the email received after booking.</span></label></li>
+    <li><label><input type="checkbox"><span>Physical photo identification available; requirements differ for
+      candidates under 18. No other items are required: no PIN, FRN or papers.</span></label></li>
+    <li><label><input type="checkbox"><span>Watches, earbuds, headphones, smart glasses and hats removed and placed out of reach.</span></label></li>
+    <li><label><input type="checkbox"><span>Signed out of Zoom on both devices, so that each device can be named when joining.</span></label></li>
   </ul>
 
-  <h3>On exam day</h3>
+  <h3>Exam Day</h3>
   <ul class="checklist">
-    <li><label><input type="checkbox"><span>Your Zoom link, which arrives by email within 48 hours of booking. Check spam.</span></label></li>
-    <li><label><input type="checkbox"><span>Join on time and wait. Sitting in the waiting room means you are on the
-      schedule, even if the session is running late.</span></label></li>
-    <li><label><input type="checkbox"><span>Do not test screen share in the waiting room. Doing so will get you removed
-      from the session.</span></label></li>
+    <li><label><input type="checkbox"><span>Zoom link received by email at least 45 minutes before the examination. Check spam and junk folders.</span></label></li>
+    <li><label><input type="checkbox"><span>Both devices in the Zoom waiting room 45 minutes early, named &ldquo;First Last
+      computer&rdquo; and &ldquo;First Last phone&rdquo;.</span></label></li>
+    <li><label><input type="checkbox"><span>Screen sharing not tested in the waiting room. Testing it results in removal from
+      the session.</span></label></li>
   </ul>
 </section>
 
- 
-
-     <h3><center>Preparation</center></h3>
-	  <p>
-<nav class="page-links">
-  <a class="page-link" href="Online_Prep_Room.html">Room</a>
-  <a class="page-link" href="Online_Prep_Computer.html">Computer</a>
-  <a class="page-link" href="Online_Prep_2ndDevice.html">2nd Device</a>
-  <a class="page-link" href="Online_Rules_IQ.html">Rules</a>
-</nav>
-
-<h3><center>ID Information</center></h3>
-	 	  <p>
-<nav class="page-links">
-  <a class="page-link" href="ID.html">Acceptable ID</a>
-</nav>
-<br><br>
-			  
-		  <p>
 <nav class="page-links page-links--pager">
   <a class="page-link page-link--back" href="Online_HowtoScheduleandRegister.html">Back</a>
   <a class="page-link page-link--next" href="Online_Prep_Room.html">Next</a>
 </nav>
-<br>
-			  
-  </section><br>
- 
+
+</section>
 </div>
 
 </main>
@@ -222,7 +205,7 @@
 <footer class="site-footer">
   <aside class="study-band" aria-label="Ham Radio Prep offer">
     <img class="study-band__logo" src="../images/hamradioprep-logo-white.png" alt="" width="1080" height="209">
-    <p><strong>Studying for your exam?</strong> Ham Radio Prep courses are
+    <p><strong>Ham Radio Prep courses:</strong>
       <strong>20% off</strong> with code <span class="coupon">PARC</span> &mdash; <a href="https://study.hamradioprep.com/enroll/1972787?price_id=2681038&amp;coupon=parc" target="_blank" rel="noopener">Technician</a>, <a href="https://study.hamradioprep.com/enroll/2432887?price_id=3224428&amp;coupon=parc" target="_blank" rel="noopener">General</a>, <a href="https://study.hamradioprep.com/enroll/2935944?price_id=3784628&amp;coupon=parc" target="_blank" rel="noopener">Amateur Extra</a>, <a href="https://study.hamradioprep.com/enroll/405063?price_id=422572&amp;coupon=parc" target="_blank" rel="noopener">Tech + General</a>, <a href="https://study.hamradioprep.com/enroll/1701522?price_id=3096155&amp;coupon=parc" target="_blank" rel="noopener">All Access</a>.</p>
   </aside>
   <div class="site-footer__inner">
@@ -239,9 +222,10 @@
       <h2>Exams</h2>
       <ul>
         <li><a href="../pages/calendar.html">Schedule an exam</a></li>
-        <li><a href="../pages/Online_InstructionSeparation.html">Online testing</a></li>
+        <li><a href="../pages/online.html">Online testing</a></li>
         <li><a href="../pages/inperson.html">In-person testing</a></li>
         <li><a href="../pages/faq.html">FAQ</a></li>
+        <li><a href="../pages/troubleshooting.html">Troubleshooting</a></li>
       </ul>
     </div>
     <div>

@@ -128,12 +128,18 @@ export const SITE = {
 
 export const NAV = [
   { label: 'Home', href: '/index.html' },
+  /* The overview first: it links on to the step-by-step and complete instructions.
+     Until 2026-09-15 this went straight to the 5,000-word instructions page. */
+  { label: 'Online Testing', href: '/pages/online.html' },
+  { label: 'In-Person Testing', href: '/pages/inperson.html' },
+  { label: 'Schedule', href: '/pages/calendar.html' },
+  { label: 'FAQ', href: '/pages/faq.html' },
   {
     label: 'Helpful Links',
     children: [
       { label: "What's Next", href: '/pages/whatnext.html' },
       { label: 'Accessible Testing / HandiHam', href: '/pages/handiham.html' },
-      { label: 'Government Shutdown', href: '/pages/govshutdown.html' },
+      { label: 'Troubleshooting', href: '/pages/troubleshooting.html' },
       { label: 'ARRL', href: 'https://www.arrl.org', external: true },
       { label: 'eHam', href: 'https://www.eham.net', external: true },
       { label: 'FCC License Search', href: 'https://wireless2.fcc.gov', external: true },
@@ -143,10 +149,6 @@ export const NAV = [
       { label: 'Young Ladies Radio League', href: 'https://www.ylrl.net', external: true },
     ],
   },
-  { label: 'Online Testing', href: '/pages/Online_InstructionSeparation.html' },
-  { label: 'In-Person Testing', href: '/pages/inperson.html' },
-  { label: 'FAQ', href: '/pages/faq.html' },
-  { label: 'Schedule', href: '/pages/calendar.html' },
   { label: 'Reviews', href: '/pages/reviews.html' },
   { label: 'Our Team', href: '/pages/team.html' },
 ];
@@ -194,7 +196,7 @@ export const PAGES = {
     // and broke the whole schedule page.
     scripts: ['/js/schedule.js'],
     title: 'Schedule a Ham Radio License Exam',
-    desc: 'Book your amateur radio license exam. Sessions run throughout the day and night — pick a time that works and reserve your seat online.',
+    desc: 'Book an amateur radio license exam with PARC. Sessions are available throughout the day and night and are reserved online.',
     h1: 'Schedule Your Exam',
     schema: 'events',
   },
@@ -221,7 +223,7 @@ export const PAGES = {
   },
   'pages/whatnext.html': {
     title: "What's Next After Passing Your Ham Radio Exam",
-    desc: 'You passed — now what? Getting your call sign, paying the FCC fee, finding a club, and the first steps on the air as a new amateur radio operator.',
+    desc: 'The steps after passing an amateur radio exam: paying the FCC application fee, receiving a call sign, and recommended first steps for new operators.',
     h1: "What's Next — Welcome to Amateur Radio",
   },
   'pages/govshutdown.html': {
@@ -231,7 +233,7 @@ export const PAGES = {
   },
   'pages/handiham.html': {
     title: 'Accessible Ham Radio Exams & HandiHam Support',
-    desc: 'Amateur radio is for everyone. Accessible exam options, adaptive equipment, and study resources for blind, deaf, and physically disabled candidates.',
+    desc: 'Accessible amateur radio exam options, adaptive equipment and study resources for candidates who are blind, deaf or physically disabled.',
     h1: 'Amateur Radio for People with Disabilities',
   },
   'pages/ID.html': {
@@ -261,7 +263,7 @@ export const PAGES = {
   },
   'pages/Online_Prep_Room.html': {
     title: 'Exam Room Requirements for Online Testing',
-    desc: 'How your room must be arranged for a remote amateur radio exam — lighting, walls, desk, and what has to be cleared before the session starts.',
+    desc: 'Room requirements for a remote amateur radio exam: room selection, the items that must be cleared, and who may be present.',
     h1: 'Preparing Your Room',
   },
   'pages/Online_Prep_Computer.html': {
@@ -299,17 +301,17 @@ export const PAGES = {
   },
   'pages/Online_MultiExam.html': {
     title: 'Taking Multiple Exam Elements in One Session',
-    desc: 'You may attempt Technician, General, and Extra in a single sitting. How PARC handles multi-element amateur radio exam sessions.',
+    desc: 'Taking two or three amateur radio exam elements in one PARC session, which must be arranged by email before booking.',
     h1: 'Multiple Exams',
   },
   'pages/Online_MultiCandidate.html': {
     title: 'Scheduling Multiple Candidates',
-    desc: 'How families, clubs, classes, and scout groups book several amateur radio exam candidates into one PARC session.',
+    desc: 'Requirements for two or more candidates testing from the same residence or building: separate bookings, devices and rooms.',
     h1: 'Multiple Candidates',
   },
   'pages/Online_Handicapped.html': {
     title: 'Exam Accommodations for Candidates with Disabilities',
-    desc: 'PARC provides accommodations for amateur radio exam candidates with disabilities, including readers, extra time, and adaptive setups.',
+    desc: 'How candidates with disabilities request accommodations for a PARC amateur radio exam, such as having an examiner read the questions.',
     h1: 'Accommodations',
   },
   'pages/Online_CSCE_605.html': {
@@ -324,24 +326,24 @@ export const PAGES = {
     h1: 'Reviews',
   },
   'pages/troubleshooting.html': {
-    title: 'If Something Goes Wrong — Exam Day Troubleshooting',
-    desc: 'The problems candidates hit most often before and during an online amateur radio exam, and what to do about each one.',
-    h1: 'If something goes wrong',
+    title: 'Online Exam Troubleshooting',
+    desc: 'Common problems before and during an online amateur radio exam, and the steps to resolve each one.',
+    h1: 'Troubleshooting',
   },
   'pages/team.html': {
     scripts: ['/js/team.js'],
     title: 'Our Team — The Volunteer Examiners at PARC',
-    desc: 'Meet the volunteer examiners who run PARC exam sessions almost every day of the week.',
+    desc: 'The Volunteer Examiners who administer PARC examination sessions on nearly every day of the week.',
     h1: 'Our Team',
   },
   'pages/donations.html': {
     title: 'Support PARC Radio & Technology',
-    desc: 'PARC is an all-volunteer group. Donations cover exam materials, equipment, and community outreach — none of it pays a salary.',
+    desc: 'PARC is an all-volunteer organization. Donations fund examination materials, equipment and community outreach.',
     h1: 'Support Our Work',
   },
   'pages/payhere.html': {
     title: 'Pay Your Exam Fee',
-    desc: 'Pay the amateur radio exam application fee for your scheduled PARC session. Use the same email address you used to schedule.',
+    desc: 'How the $15 PARC examination fee is paid: by card when booking on the schedule, using the same email address as the registration.',
     h1: 'Pay Your Exam Fee',
     noindex: true, // transactional; nothing to gain from indexing
   },

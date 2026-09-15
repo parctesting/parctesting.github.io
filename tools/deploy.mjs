@@ -81,7 +81,8 @@ if (!CHECK_ONLY) {
   }
 
   step('Building (order matters — see header)');
-  // 1. public pages
+  // 1. public pages (the Complete Text instructions are built from the step pages first)
+  run('node tools/build-instructions.mjs'); ok('build-instructions.mjs — Complete Text instructions rebuilt');
   run('node tools/retheme.mjs');            ok('retheme.mjs   — public pages regenerated');
   // 2. alt text + sitemap
   run('node tools/fix-alt.mjs');            ok('fix-alt.mjs   — image descriptions applied');
@@ -199,6 +200,14 @@ existsSync(join(ROOT, '.nojekyll'))
   ['_ve-source', 'tools', 'worker', 'design'].every((d) => cfg.includes(d))
     ? ok('_config.yml excludes _ve-source, tools, worker, design')
     : bad('_config.yml is missing one of the required excludes');
+}
+
+// the Complete Text instructions must say what the step pages say
+try {
+  execFileSync('node', ['tools/build-instructions.mjs', '--check'], { cwd: ROOT, stdio: 'pipe' });
+  ok('Complete Text instructions match the step pages');
+} catch {
+  bad('Complete Text instructions are out of date — run: node tools/build-instructions.mjs');
 }
 
 // links
