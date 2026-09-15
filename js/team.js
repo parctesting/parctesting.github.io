@@ -74,11 +74,36 @@
     result.textContent = text;
   }
 
+  /* A message in the status line alone leaves a screen reader user hunting for
+     the field. The field in error is marked invalid, linked to the message and
+     focused; the mark comes off on the next attempt. */
+  var flagged = [];
+  function describedBy(el, add) {
+    var ids = (el.getAttribute('aria-describedby') || '').split(/\s+/).filter(function (x) {
+      return x && x !== 'team-result';
+    });
+    if (add) ids.push('team-result');
+    if (ids.length) el.setAttribute('aria-describedby', ids.join(' '));
+    else el.removeAttribute('aria-describedby');
+  }
+  function clearInvalid() {
+    flagged.forEach(function (el) { el.removeAttribute('aria-invalid'); describedBy(el, false); });
+    flagged = [];
+  }
+  function invalid(el, text) {
+    say('error', text);
+    if (!el) return;
+    el.setAttribute('aria-invalid', 'true');
+    describedBy(el, true);
+    flagged.push(el);
+    el.focus();
+  }
+
   /* ---- render ------------------------------------------------------------ */
   function load(fresh) {
     if (!grid || !status) return;
     if (!ENDPOINT) {
-      status.textContent = 'The team page is not connected yet. Please check back soon.';
+      status.textContent = 'The team list is not available at this time.';
       return;
     }
     if (!fresh) status.textContent = 'Loading…';
@@ -89,8 +114,7 @@
         status.textContent = '';
         var members = d.members || [];
         if (!members.length) {
-          grid.innerHTML = '<p class="reviews-empty">No profiles yet. '
-            + 'If you examine with PARC, yours would be the first.</p>';
+          grid.innerHTML = '<p class="reviews-empty">No profiles have been published.</p>';
           return;
         }
         grid.innerHTML = members.map(function (m) {
@@ -110,7 +134,7 @@
         }).join('');
       })
       .catch(function () {
-        status.textContent = 'The team list could not be loaded just now.';
+        status.textContent = 'The team list could not be loaded.';
       });
   }
 
@@ -180,7 +204,7 @@
         photoData = '';
         fileInput.value = '';
         showPhoto();
-        say('error', 'That image could not be read. Please try a JPEG or PNG.');
+        say('error', 'The image could not be read. Select a JPEG or PNG file.');
       });
     });
   }
@@ -212,8 +236,8 @@
         'refresh-expired': 'auto',
         'error-callback': function () {
           tsFailed = true;
-          tsBox.innerHTML = '<p class="review-form-note">The human check could not run. '
-            + 'If you use a content blocker, allow challenges.cloudflare.com and reload.</p>';
+          tsBox.innerHTML = '<p class="review-form-note">The security check could not be completed. '
+            + 'If a content blocker is in use, allow challenges.cloudflare.com and reload the page.</p>';
         },
       });
     };
@@ -224,7 +248,7 @@
     s.onerror = function () {
       tsFailed = true;
       tsBox.innerHTML = '<p class="review-form-note">The human check could not load. '
-        + 'If you use a content blocker, allow challenges.cloudflare.com and reload.</p>';
+        + 'If a content blocker is in use, allow challenges.cloudflare.com and reload the page.</p>';
     };
     document.head.appendChild(s);
   }
@@ -291,7 +315,7 @@
 
   function showLabel() {
     if (!submit) return;
-    submit.textContent = mode === 'add' ? SEND_LABEL : (loaded ? 'Save changes' : 'Load my profile');
+    submit.textContent = mode === 'add' ? SEND_LABEL : (loaded ? 'Save Changes' : 'Load My Profile');
   }
   function showStep() {
     if (fields) fields.hidden = mode === 'update' && !loaded;
@@ -352,8 +376,8 @@
       + '<p class="team-code-box__code"><code></code>'
       + '<button type="button" class="btn">Copy</button></p>'
       // What the code is for is said once, in the page's introduction.
-      + '<p class="team-code-box__note">This browser remembers it, but keep a copy somewhere '
-      + 'safe in case you use another device.</p>';
+      + '<p class="team-code-box__note">This browser saves the code. Keep a copy in a safe '
+      + 'place for use on another device.</p>';
     result.parentNode.insertBefore(codeBox, result.nextSibling);
     codeValue = codeBox.querySelector('code');
     copyBtn = codeBox.querySelector('button');
@@ -381,8 +405,8 @@
     modeBox.className = 'team-mode';
     modeBox.setAttribute('role', 'group');
     modeBox.setAttribute('aria-label', 'Add or update a profile');
-    modeBox.innerHTML = '<button type="button" class="team-mode__btn" data-mode="add" aria-pressed="true">Add a new profile</button>'
-      + '<button type="button" class="team-mode__btn" data-mode="update" aria-pressed="false">Update my profile</button>';
+    modeBox.innerHTML = '<button type="button" class="team-mode__btn" data-mode="add" aria-pressed="true">Add a New Profile</button>'
+      + '<button type="button" class="team-mode__btn" data-mode="update" aria-pressed="false">Update My Profile</button>';
     form.parentNode.insertBefore(modeBox, form);
     modeBox.addEventListener('click', function (e) {
       var b = e.target.closest ? e.target.closest('button[data-mode]') : null;
@@ -397,8 +421,8 @@
       + ' autocomplete="off" autocapitalize="characters" spellcheck="false"'
       + ' placeholder="XXXX-XXXX-XXXX" aria-describedby="team-edit-code-hint">'
       + '<p class="review-hint" id="team-edit-code-hint">No code, or lost it? Ask and a new one can be sent to you.</p>'
-      + '<p class="review-hint team-code-remembered" hidden>This browser remembered your code. '
-      + '<button type="button" class="team-link-btn">Forget it</button></p>';
+      + '<p class="review-hint team-code-remembered" hidden>This browser has saved your code. '
+      + '<button type="button" class="team-link-btn">Forget Code</button></p>';
     form.insertBefore(entry, fields);
     codeInput = entry.querySelector('input');
     remembered = entry.querySelector('.team-code-remembered');
@@ -418,15 +442,15 @@
       if (fieldsFromProfile) clearFields();
       showStep();
       syncRemembered();
-      say('', 'This browser has forgotten the code.');
+      say('', 'The code has been removed from this browser.');
       codeInput.focus();
     });
 
     removedNote = document.createElement('p');
     removedNote.className = 'review-hint team-photo-removed';
     removedNote.hidden = true;
-    removedNote.innerHTML = 'Your photo comes off the team page when you save. '
-      + '<button type="button" class="team-link-btn">Keep my photo</button>';
+    removedNote.innerHTML = 'Your photo will be removed from the team page when you save. '
+      + '<button type="button" class="team-link-btn">Keep My Photo</button>';
     fields.appendChild(removedNote);
     keepPhoto = removedNote.querySelector('button');
     keepPhoto.addEventListener('click', function () {
@@ -479,15 +503,17 @@
         .catch(function () {
           turnstileReset();
           busy(false);
-          say('error', 'That did not send. Please check your connection and try again.');
+          say('error', 'The request could not be sent. Check the internet connection and try again.');
         });
     });
   }
 
   function profileFields() {
-    var name = document.getElementById('team-name').value.trim();
-    if (name.length < 2) { say('error', 'Please give the name you would like shown.'); return null; }
-    if (bio.value.trim().length < 10) { say('error', 'Please add a sentence or two about yourself.'); return null; }
+    var nameEl = document.getElementById('team-name');
+    var name = nameEl.value.trim();
+    clearInvalid();
+    if (name.length < 2) { invalid(nameEl, 'Enter the name to be shown on the team page.'); return null; }
+    if (bio.value.trim().length < 10) { invalid(bio, 'Enter a short description of at least one sentence.'); return null; }
     return {
       name: name,
       callsign: document.getElementById('team-callsign').value,
@@ -504,10 +530,10 @@
     if (codeBox) codeBox.hidden = true;
     p.photo = photoData;
     send('/team', p, 'Sending…', function (res) {
-      if (!res.ok) { say('error', res.d.error || 'That did not send. Please try again.'); return; }
+      if (!res.ok) { say('error', res.d.error || 'The profile could not be submitted. Try again.'); return; }
       form.reset();
       clearFields();
-      say('ok', res.d.message || 'Thank you — you are on the team page now.');
+      say('ok', res.d.message || 'Thank you. Your profile has been published on the Our Team page.');
       if (res.d.editCode) {
         rememberCode(res.d.editCode);
         buildEditing();
@@ -521,14 +547,15 @@
 
   function lookupProfile() {
     var c = normaliseCode(codeInput.value);
+    clearInvalid();
     if (!c) {
-      say('error', 'That does not look like an edit code. It is 12 letters and numbers, in three groups of four.');
+      invalid(codeInput, 'The edit code is not in the expected format: 12 letters and numbers, in three groups of four.');
       return;
     }
     say('', '');
     send('/team/lookup', { editCode: c }, 'Loading…', function (res) {
       if (!res.ok || !res.d.member) {
-        say('error', res.d.error || 'That code could not be checked. Please try again.');
+        say('error', res.d.error || 'The code could not be checked. Try again.');
         return;
       }
       loaded = res.d.member; loadedCode = c;
@@ -537,7 +564,7 @@
       syncRemembered();
       fillFields(loaded);
       showStep();
-      say('ok', 'Your profile is below. Change what you like, then choose Save changes.');
+      say('ok', 'Your profile is shown below. Make any changes, then select Save Changes.');
     });
   }
 
@@ -552,7 +579,7 @@
     p.removePhoto = sentRemove;
     send('/team/update', p, 'Saving…', function (res) {
       if (!res.ok || !res.d.member) {
-        say('error', res.d.error || 'That did not save. Please try again.');
+        say('error', res.d.error || 'The changes could not be saved. Try again.');
         return;
       }
       loaded = res.d.member;
@@ -563,7 +590,7 @@
       photoData = ''; removePhoto = false;
       if (fileInput) fileInput.value = '';
       showPhoto();
-      say('ok', res.d.message || 'Saved.');
+      say('ok', res.d.message || 'Your changes have been saved.');
     });
   }
 

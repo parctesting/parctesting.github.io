@@ -56,7 +56,7 @@
        the form up would let someone write one and lose it on submit, so take it
        down rather than accept text we cannot store. */
     if (!ENDPOINT) {
-      status.textContent = 'Reviews are not available just yet. Please check back soon.';
+      status.textContent = 'Reviews are not available at this time.';
       if (formWrap) formWrap.hidden = true;
       return;
     }
@@ -67,7 +67,7 @@
         status.textContent = '';
         var rv = d.reviews || [];
         if (!rv.length) {
-          list.innerHTML = '<p class="reviews-empty">No reviews yet. Yours would be the first.</p>';
+          list.innerHTML = '<p class="reviews-empty">No reviews have been submitted.</p>';
           return;
         }
         summary.innerHTML =
@@ -85,12 +85,16 @@
         }).join('');
       })
       .catch(function () {
-        status.textContent = 'Reviews could not be loaded right now. The form below still works.';
+        status.textContent = 'Reviews could not be loaded. A review may still be submitted using the form below.';
       });
   }
 
   /* ---- star input -------------------------------------------------------- */
   function paint() {
+    if (rating && stars.getAttribute('aria-invalid')) {
+      stars.removeAttribute('aria-invalid');
+      describedBy(stars, false);
+    }
     [].forEach.call(stars.querySelectorAll('.star'), function (b) {
       var v = Number(b.getAttribute('data-value'));
       b.classList.toggle('is-on', v <= rating);
@@ -121,6 +125,10 @@
   if (textEl && remaining) {
     textEl.addEventListener('input', function () {
       remaining.textContent = String(1200 - textEl.value.length);
+      if (textEl.value.trim() && textEl.getAttribute('aria-invalid')) {
+        textEl.removeAttribute('aria-invalid');
+        describedBy(textEl, false);
+      }
     });
   }
 
@@ -144,8 +152,8 @@
         'refresh-expired': 'auto',
         'error-callback': function () {
           tsFailed = true;
-          tsBox.innerHTML = '<p class="review-form-note">The human check could not run. '
-            + 'If you use a content blocker, allow challenges.cloudflare.com and reload.</p>';
+          tsBox.innerHTML = '<p class="review-form-note">The security check could not be completed. '
+            + 'If a content blocker is in use, allow challenges.cloudflare.com and reload the page.</p>';
         },
       });
     };
@@ -160,8 +168,8 @@
        form. */
     s.onerror = function () {
       tsFailed = true;
-      tsBox.innerHTML = '<p class="review-form-note">The human check could not load. '
-        + 'If you use a content blocker, allow challenges.cloudflare.com and reload.</p>';
+      tsBox.innerHTML = '<p class="review-form-note">The security check could not be loaded. '
+        + 'If a content blocker is in use, allow challenges.cloudflare.com and reload the page.</p>';
     };
     document.head.appendChild(s);
   }
@@ -208,18 +216,47 @@
     catch (e) { /* nothing useful to do */ }
   }
 
+  /* ---- validation --------------------------------------------------------
+     A message in the status line alone leaves a screen reader user hunting for
+     the field. The field is marked invalid, linked to the message, and focused. */
+  function describedBy(el, add) {
+    var ids = (el.getAttribute('aria-describedby') || '').split(/\s+/).filter(function (x) {
+      return x && x !== 'review-result';
+    });
+    if (add) ids.push('review-result');
+    if (ids.length) el.setAttribute('aria-describedby', ids.join(' '));
+    else el.removeAttribute('aria-describedby');
+  }
+  function clearInvalid() {
+    [stars, textEl].forEach(function (el) {
+      if (!el) return;
+      el.removeAttribute('aria-invalid');
+      describedBy(el, false);
+    });
+  }
+  function invalid(el, focusEl, msg) {
+    result.className = 'review-result is-error';
+    result.textContent = msg;
+    el.setAttribute('aria-invalid', 'true');
+    describedBy(el, true);
+    focusEl.focus();
+  }
+
   /* ---- submit ------------------------------------------------------------ */
   if (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       result.className = 'review-result';
+      clearInvalid();
 
-      if (!rating) { result.className = 'review-result is-error';
-        result.textContent = 'Please choose a rating.'; return; }
-      if (!textEl.value.trim()) { result.className = 'review-result is-error';
-        result.textContent = 'Please add a few words about your experience.'; return; }
+      if (!rating) {
+        invalid(stars, stars.querySelector('.star[tabindex="0"]') || stars.querySelector('.star'),
+          'Select a rating.');
+        return;
+      }
+      if (!textEl.value.trim()) { invalid(textEl, textEl, 'Enter a description of the examination session.'); return; }
       if (!ENDPOINT) { result.className = 'review-result is-error';
-        result.textContent = 'Reviews are not connected yet.'; return; }
+        result.textContent = 'Reviews are not available at this time.'; return; }
 
       submit.disabled = true;
       var origLabel = submit.textContent;
@@ -246,7 +283,7 @@
               /* The token is spent either way, so a retry needs a fresh one. */
               turnstileReset();
               result.className = 'review-result is-error';
-              result.textContent = res.d.error || 'That did not send. Please try again.';
+              result.textContent = res.d.error || 'The review could not be submitted. Try again.';
               return;
             }
             form.reset();
@@ -254,7 +291,7 @@
             turnstileReset();
             if (remaining) remaining.textContent = '1200';
             result.className = 'review-result is-ok';
-            result.textContent = res.d.message || 'Thank you — your review is on the page.';
+            result.textContent = res.d.message || 'Thank you. Your review has been published.';
             /* Re-read rather than splice the new one in by hand, so the average and
                the ordering come from the same place they always do. The cache
                buster is needed because the list is served with a short max-age. */
@@ -264,7 +301,7 @@
             submit.disabled = false;
             submit.textContent = origLabel;
             result.className = 'review-result is-error';
-            result.textContent = 'That did not send. Please check your connection and try again.';
+            result.textContent = 'The review could not be submitted. Check the internet connection and try again.';
           });
       });
     });

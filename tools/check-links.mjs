@@ -2,6 +2,7 @@
 /** Resolves every internal href/src across the published site and reports misses. */
 import { readdirSync, statSync, readFileSync, existsSync } from 'node:fs';
 import { join, relative, dirname, resolve } from 'node:path';
+import { PAGES } from './site-data.mjs';
 
 const ROOT = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
 const walk = (d, a = []) => {
@@ -31,5 +32,26 @@ for (const file of walk(ROOT)) {
   }
 }
 console.log(`checked ${checked} internal links across the published site`);
-if (bad.length) { console.log(`\nBROKEN (${bad.length}):`); bad.forEach((b) => console.log('  ' + b)); process.exit(1); }
+
+/* A link that opens a new tab must say so. Without it a screen reader user lands
+   in a tab with no Back history and no idea how they got there. The visible arrow
+   comes from css/site.css; this is the spoken half. Public pages only: the locked
+   VE shells are rebuilt by parc-lock, which needs the passcode. */
+const unannounced = [];
+for (const rel of Object.keys(PAGES)) {
+  if (rel === 'pages/ve-file.html' || !existsSync(join(ROOT, rel))) continue;
+  const html = readFileSync(join(ROOT, rel), 'utf8');
+  for (const m of html.matchAll(/<a\b[^>]*target=["']_blank["'][^>]*>([\s\S]*?)<\/a>/gi)) {
+    if (!/opens (Calendly )?in a new tab/.test(m[1])) {
+      unannounced.push(`${rel}  ->  ${m[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() || '(image link)'}`);
+    }
+  }
+}
+
+if (bad.length) { console.log(`\nBROKEN (${bad.length}):`); bad.forEach((b) => console.log('  ' + b)); }
 else console.log('no broken internal links');
+if (unannounced.length) {
+  console.log(`\nNEW-TAB LINKS WITHOUT "(opens in a new tab)" (${unannounced.length}):`);
+  unannounced.forEach((u) => console.log('  ' + u));
+} else console.log('every new-tab link on the public pages is announced');
+if (bad.length || unannounced.length) process.exit(1);

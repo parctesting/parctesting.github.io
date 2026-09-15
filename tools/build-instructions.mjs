@@ -17,6 +17,10 @@
  *     sense one page at a time, and anything between <!-- step-only --> markers
  *   - moves every heading down a level, so each page's h1 becomes a section h2
  *   - turns links to pages that are included here into links within this page
+ *
+ * It also keeps the step pages' own navigation current: each pager button is
+ * named after the page it opens ("Next: Preparing Your Room"), and each step page
+ * opens with its stage ("Step 3 of 5: Prepare"). --check fails when either is stale.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -52,6 +56,30 @@ const SECTIONS = [
 const flat = SECTIONS.flatMap((s) => (s.parts ? s.parts : [s]));
 const anchorFor = new Map(flat.map((s) => [s.file, s.id]));
 
+/* The five stages Before You Book lists as its steps. Each step page opens with
+   "Step 3 of 5: Prepare", so a reader always knows where they are. Before You
+   Book itself is the introduction that lists the stages, so it has none. */
+const STAGES = ['Study', 'Book, Pay and Register', 'Prepare', 'Rules', 'Exam Day'];
+const STAGE_OF = {
+  'Online_WhereandHowtoStudy.html': 1,
+  'Online_HowtoScheduleandRegister.html': 2,
+  'Online_SingleExam.html': 2,
+  'Online_MultiExam.html': 2,
+  'Online_MultiCandidate.html': 2,
+  'Online_Handicapped.html': 2,
+  'Online_Preparation.html': 3,
+  'ID.html': 3,
+  'Online_Prep_Room.html': 3,
+  'Online_Prep_Computer.html': 3,
+  'Online_Prep_2ndDevice.html': 3,
+  'Online_Rules_IQ.html': 4,
+  'Online_Protocol.html': 5,
+  'Online_CSCE_605.html': 5,
+};
+/* Every page with a Back/Next pager. The checklist page is not part of the
+   Complete Text, but it is part of the chain. */
+const PAGER_PAGES = ['Online_GeneralInfo.html', ...Object.keys(STAGE_OF)];
+
 function stepContent(file) {
   const html = readFileSync(join(PAGES_DIR, file), 'utf8');
   const container = html.indexOf('<div class="container">');
@@ -66,7 +94,7 @@ function stepContent(file) {
 function transform(file, id, shift) {
   let s = stepContent(file)
     .replace(/<!-- step-only[\s\S]*?<!-- \/step-only -->\s*/g, '')
-    .replace(/<nav class="page-links page-links--pager">[\s\S]*?<\/nav>\s*/g, '')
+    .replace(/<nav class="page-links page-links--pager"[^>]*>[\s\S]*?<\/nav>\s*/g, '')
     .replace(/<div class="callout callout--next">[\s\S]*?<\/div>\s*/g, '');
 
   if (!/<h1>/.test(s)) throw new Error(`${file}: no <h1> to become the section heading`);
@@ -84,6 +112,50 @@ function transform(file, id, shift) {
 function title(file) {
   const m = stepContent(file).match(/<h1>([\s\S]*?)<\/h1>/);
   return m ? m[1].trim() : file;
+}
+
+/* ---- the step pages' own navigation ---------------------------------------
+   A pager reading only "Back" and "Next" tells a screen reader user, and anyone
+   scanning, nothing about where it goes. Labels come from the destination's h1,
+   so renaming a page cannot leave a stale label behind. */
+function headingOf(file) {
+  const html = readFileSync(join(PAGES_DIR, file), 'utf8');
+  const zone = html.slice(html.indexOf('<div class="container">'));
+  const m = zone.match(/<h1[^>]*>([\s\S]*?)<\/h1>/);
+  if (!m) throw new Error(`${file}: no <h1> to name the pager link after`);
+  return m[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+}
+
+function progressBlock(stage) {
+  const bar = STAGES.map((_, i) =>
+    `<span${i + 1 < stage ? ' class="is-done"' : i + 1 === stage ? ' class="is-current"' : ''}></span>`).join('');
+  return `<!-- step-only: progress -->
+<p class="step-progress"><span class="step-progress__text">Step ${stage} of ${STAGES.length}: ${STAGES[stage - 1]}</span>
+  <span class="step-progress__bar" aria-hidden="true">${bar}</span></p>
+<!-- /step-only -->
+`;
+}
+
+function withNavigation(file) {
+  const path = join(PAGES_DIR, file);
+  const html = readFileSync(path, 'utf8');
+  let out = html.replace(
+    /<nav class="page-links page-links--pager"[^>]*>([\s\S]*?)<\/nav>/,
+    (m, inner) => '<nav class="page-links page-links--pager" aria-label="Instruction steps">' +
+      inner.replace(/<a class="page-link page-link--(back|next)" href="([^"#]+)"[^>]*>[\s\S]*?<\/a>/g,
+        (a, dir, href) => `<a class="page-link page-link--${dir}" href="${href}">` +
+          `<span class="page-link__label">${dir === 'back' ? 'Back' : 'Next'}: ${headingOf(href)}</span></a>`) +
+      '</nav>');
+  if (out === html && !/page-links--pager/.test(html)) throw new Error(`${file}: no pager`);
+
+  out = out.replace(/<!-- step-only: progress -->[\s\S]*?<!-- \/step-only -->\s*/, '');
+  if (STAGE_OF[file]) {
+    const zone = out.indexOf('<div class="container">');
+    const h1 = out.indexOf('<h1', zone);
+    if (zone === -1 || h1 === -1) throw new Error(`${file}: no <h1> to place the progress line above`);
+    out = out.slice(0, h1) + progressBlock(STAGE_OF[file]) + '\n' + out.slice(h1);
+  }
+  return { path, html, out };
 }
 
 function build() {
@@ -142,10 +214,10 @@ ${body}
 
 <div class="callout callout--next">
   <h2>Book Your Exam</h2>
-  <p>Select a time on the schedule. After the examination, refer to What&rsquo;s Next.</p>
+  <p>Select a time on the schedule. After the examination, refer to After Passing the Exam.</p>
   <p class="callout__actions">
     <a class="btn btn--primary" href="calendar.html">Book Your Exam</a>
-    <a class="btn" href="whatnext.html">What&rsquo;s Next</a>
+    <a class="btn" href="whatnext.html">After Passing the Exam</a>
   </p>
 </div>
 
@@ -158,23 +230,43 @@ ${body}
 `;
 }
 
+const CHECK = process.argv.includes('--check');
+
+/* Step pages first: their progress lines are step-only, so the Complete Text
+   built from them comes out the same either way, but it is built from what is
+   on disk. */
+const staleSteps = [];
+for (const file of PAGER_PAGES) {
+  const { path, html: before, out } = withNavigation(file);
+  if (out === before) continue;
+  if (CHECK) staleSteps.push(file);
+  else writeFileSync(path, out);
+}
+
 const html = readFileSync(TARGET, 'utf8');
 const zoneStart = html.indexOf('<div class="container">');
 const zoneEnd = html.search(/<footer\b/);
 if (zoneStart === -1 || zoneEnd <= zoneStart) throw new Error('Online_InstructionSeparation.html: no content zone');
 
 const next = html.slice(0, zoneStart) + build() + html.slice(zoneEnd);
-if (process.argv.includes('--check')) {
+if (CHECK) {
   /* Compare content zones only: retheme owns the head and footer, and strips
      the <main> tags this writes, so whole-file equality would never hold. */
   const zoneOf = (h) => h.slice(h.indexOf('<div class="container">'), h.search(/<footer\b/))
     .replace(/<\/?main\b[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  let stale = false;
+  if (staleSteps.length) {
+    console.error(`Step navigation is out of date in ${staleSteps.join(', ')}: run node tools/build-instructions.mjs`);
+    stale = true;
+  }
   if (zoneOf(next) !== zoneOf(html)) {
     console.error('Online_InstructionSeparation.html is out of date: run node tools/build-instructions.mjs');
-    process.exit(1);
+    stale = true;
   }
-  console.log('Online_InstructionSeparation.html matches the step pages');
+  if (stale) process.exit(1);
+  console.log('Online_InstructionSeparation.html and the step navigation match the step pages');
 } else {
   writeFileSync(TARGET, next);
-  console.log(`Online_InstructionSeparation.html rebuilt from ${flat.length} step pages`);
+  console.log(`Online_InstructionSeparation.html rebuilt from ${flat.length} step pages; ` +
+    `navigation checked on ${PAGER_PAGES.length} step pages`);
 }
