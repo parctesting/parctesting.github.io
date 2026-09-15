@@ -59,6 +59,9 @@
   var WORKER_URL = (root.getAttribute('data-availability-endpoint') || '').trim();
   var SNAPSHOT_URL = BASE + 'data/availability.json';
   var BOOK_DIRECT = 'https://calendly.com/parctesting';
+  /* Every link that opens a new tab says so to screen readers; the page's other
+     new-tab links carry the same text (tools/check-links.mjs enforces it). */
+  var NEW_TAB = '<span class="sr-only"> (opens in a new tab)</span>';
   var GATE_KEY = 'parc-schedule-audience';
 
   var DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -237,9 +240,19 @@
     if (form) form.addEventListener('submit', function (e) {
       e.preventDefault();
       var m = +mSel.value, dd = +dSel.value, yy = +ySel.value;
-      if (!m || !dd || !yy) { err.textContent = 'Please choose a month, day, and year.'; return; }
+      /* Mark the field that needs attention and move to it, so a screen reader
+         user hears what to correct instead of only a status line elsewhere. */
+      var sels = [mSel, dSel, ySel];
+      sels.forEach(function (s) { s.removeAttribute('aria-invalid'); s.removeAttribute('aria-describedby'); });
+      var flag = function (s, msg) {
+        err.textContent = msg;
+        s.setAttribute('aria-invalid', 'true');
+        s.setAttribute('aria-describedby', 'age-error');
+        s.focus();
+      };
+      if (!m || !dd || !yy) { flag(!m ? mSel : !dd ? dSel : ySel, 'Select a month, day and year.'); return; }
       var age = ageFrom(yy, m, dd);
-      if (age < 0 || age > 120) { err.textContent = 'Please check that date.'; return; }
+      if (age < 0 || age > 120) { flag(ySel, 'The date entered is not valid.'); return; }
       err.textContent = '';
       var aud = age <= YOUTH_MAX_AGE ? 'youth' : 'general';
       saveAudience(aud);            // the date itself goes no further
@@ -615,6 +628,7 @@
   /* ---- render ----------------------------------------------------------- */
   function render() {
     var byDay = visibleByDay();
+    resolveSelectedDay(byDay);
     renderGrid(byDay);
     renderDay(byDay);
     renderSummary(byDay);
@@ -634,30 +648,30 @@
     var key = monthKey(state.month), status = state.months[key], name = MONTHS[state.month.m];
     var total = daysOf(byDay).reduce(function (a, k) { return a + byDay[k].length; }, 0);
     var direct = function (text) {
-      return '<a href="' + BOOK_DIRECT + '" target="_blank" rel="noopener">' + text + '</a>';
+      return '<a href="' + BOOK_DIRECT + '" target="_blank" rel="noopener">' + text + NEW_TAB + '</a>';
     };
     var html = '';
     if (isLoading(status)) {
       html = 'Loading times for ' + name + '…';
     } else if (status === 'failed') {
-      html = 'Times for ' + name + ' could not be loaded just now. ' +
-        '<button type="button" class="tz-change" id="cal-retry">Try again</button>, or ' +
+      html = 'Times for ' + name + ' could not be loaded. ' +
+        '<button type="button" class="tz-change" id="cal-retry">Try Again</button>, or ' +
         direct('book directly on Calendly') + '.';
     } else if (status === 'unavailable') {
-      html = 'Times for ' + name + ' cannot be shown here right now. Every session can still be ' +
+      html = 'Times for ' + name + ' cannot be displayed at this time. Every session may still be ' +
         direct('booked directly on Calendly') + '.';
     } else if (status === 'partial') {
       html = 'Times after ' + new Intl.DateTimeFormat('en-US', { timeZone: state.tz, month: 'long', day: 'numeric' })
         .format(new Date(state.partialUntil[key] - DAY_MS)) +
-        ' cannot be shown here right now. Later sessions can still be ' + direct('booked directly on Calendly') + '.';
+        ' cannot be displayed at this time. Later sessions may still be ' + direct('booked directly on Calendly') + '.';
     } else if (status === 'incomplete') {
-      html = 'Some sessions for ' + name + ' could not be loaded just now, so times may be missing. ' +
-        '<button type="button" class="tz-change" id="cal-retry">Try again</button>, or ' +
+      html = 'Some sessions for ' + name + ' could not be loaded, so some times may be missing. ' +
+        '<button type="button" class="tz-change" id="cal-retry">Try Again</button>, or ' +
         direct('book directly on Calendly') + '.';
     } else if (!total && !state.monthOpen) {
-      html = 'No exam times are open in ' + name + ' yet.';
+      html = 'No examination times are open for ' + name + ' at this time.';
     } else if (!total) {
-      html = 'No times match these filters. Try turning another one on.';
+      html = 'No times match the selected filters. Change the filters to see more times.';
     } else if (state.audience === 'youth' && !state.youthOnly) {
       /* Says which sessions are open to them, not what they cost. Terms are
          settled at booking; stating them here would invite people to work the
@@ -694,7 +708,7 @@
       el.textContent = 'Some of these times were last checked ' +
         new Date(state.staleAt[key]).toLocaleString('en-US',
           { timeZone: state.tz, month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) +
-        ' and may already be taken. Calendly confirms what is still free when you book.';
+        ' and may no longer be available. Calendly confirms availability at booking.';
       el.hidden = false;
       return;
     }
@@ -707,19 +721,22 @@
       { timeZone: state.tz, month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
     if (hours < 24) {
       el.className = 'cal-freshness';
-      el.textContent = 'Times last checked ' + when + '. Calendly confirms what is still free when you book.';
+      el.textContent = 'Times last checked ' + when + '. Calendly confirms availability at booking.';
     } else {
       el.className = 'cal-freshness is-stale';
       el.textContent = 'Availability last checked ' + when + ' (' + Math.round(hours / 24) +
         ' day' + (Math.round(hours / 24) === 1 ? '' : 's') + ' ago). Some of these times may ' +
-        'already be taken — Calendly will show what is really free when you click through.';
+        'no longer be available. Calendly confirms availability at booking.';
     }
     el.hidden = false;
   }
 
   function renderGrid(byDay) {
     var y = state.month.y, m = state.month.m;
-    document.getElementById('cal-month').textContent = MONTHS[m] + ' ' + y;
+    /* The heading is a live region, so a new month is announced. Rewriting the
+       same text on every day selection would announce it again. */
+    var monthEl = document.getElementById('cal-month');
+    if (monthEl.textContent !== MONTHS[m] + ' ' + y) monthEl.textContent = MONTHS[m] + ' ' + y;
 
     /* Nothing before this month can be booked, and the Worker serves twelve
        months out, so the arrows stop at both ends rather than lead to empty grids. */
@@ -755,8 +772,24 @@
         // Three density steps, so a glance shows where the room is.
         cell.classList.add(slots.length >= 30 ? 'lvl-3' : slots.length >= 10 ? 'lvl-2' : 'lvl-1');
         if (key === state.selectedDay) cell.classList.add('is-selected');
-        cell.setAttribute('aria-label', slots.length + ' times available on ' + MONTHS[m] + ' ' + d);
-        (function (k) { cell.addEventListener('click', function () { state.selectedDay = k; render(); }); })(key);
+        cell.setAttribute('aria-pressed', key === state.selectedDay ? 'true' : 'false');
+        cell.setAttribute('data-day', key);
+        cell.setAttribute('aria-label', MONTHS[m] + ' ' + d + ', ' + slots.length +
+          (slots.length === 1 ? ' time' : ' times') + ' available');
+        (function (k) {
+          cell.addEventListener('click', function (e) {
+            state.selectedDay = k;
+            render();
+            /* render() rebuilt the grid, so the button that had focus is gone and
+               focus would drop to the top of the page. From the keyboard (detail 0)
+               the next step is choosing a time, so focus moves to the times; a
+               click or tap stays on the day. */
+            var title = document.getElementById('cal-day-title');
+            var again = document.querySelector('#cal-grid [data-day="' + k + '"]');
+            if (e.detail === 0 && title) title.focus();
+            else if (again) again.focus({ preventScroll: true });
+          });
+        })(key);
       } else {
         cell.classList.add('is-none');
       }
@@ -800,21 +833,28 @@
     return window.parcTagBooking ? window.parcTagBooking(url) : url;
   }
 
+  /** The day whose times are shown: the one chosen, or else the month's first day
+   *  with times. Settled before the grid is drawn, so the grid marks the same day
+   *  the panel shows. The selected day has to belong to the month on screen.
+   *  Moving to November with an October day still selected used to leave
+   *  October's times beside November's grid. */
+  function resolveSelectedDay(byDay) {
+    var key = state.selectedDay;
+    if (key && byDay[key] && key.slice(0, 7) === monthKey(state.month)) return key;
+    var days = daysOf(byDay);
+    if (!days.length) return null;
+    return (state.selectedDay = days[0]);
+  }
+
   function renderDay(byDay) {
     var panel = document.getElementById('cal-day');
-    var days = daysOf(byDay), key = state.selectedDay;
-    /* The selected day has to belong to the month on screen. Moving to November
-       with an October day still selected used to leave October's times beside
-       November's grid. */
-    if (!key || !byDay[key] || key.slice(0, 7) !== monthKey(state.month)) {
-      if (!days.length) {
-        var loading = isLoading(state.months[monthKey(state.month)]);
-        panel.innerHTML = '<p class="cal-day__empty">' +
-          (loading ? 'Loading times…' : state.monthOpen ? 'No times match these filters.' : 'No times to show for this month.') +
-          '</p>';
-        return;
-      }
-      key = state.selectedDay = days[0];
+    var key = resolveSelectedDay(byDay);
+    if (!key) {
+      var loading = isLoading(state.months[monthKey(state.month)]);
+      panel.innerHTML = '<p class="cal-day__empty">' +
+        (loading ? 'Loading times…' : state.monthOpen ? 'No times match the selected filters.' : 'No times are available this month.') +
+        '</p>';
+      return;
     }
     var slots = byDay[key].slice().sort(function (a, b) { return a.date - b.date; });
     var heading = new Intl.DateTimeFormat('en-US',
@@ -824,7 +864,7 @@
     var groups = {};
     slots.forEach(function (s) { (groups[bandOf(hourIn(s.date, state.tz))] = groups[bandOf(hourIn(s.date, state.tz))] || []).push(s); });
 
-    var html = '<h3 class="cal-day__title">' + heading +
+    var html = '<h3 class="cal-day__title" id="cal-day-title" tabindex="-1">' + heading +
       ' <span class="cal-day__count">' + slots.length + ' time' + (slots.length === 1 ? '' : 's') + '</span></h3>';
 
     BANDS.forEach(function (band) {
@@ -843,6 +883,9 @@
           '" target="_blank" rel="noopener">' +
           '<span class="slot__time">' + timeLabel(s.date, state.tz) +
           (y ? ' <span class="slot__youth">Youth</span>' : '') + '</span>' +
+          /* A list of links read out of context is only "9:00 AM", "9:15 AM"…
+             The day and the new tab are spoken, not shown. */
+          '<span class="sr-only"> on ' + heading + ' (opens Calendly in a new tab)</span>' +
           '</a></li>';
       });
       html += '</ul></div>';

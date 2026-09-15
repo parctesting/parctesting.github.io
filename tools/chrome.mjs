@@ -10,6 +10,11 @@ import { SITE, NAV } from './site-data.mjs';
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
   .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
+/* Every link that opens a new tab says so: a screen reader hears it, and
+   css/site.css draws a small arrow for everyone else. tools/check-links.mjs
+   fails the build if a new-tab link lacks this text. */
+const NEW_TAB = '<span class="sr-only"> (opens in a new tab)</span>';
+
 /**
  * Relative-path prefix for a page, so a build works at ANY mount point.
  *
@@ -114,7 +119,7 @@ export function navHtml(rel) {
     }
     const kids = n.children.map((c) => {
       const ext = c.external ? ' target="_blank" rel="noopener"' : '';
-      return `            <li><a href="${esc(link(rel, c.href))}"${ext}>${esc(c.label)}</a></li>`;
+      return `            <li><a href="${esc(link(rel, c.href))}"${ext}>${esc(c.label)}${c.external ? NEW_TAB : ''}</a></li>`;
     }).join('\n');
     return `        <li class="has-sub">
           <button type="button" class="nav-sub-toggle" aria-expanded="false">${esc(n.label)}</button>
@@ -189,7 +194,7 @@ function studyBand(rel) {
   const p = SITE.hamRadioPrep;
   if (!p || !p.courses || !p.courses.length) return '';
   const links = p.courses
-    .map((c) => `<a href="${esc(c.href)}" target="_blank" rel="noopener">${esc(c.short)}</a>`)
+    .map((c) => `<a href="${esc(c.href)}" target="_blank" rel="noopener">${esc(c.short)}${NEW_TAB}</a>`)
     .join(', ');
   /* Their logo is white, made for a dark background, which the footer is. alt=""
      because the sentence beside it already names Ham Radio Prep. */
@@ -233,11 +238,11 @@ ${opts.studyBand === false ? '' : studyBand(rel)}  <div class="site-footer__inne
     <div>
       <h2>More</h2>
       <ul>
-        <li><a href="${link(rel, '/pages/whatnext.html')}">What's next after passing</a></li>
+        <li><a href="${link(rel, '/pages/whatnext.html')}">After passing the exam</a></li>
         <li><a href="${link(rel, '/pages/handiham.html')}">Accessible testing</a></li>
         <li><a href="${link(rel, '/pages/donations.html')}">Support PARC</a></li>
-        <li><a href="${esc(SITE.facebook)}" target="_blank" rel="noopener">Facebook group</a></li>
-        <li><a href="${esc(SITE.telegram)}" target="_blank" rel="noopener">Telegram group</a></li>
+        <li><a href="${esc(SITE.facebook)}" target="_blank" rel="noopener">Facebook group${NEW_TAB}</a></li>
+        <li><a href="${esc(SITE.telegram)}" target="_blank" rel="noopener">Telegram group${NEW_TAB}</a></li>
       </ul>
     </div>
   </div>

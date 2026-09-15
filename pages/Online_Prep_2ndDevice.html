@@ -57,16 +57,16 @@
         <li class="has-sub">
           <button type="button" class="nav-sub-toggle" aria-expanded="false">Helpful Links</button>
           <ul class="nav-sub">
-            <li><a href="../pages/whatnext.html">What's Next</a></li>
+            <li><a href="../pages/whatnext.html">After the Exam</a></li>
             <li><a href="../pages/handiham.html">Accessible Testing / HandiHam</a></li>
             <li><a href="../pages/troubleshooting.html">Troubleshooting</a></li>
-            <li><a href="https://www.arrl.org" target="_blank" rel="noopener">ARRL</a></li>
-            <li><a href="https://www.eham.net" target="_blank" rel="noopener">eHam</a></li>
-            <li><a href="https://wireless2.fcc.gov" target="_blank" rel="noopener">FCC License Search</a></li>
-            <li><a href="https://hamradioprep.com" target="_blank" rel="noopener">Ham Radio Prep</a></li>
-            <li><a href="https://www.handiham.org" target="_blank" rel="noopener">HandiHam.org</a></li>
-            <li><a href="https://www.qrz.com" target="_blank" rel="noopener">QRZ</a></li>
-            <li><a href="https://www.ylrl.net" target="_blank" rel="noopener">Young Ladies Radio League</a></li>
+            <li><a href="https://www.arrl.org" target="_blank" rel="noopener">ARRL<span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://www.eham.net" target="_blank" rel="noopener">eHam<span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://wireless2.fcc.gov" target="_blank" rel="noopener">FCC License Search<span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://hamradioprep.com" target="_blank" rel="noopener">Ham Radio Prep<span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://www.handiham.org" target="_blank" rel="noopener">HandiHam.org<span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://www.qrz.com" target="_blank" rel="noopener">QRZ<span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://www.ylrl.net" target="_blank" rel="noopener">Young Ladies Radio League<span class="sr-only"> (opens in a new tab)</span></a></li>
           </ul>
         </li>
         <li><a href="../pages/reviews.html">Reviews</a></li>
@@ -108,6 +108,11 @@
 <div class="container">
 <section>
 
+<!-- step-only: progress -->
+<p class="step-progress"><span class="step-progress__text">Step 3 of 5: Prepare</span>
+  <span class="step-progress__bar" aria-hidden="true"><span class="is-done"></span><span class="is-done"></span><span class="is-current"></span><span></span><span></span></span></p>
+<!-- /step-only -->
+
 <h1>Preparing Your Second Device</h1>
 
 <p class="lede">The phone or tablet serves as the examiners&rsquo; second camera. It is used
@@ -116,11 +121,12 @@
 
 <figure class="instruction-figure">
   <img src="../images/setup-two-devices.svg"
-       alt="Top-down view of a desk. Your computer faces you and its camera shows your face. A second device on a stand sits at ninety degrees to your side, its view covering you, your hands, the keyboard, your screen and the room."
-       width="760" height="430" loading="lazy" decoding="async">
-  <figcaption>The second camera must be placed directly to the left or right, not behind
+       alt="Diagram of a desk seen from above: the computer in front of the candidate, and the second device on a stand at 90 degrees to the candidate&rsquo;s side."
+       width="580" height="272" loading="lazy" decoding="async">
+  <figcaption>The second device stands directly to the left or right of the candidate, not behind
     the candidate and not beside the screen. The examiners must be able to see the
-    candidate&rsquo;s hands and the screen at the same time.</figcaption>
+    candidate&rsquo;s hands and the screen at the same time. Both devices remain connected to
+    Zoom for the entire examination.</figcaption>
 </figure>
 
 <h2 id="setup">Placement</h2>
@@ -141,8 +147,8 @@
       candidate and both hands visible.</figcaption>
   </figure>
   <figure>
-    <img src="../images/rotation.png" width="600" height="380" loading="lazy" decoding="async"
-         alt="Two phones side by side: one turned on its side labeled Horizontal, one upright labeled Vertical. The exam requires the horizontal orientation.">
+    <img src="../images/device-orientation.svg" width="560" height="300" loading="lazy" decoding="async"
+         alt="Diagram of two phones: one turned on its side, labelled Horizontal, Required, and one upright, labelled Vertical, Not Permitted.">
     <figcaption>The device must be positioned horizontally. A stand or clip mount holds it
       steady.</figcaption>
   </figure>
@@ -173,9 +179,9 @@
   phone. Handling the phone can cause feedback, which may require disconnecting all devices
   and rejoining after the next candidate.</p>
 
-<nav class="page-links page-links--pager">
-  <a class="page-link page-link--back" href="Online_Prep_Computer.html">Back</a>
-  <a class="page-link page-link--next" href="Online_Rules_IQ.html">Next</a>
+<nav class="page-links page-links--pager" aria-label="Instruction steps">
+  <a class="page-link page-link--back" href="Online_Prep_Computer.html"><span class="page-link__label">Back: Preparing Your Computer</span></a>
+  <a class="page-link page-link--next" href="Online_Rules_IQ.html"><span class="page-link__label">Next: Rules for Online Exams</span></a>
 </nav>
 
 </section>
@@ -187,7 +193,7 @@
   <aside class="study-band" aria-label="Ham Radio Prep offer">
     <img class="study-band__logo" src="../images/hamradioprep-logo-white.png" alt="" width="1080" height="209">
     <p><strong>Ham Radio Prep courses:</strong>
-      <strong>20% off</strong> with code <span class="coupon">PARC</span> &mdash; <a href="https://study.hamradioprep.com/enroll/1972787?price_id=2681038&amp;coupon=parc" target="_blank" rel="noopener">Technician</a>, <a href="https://study.hamradioprep.com/enroll/2432887?price_id=3224428&amp;coupon=parc" target="_blank" rel="noopener">General</a>, <a href="https://study.hamradioprep.com/enroll/2935944?price_id=3784628&amp;coupon=parc" target="_blank" rel="noopener">Amateur Extra</a>, <a href="https://study.hamradioprep.com/enroll/405063?price_id=422572&amp;coupon=parc" target="_blank" rel="noopener">Tech + General</a>, <a href="https://study.hamradioprep.com/enroll/1701522?price_id=3096155&amp;coupon=parc" target="_blank" rel="noopener">All Access</a>.</p>
+      <strong>20% off</strong> with code <span class="coupon">PARC</span> &mdash; <a href="https://study.hamradioprep.com/enroll/1972787?price_id=2681038&amp;coupon=parc" target="_blank" rel="noopener">Technician<span class="sr-only"> (opens in a new tab)</span></a>, <a href="https://study.hamradioprep.com/enroll/2432887?price_id=3224428&amp;coupon=parc" target="_blank" rel="noopener">General<span class="sr-only"> (opens in a new tab)</span></a>, <a href="https://study.hamradioprep.com/enroll/2935944?price_id=3784628&amp;coupon=parc" target="_blank" rel="noopener">Amateur Extra<span class="sr-only"> (opens in a new tab)</span></a>, <a href="https://study.hamradioprep.com/enroll/405063?price_id=422572&amp;coupon=parc" target="_blank" rel="noopener">Tech + General<span class="sr-only"> (opens in a new tab)</span></a>, <a href="https://study.hamradioprep.com/enroll/1701522?price_id=3096155&amp;coupon=parc" target="_blank" rel="noopener">All Access<span class="sr-only"> (opens in a new tab)</span></a>.</p>
   </aside>
   <div class="site-footer__inner">
     <div>
@@ -212,11 +218,11 @@
     <div>
       <h2>More</h2>
       <ul>
-        <li><a href="../pages/whatnext.html">What's next after passing</a></li>
+        <li><a href="../pages/whatnext.html">After passing the exam</a></li>
         <li><a href="../pages/handiham.html">Accessible testing</a></li>
         <li><a href="../pages/donations.html">Support PARC</a></li>
-        <li><a href="https://www.facebook.com/groups/833919518104689" target="_blank" rel="noopener">Facebook group</a></li>
-        <li><a href="https://t.me/+d32UCpaXRLhiNjJh" target="_blank" rel="noopener">Telegram group</a></li>
+        <li><a href="https://www.facebook.com/groups/833919518104689" target="_blank" rel="noopener">Facebook group<span class="sr-only"> (opens in a new tab)</span></a></li>
+        <li><a href="https://t.me/+d32UCpaXRLhiNjJh" target="_blank" rel="noopener">Telegram group<span class="sr-only"> (opens in a new tab)</span></a></li>
       </ul>
     </div>
   </div>

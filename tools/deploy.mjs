@@ -205,17 +205,17 @@ existsSync(join(ROOT, '.nojekyll'))
 // the Complete Text instructions must say what the step pages say
 try {
   execFileSync('node', ['tools/build-instructions.mjs', '--check'], { cwd: ROOT, stdio: 'pipe' });
-  ok('Complete Text instructions match the step pages');
+  ok('Complete Text instructions and step navigation match the step pages');
 } catch {
-  bad('Complete Text instructions are out of date — run: node tools/build-instructions.mjs');
+  bad('Complete Text instructions or step navigation are out of date — run: node tools/build-instructions.mjs');
 }
 
 // links
 try {
   execFileSync('node', ['tools/check-links.mjs'], { cwd: ROOT, stdio: 'pipe' });
-  ok('no broken internal links');
+  ok('no broken internal links; every new-tab link is announced');
 } catch (e) {
-  bad('broken internal links — run: node tools/check-links.mjs');
+  bad('broken internal links or unannounced new-tab links — run: node tools/check-links.mjs');
 }
 
 // Ham Radio Prep course links: every one on every page must be in site-data. The

@@ -137,7 +137,7 @@ export const NAV = [
   {
     label: 'Helpful Links',
     children: [
-      { label: "What's Next", href: '/pages/whatnext.html' },
+      { label: 'After the Exam', href: '/pages/whatnext.html' },
       { label: 'Accessible Testing / HandiHam', href: '/pages/handiham.html' },
       { label: 'Troubleshooting', href: '/pages/troubleshooting.html' },
       { label: 'ARRL', href: 'https://www.arrl.org', external: true },
@@ -201,7 +201,7 @@ export const PAGES = {
     schema: 'events',
   },
   'pages/faq.html': {
-    title: 'Ham Radio Exam FAQ — Your Questions Answered',
+    title: 'Ham Radio Exam Frequently Asked Questions',
     desc: 'Answers to the questions candidates ask most about online and in-person amateur radio license exams: fees, ID, equipment, rules, and results.',
     h1: 'Frequently Asked Questions',
     schema: 'faq',
@@ -212,7 +212,7 @@ export const PAGES = {
     h1: 'In-Person Exam Sessions',
   },
   'pages/online.html': {
-    title: 'Online Ham Radio Exam — What You Need to Know',
+    title: 'Online Ham Radio Exams',
     desc: 'Everything required for a remote video amateur radio exam with PARC. Read all instructions and requirements before paying or registering.',
     h1: 'Ham Exam — Online',
   },
@@ -222,9 +222,9 @@ export const PAGES = {
     h1: 'Online Testing Instructions',
   },
   'pages/whatnext.html': {
-    title: "What's Next After Passing Your Ham Radio Exam",
+    title: 'After Passing Your Ham Radio Exam',
     desc: 'The steps after passing an amateur radio exam: paying the FCC application fee, receiving a call sign, and recommended first steps for new operators.',
-    h1: "What's Next — Welcome to Amateur Radio",
+    h1: 'After Passing Your Exam',
   },
   'pages/govshutdown.html': {
     title: 'FCC Fees & Licensing During a Government Shutdown',
@@ -242,9 +242,9 @@ export const PAGES = {
     h1: 'Acceptable Identification',
   },
   'pages/Online_GeneralInfo.html': {
-    title: 'Online Exam General Information',
+    title: 'Before You Book an Online Ham Radio Exam',
     desc: 'General information about PARC remote video amateur radio exam sessions: how they work, what to expect, and what is required of candidates.',
-    h1: 'General Information',
+    h1: 'Before You Book an Online Exam',
   },
   'pages/Online_HowtoScheduleandRegister.html': {
     title: 'How to Schedule and Register for Your Exam',
@@ -315,13 +315,13 @@ export const PAGES = {
     h1: 'Accommodations',
   },
   'pages/Online_CSCE_605.html': {
-    title: 'Your CSCE and FCC Form 605 Explained',
+    title: 'CSCE and FCC Form 605',
     desc: 'What the CSCE you receive after passing means, how FCC Form 605 fits in, and what happens between your exam and your call sign.',
     h1: 'CSCE and FCC Form 605',
   },
   'pages/reviews.html': {
     scripts: ['/js/reviews.js'],
-    title: 'Reviews — What Candidates Say About PARC',
+    title: 'Candidate Reviews',
     desc: 'Read what candidates say about taking their amateur radio license exam with PARC, and leave a review of your own session.',
     h1: 'Reviews',
   },
@@ -332,12 +332,12 @@ export const PAGES = {
   },
   'pages/team.html': {
     scripts: ['/js/team.js'],
-    title: 'Our Team — The Volunteer Examiners at PARC',
+    title: 'Our Volunteer Examiner Team',
     desc: 'The Volunteer Examiners who administer PARC examination sessions on nearly every day of the week.',
     h1: 'Our Team',
   },
   'pages/donations.html': {
-    title: 'Support PARC Radio & Technology',
+    title: 'Support PARC',
     desc: 'PARC is an all-volunteer organization. Donations fund examination materials, equipment and community outreach.',
     h1: 'Support Our Work',
   },

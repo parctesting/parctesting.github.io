@@ -76,7 +76,7 @@
       })
       .catch(function () {
         loading = false;
-        show('<p class="search-msg">Search is unavailable right now. Try the menu above.</p>');
+        show('<p class="search-msg">Search is not available at this time. Use the menu to find a page.</p>');
       });
   }
 
@@ -165,8 +165,8 @@
     hits = hits.slice(0, 8);
 
     if (!hits.length) {
-      show('<p class="search-msg">Nothing found for &ldquo;' + esc(q) + '&rdquo;. ' +
-           'Try a different word, or the <a href="' + BASE + 'pages/faq.html">FAQ</a>.</p>');
+      show('<p class="search-msg">No results for &ldquo;' + esc(q) + '&rdquo;. ' +
+           'Try a different word, or see the <a href="' + BASE + 'pages/faq.html">Frequently Asked Questions</a>.</p>');
       return;
     }
 

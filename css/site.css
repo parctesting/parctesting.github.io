@@ -36,7 +36,10 @@
      with room to spare at ~15:1. */
   --ink:        #1F2328;
   --ink-2:      #4A5158;
-  --muted:      #677079;   /* clears 4.5:1 on surface AND the card tone */
+  /* Secondary text is often small (dates, notes, calendar counts), so it clears
+     6:1 rather than scraping 4.5:1: 6.4:1 on surface, 5.9:1 on the page ground.
+     Was #677079 (4.5-4.9:1) until 2026-09-15. */
+  --muted:      #565E66;
   --muted-dark: #8A939C;   /* muted, but against the dark footer */
   --surface:    #FCFCFB;
   --surface-2:  #F6F7F8;
@@ -57,7 +60,7 @@
 
   --focus:      #1F5FBF;
   --ok:         #0E7C2A;
-  --warn:       #9A6700;
+  --warn:       #805500;   /* 6.4:1 on surface; #9A6700 was 4.7:1 */
 
   /* ---- exam-script colour code — LEFT AS IT WAS, ON PURPOSE ---------------
      VEs read these live during exams and the site owner asked that the scripts
@@ -275,7 +278,7 @@ body { overflow-wrap: break-word; }
 }
 .nav-donate::before {
   /* A heart reads instantly and stops it being a generic red rectangle. */
-  content: "\2665"; font-size: 1.05em; line-height: 1;
+  content: "\2665"; content: "\2665" / ""; font-size: 1.05em; line-height: 1;
   transform: translateY(-.04em);
 }
 .nav-donate:hover { background: var(--parc-700); }
@@ -681,7 +684,7 @@ a.dropbtn--team:focus-visible {
 .card h2 { font-size: var(--step-1); margin-bottom: var(--sp-2); color: var(--ink); }
 .card p { color: var(--ink-2); font-size: var(--step--1); flex: 1; }
 .card__link { font-weight: 700; text-decoration: none; margin-top: var(--sp-3); }
-.card__link::after { content: " \2192"; }
+.card__link::after { content: " \2192"; content: " \2192" / ""; }
 .card a::before { content: ""; position: absolute; inset: 0; }
 .card { position: relative; }
 
@@ -760,7 +763,8 @@ a.dropbtn--team:focus-visible {
 /* On a phone the buttons stack; full width keeps them one tidy column. */
 @media (max-width: 600px) {
   .partner-card .partner-card__courses li { flex: 1 1 100%; }
-  .partner-card .partner-card__courses .btn { display: block; text-align: center; }
+  /* Flex, like every other button, so the new-tab arrow keeps its place. */
+  .partner-card .partner-card__courses .btn { display: flex; width: 100%; }
 }
 /* The code is the one thing to remember, so it looks like a code. */
 .coupon {
@@ -941,7 +945,7 @@ a.dropbtn--team:focus-visible {
 .tz-detected { display: inline-flex; align-items: baseline; gap: var(--sp-2); }
 .tz-change {
   background: none; border: 0; padding: 0;
-  font: inherit; font-size: var(--step--2);
+  font: inherit;
   color: var(--parc-red); text-decoration: underline;
   cursor: pointer;
 }
@@ -999,7 +1003,7 @@ a.dropbtn--team:focus-visible {
    be readable: --line-2 made the numbers 1.44:1. */
 .cal-cell.is-none { color: var(--muted); background: var(--surface-2); }
 .cal-cell__num { font-size: var(--step--1); font-weight: 600; }
-.cal-cell__count { font-size: .7rem; font-weight: 700; line-height: 1; }
+.cal-cell__count { font-size: .8rem; font-weight: 700; line-height: 1; }
 
 /* Availability density — three steps so a glance shows where the room is.
    Teal rather than the brand red: this is data, and a red-saturated grid read
@@ -1042,14 +1046,14 @@ a.dropbtn--team:focus-visible {
 }
 .slot:hover { border-color: #0F6B62; background: #E8F4F3; }
 .slot__time { font-weight: 700; color: var(--ink); }
-.slot__meta { font-size: .75rem; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+.slot__meta { font-size: .8rem; color: var(--muted); display: flex; align-items: center; gap: 4px; }
 .cal-foot { margin-top: var(--sp-5); font-size: var(--step--1); color: var(--muted); }
 
 .booking-alert {
   background: var(--parc-50); border: 1px solid var(--parc-red);
   border-left: 4px solid var(--parc-red);
   padding: var(--sp-3) var(--sp-4); border-radius: 0 var(--radius) var(--radius) 0;
-  margin-bottom: var(--sp-5); font-size: var(--step--1);
+  margin-bottom: var(--sp-5); font-size: var(--step-0);
 }
 .notices { margin-top: var(--sp-8); padding-top: var(--sp-5); border-top: 1px solid var(--line); }
 .notices h2 { font-size: var(--step-1); }
@@ -1068,7 +1072,7 @@ a.dropbtn--team:focus-visible {
 .slot__youth {
   display: inline-block; margin-left: 4px; padding: 0 5px; border-radius: 3px;
   background: var(--ve-blue); color: #fff;
-  font-size: .62rem; font-weight: 700; letter-spacing: .04em;
+  font-size: .75rem; font-weight: 700; letter-spacing: .04em;
   text-transform: uppercase; vertical-align: middle;
 }
 #filter-youth.is-on { background: var(--ve-blue); border-color: var(--ve-blue); color: #fff; }
@@ -1451,7 +1455,7 @@ button.team-link-btn:hover { color: #1F2328; }
 .faq-toc .page-links { margin: var(--sp-4) 0 0; }
 .faq-toc__title {
   margin: 0 0 .25rem;
-  font-size: var(--step--2); font-weight: 700;
+  font-size: inherit; font-weight: 700;
   letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
   padding-bottom: var(--sp-2);
   border-bottom: 2px solid var(--ink);
@@ -1472,8 +1476,9 @@ button.team-link-btn:hover { color: #1F2328; }
 }
 .faq-toc li a::before {
   content: counter(toc, decimal-leading-zero);
+  content: counter(toc, decimal-leading-zero) / "";
   flex: none; font-variant-numeric: tabular-nums;
-  font-size: var(--step--2); font-weight: 700; color: var(--parc-red);
+  font-size: inherit; font-weight: 700; color: var(--parc-red);
 }
 .faq-toc li a:hover, .faq-toc li a:focus-visible { color: var(--parc-700); }
 
@@ -1637,7 +1642,7 @@ a.skip-link:focus {
   display: grid; place-items: center;
   border-radius: 50%;
   background: var(--parc-red); color: #fff;
-  font-size: var(--step--2); font-weight: 700;
+  font-size: inherit; font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 .timeline h3 { margin: 0 0 var(--sp-2); font-size: var(--step-0); }
@@ -1755,11 +1760,11 @@ a.skip-link:focus {
   display: flex; gap: var(--sp-3); align-items: baseline;
 }
 .trouble h3::before {
-  content: "?"; flex: none;
+  content: "?"; content: "?" / ""; flex: none;
   width: 1.4rem; height: 1.4rem; border-radius: 50%;
   display: grid; place-items: center;
   background: var(--parc-50); color: var(--parc-700);
-  font-size: var(--step--2); font-weight: 700;
+  font-size: inherit; font-weight: 700;
 }
 .trouble p { margin: 0 0 0 calc(1.4rem + var(--sp-3)); color: var(--ink-2); }
 
@@ -1963,8 +1968,16 @@ h2.doc-section {
 
 /* Back and Next read as direction, so they get arrows and sit at the edges. */
 .page-links--pager { grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); }
-.page-link--back::before { content: "\2190\00a0"; }
-.page-link--next::after  { content: "\00a0\2192"; }
+/* The arrows are decoration: the "/ \"\"" alternative keeps them out of the spoken
+   name ("left arrow Back: …"). Browsers without that syntax keep the first value.
+   They are pinned to the button's edges, in padding kept equal on both sides, so a
+   label that wraps to two lines ("Back: Before You Book an Online / Exam") stays
+   centred. As flex items, or inline in the first line, they pushed it off centre. */
+.page-links--pager .page-link { position: relative; padding-inline: 2.25rem; }
+.page-link--back .page-link__label::before,
+.page-link--next .page-link__label::after { position: absolute; top: 50%; transform: translateY(-50%); }
+.page-link--back .page-link__label::before { content: "\2190"; content: "\2190" / ""; left: .85rem; }
+.page-link--next .page-link__label::after  { content: "\2192"; content: "\2192" / ""; right: .85rem; }
 .page-link--back, .page-link--next,
 .page-link--back:link, .page-link--next:link,
 .page-link--back:visited, .page-link--next:visited {
@@ -2017,3 +2030,74 @@ h2.doc-section {
 @media (max-width: 560px) {
   .step-list .instruction-choice__item { grid-template-columns: 1fr; gap: var(--sp-2); }
 }
+
+/* ---------- where a step page sits ------------------------------------------
+   "Step 3 of 5: Prepare", from the five stages Before You Book lists. Written by
+   tools/build-instructions.mjs. The text carries the meaning; the bar beside it
+   is decoration and hidden from screen readers. */
+.step-progress {
+  display: flex; flex-direction: column; align-items: center; gap: var(--sp-2);
+  margin: 0 0 var(--sp-3);
+  font-size: var(--step--1); font-weight: 600; color: var(--ink-2); text-align: center;
+}
+.step-progress__bar { display: flex; gap: 4px; }
+.step-progress__bar span { width: 1.75rem; height: 4px; border-radius: 2px; background: var(--line-2); }
+.step-progress__bar .is-done,
+.step-progress__bar .is-current { background: var(--parc-red); }
+
+/* The day's times take focus when a day is chosen from the keyboard. */
+.cal-day__title:focus { outline: none; }
+.cal-day__title:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; border-radius: 2px; }
+
+/* ---------- links that open a new tab ----------------------------------------
+   A small arrow out of a box, for sighted readers; the spoken "(opens in a new
+   tab)" is in the markup. Screen only: the print stylesheet prints the address
+   after the link instead. The icon is a mask filled with currentColor, so it
+   takes the colour of each link and button. */
+@media screen {
+  /* A no-break space, not an inline-block: a line can break before an inline-block,
+     which left the arrow alone at the start of the next line in the footer. The
+     space glues it to the last word, and the arrow is drawn in its right padding. */
+  a[target="_blank"]::after {
+    content: "\00a0"; content: "\00a0" / "";
+    padding-right: .8em;
+    background-color: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M9 1h6v6h-2V4.4L8.2 9.2 6.8 7.8 11.6 3H9z'/%3E%3Cpath d='M2 4.5A1.5 1.5 0 0 1 3.5 3H7v2H4v7h7V9h2v3.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 2 12.5z'/%3E%3C/svg%3E") right center / .72em .72em no-repeat;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M9 1h6v6h-2V4.4L8.2 9.2 6.8 7.8 11.6 3H9z'/%3E%3Cpath d='M2 4.5A1.5 1.5 0 0 1 3.5 3H7v2H4v7h7V9h2v3.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 2 12.5z'/%3E%3C/svg%3E") right center / .72em .72em no-repeat;
+  }
+  /* Buttons are flex containers, so there the arrow is a flex item of its own and
+     pushed a wrapped label ("Amateur Extra / Course") off centre. An empty item of
+     the same width on the left balances it. */
+  a.btn[target="_blank"]::before,
+  a.page-link[target="_blank"]::before { content: ""; flex: none; width: .72em; }
+  a.btn[target="_blank"]::after,
+  a.page-link[target="_blank"]::after {
+    content: ""; flex: none; width: .72em; height: .72em; padding: 0;
+    -webkit-mask-position: center; mask-position: center;
+  }
+  .social-row a::after, a.slot::after { content: none; }
+}
+
+/* ---------- Windows High Contrast and other forced colours -------------------
+   Forced colours replace backgrounds, which would erase the new-tab arrow, the
+   calendar's selected day and the density key. */
+@media (forced-colors: active) {
+  a[target="_blank"]::after { background-color: LinkText; forced-color-adjust: none; }
+  .btn[target="_blank"]::after { background-color: ButtonText; }
+  .cal-cell.is-selected { outline: 3px solid Highlight; }
+  .cal-key { forced-color-adjust: none; border-color: CanvasText; }
+  .step-progress__bar span { border: 1px solid CanvasText; }
+  .step-progress__bar .is-done, .step-progress__bar .is-current { background: CanvasText; forced-color-adjust: none; }
+}
+
+/* ---------- a logo at the head of a page ------------------------------------- */
+.page-logo { margin: 0 auto var(--sp-5); text-align: center; }
+.page-logo img { width: min(100%, 300px); height: auto; }
+
+/* ---------- the key to a numbered diagram, as real text -----------------------
+   Text drawn inside an SVG shrinks with the picture, to 5-8px on a phone, and does
+   not grow with the reader's text size. The numbers stay in the picture; what
+   they mean is here. */
+.figure-key { margin: var(--sp-3) 0 0; padding-left: var(--sp-5); columns: 2 14rem; column-gap: var(--sp-6); }
+.figure-key li { margin-bottom: var(--sp-1); break-inside: avoid; }
+
