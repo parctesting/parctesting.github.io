@@ -1448,6 +1448,7 @@ button.team-link-btn:hover { color: #1F2328; }
 .faq-toc {
   margin: var(--sp-5) 0 var(--sp-6);
 }
+.faq-toc .page-links { margin: var(--sp-4) 0 0; }
 .faq-toc__title {
   margin: 0 0 .25rem;
   font-size: var(--step--2); font-weight: 700;
@@ -1464,17 +1465,17 @@ button.team-link-btn:hover { color: #1F2328; }
   counter-reset: toc;
 }
 .faq-toc li { counter-increment: toc; display: block; border-bottom: 1px solid var(--line); }
-.faq-toc a {
+.faq-toc li a {
   display: flex; align-items: baseline; gap: var(--sp-3);
   padding: .55rem 0; text-decoration: none;
   font-weight: 500; color: var(--ink);
 }
-.faq-toc a::before {
+.faq-toc li a::before {
   content: counter(toc, decimal-leading-zero);
   flex: none; font-variant-numeric: tabular-nums;
   font-size: var(--step--2); font-weight: 700; color: var(--parc-red);
 }
-.faq-toc a:hover, .faq-toc a:focus-visible { color: var(--parc-700); }
+.faq-toc li a:hover, .faq-toc li a:focus-visible { color: var(--parc-700); }
 
 @media (max-width: 640px) {
   .faq-toc ul { grid-template-columns: 1fr; }
@@ -1783,7 +1784,7 @@ a.skip-link:focus {
    thumb. Only applied on touch pointers so mouse users keep the tighter layout. */
 @media (pointer: coarse) {
   .faq-toc li { align-items: center; }
-  .faq-toc a {
+  .faq-toc li a {
     display: block;
     padding-block: var(--sp-3);
     min-height: 2.75rem;
@@ -1806,6 +1807,13 @@ a.skip-link:focus {
   margin: var(--sp-5) 0;
 }
 .compare-figs figure { margin: 0; }
+
+/* A small system icon beside the setting it helps you find: the Do Not Disturb
+   moon, the Mac Control Center toggles. They used to be shown 420px wide, which
+   made two glyphs look like screenshots. */
+.icon-list { list-style: none; padding: 0; margin: var(--sp-4) 0; display: grid; gap: var(--sp-3); }
+.icon-list li { display: flex; align-items: center; gap: var(--sp-3); }
+.icon-list img { flex: none; width: 2.5rem; height: 2.5rem; object-fit: contain; }
 .compare-figs img {
   display: block; width: 100%; height: auto;
   border-radius: var(--radius);
@@ -1827,8 +1835,9 @@ a.skip-link:focus {
 }
 .doc-toc h2 { margin: 0 0 var(--sp-3); font-size: var(--step-0); }
 .doc-toc ol { margin: 0; padding-left: var(--sp-5); }
+.doc-toc .page-links { margin: 0 0 var(--sp-3); }
 .doc-toc li { margin-bottom: var(--sp-2); }
-.doc-toc a { font-weight: 600; }
+.doc-toc li a { font-weight: 600; }
 .doc-toc__note {
   margin: var(--sp-3) 0 0; font-size: var(--step--1); color: var(--muted);
 }
@@ -1947,7 +1956,7 @@ h2.doc-section {
    the nav sat inside a paragraph and the browser split them apart. */
 .instruction-choice { margin-top: var(--sp-4); }
 /* The first heading under the page title, so an h2, but kept at the h3 size it was designed at. */
-.instruction-choice__title { font-size: var(--step-2); }
+.instruction-choice__title { font-size: var(--step-2); text-align: center; }
 .instruction-choice__item p { margin: var(--sp-2) 0 0; font-size: var(--step--1); color: var(--ink-2); }
 .page-link:hover,
 .page-link:focus-visible { background: var(--parc-red); border-color: var(--parc-red); color: #fff; }
@@ -1985,3 +1994,26 @@ h2.doc-section {
 .container center table { text-align: left; }
 .container center ol,
 .container center ul { display: block; margin-inline: 0; }
+
+/* The schedule page's must-knows are a short list inside the alert box. */
+.booking-alert > :first-child { margin-top: 0; }
+.booking-alert > :last-child { margin-bottom: 0; }
+.booking-alert ul { margin: var(--sp-2) 0 0; padding-left: var(--sp-5); }
+.booking-alert li { margin-bottom: var(--sp-1); }
+
+/* A row of buttons inside page content. The owner prefers buttons to text links
+   for moving between pages (2026-09-15), so "see this page" references are buttons. */
+.btn-row { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin: var(--sp-4) 0 var(--sp-5); }
+.trouble .btn-row, .faq-answer .btn-row, .booking-alert .btn-row, .notices .btn-row { margin: var(--sp-3) 0 0; }
+
+/* Buttons with a caption beside each, one per row: the numbered steps, the study
+   resources and the preparation areas read as an ordered list rather than a ragged grid. */
+.page-links.step-list { grid-template-columns: 1fr; gap: var(--sp-3); }
+.step-list .instruction-choice__item {
+  display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+  gap: var(--sp-4); align-items: center;
+}
+.step-list .instruction-choice__item p { margin: 0; }
+@media (max-width: 560px) {
+  .step-list .instruction-choice__item { grid-template-columns: 1fr; gap: var(--sp-2); }
+}

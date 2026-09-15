@@ -47,6 +47,7 @@ echo "Building for $PROD_DOMAIN …"
 git archive HEAD | tar -x -C "$BUILD"
 printf '%s' "$PROD_DOMAIN" > "$BUILD/CNAME"
 ( cd "$BUILD"
+  node tools/build-instructions.mjs >/dev/null
   SITE_ORIGIN="https://$PROD_DOMAIN" node tools/retheme.mjs >/dev/null
   node tools/fix-alt.mjs >/dev/null 2>&1 || true
   SITE_ORIGIN="https://$PROD_DOMAIN" node tools/build-seo.mjs >/dev/null
