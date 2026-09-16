@@ -240,6 +240,7 @@ ${opts.studyBand === false ? '' : studyBand(rel)}  <div class="site-footer__inne
       <ul>
         <li><a href="${link(rel, '/pages/whatnext.html')}">After passing the exam</a></li>
         <li><a href="${link(rel, '/pages/handiham.html')}">Accessible testing</a></li>
+        <li><a href="${link(rel, '/pages/accessibility.html')}">Accessibility of this site</a></li>
         <li><a href="${link(rel, '/pages/donations.html')}">Support PARC</a></li>
         <li><a href="${esc(SITE.facebook)}" target="_blank" rel="noopener">Facebook group${NEW_TAB}</a></li>
         <li><a href="${esc(SITE.telegram)}" target="_blank" rel="noopener">Telegram group${NEW_TAB}</a></li>
