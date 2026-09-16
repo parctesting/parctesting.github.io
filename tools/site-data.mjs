@@ -127,7 +127,7 @@ export const SITE = {
 };
 
 export const NAV = [
-  { label: 'Home', href: '/index.html' },
+  { label: 'Home', href: '/' },
   /* The overview first: it links on to the step-by-step and complete instructions.
      Until 2026-09-15 this went straight to the 5,000-word instructions page. */
   { label: 'Online Testing', href: '/pages/online.html' },
@@ -169,13 +169,22 @@ export const VE_PAGES = [
 
 /** Deleted by the retheme pass: orphaned duplicates with broken relative paths. */
 export const DELETE_PAGES = [
-  'pages/waitlist.html',      // waitlist retired — candidates email instead
   'pages/GOV SHUTDOWN/script2.html',
   'pages/GOV SHUTDOWN/Online_ScriptI2.html',
   'pages/GOV SHUTDOWN/Online_ScriptS2.html',
   'pages/Update/script.html',
-  'pages/Online_AcceptableID.html', // zero-inbound duplicate of pages/ID.html
 ];
+
+/* Pages that were removed but have an obvious successor. Each old address gets a
+   small page that sends visitors, and search engines, straight on: an immediate
+   meta refresh, which Google treats as a permanent redirect, plus a canonical
+   naming the new page. GitHub Pages cannot send a real HTTP redirect. Written by
+   tools/build-seo.mjs. Google Search Console listed the old addresses as 404s
+   (2026-09-16). Removed exam scripts stay removed: never add one here. */
+export const REDIRECTS = {
+  'pages/Online_AcceptableID.html': 'pages/ID.html',
+  'pages/waitlist.html': 'pages/calendar.html',
+};
 
 /**
  * Titles are kept under ~60 characters so Google doesn't truncate them, and are
