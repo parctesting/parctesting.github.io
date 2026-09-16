@@ -902,28 +902,6 @@ a.dropbtn--team:focus-visible {
   flex: 1 1 9rem; max-width: 16rem;
 }
 .container th > a, .container td > a { display: block; height: 100%; text-decoration: none; }
-
-/* A real data table, as opposed to the old sites' button grids above. It keeps
-   table semantics, which the rules above take away: a table set to display:block
-   is no longer announced as a table, and its rows and cells lose their meaning.
-   Wrap one in .scroll-x so a narrow screen scrolls the table, not the page. */
-.container table.data-table { display: table; table-layout: auto; border-collapse: collapse; font-size: var(--step--1); min-width: 34rem; }
-.container .data-table thead { display: table-header-group; }
-.container .data-table tbody { display: table-row-group; }
-.container .data-table tr { display: table-row; gap: 0; }
-.container .data-table th,
-.container .data-table td {
-  display: table-cell; flex: none; max-width: none;
-  padding: var(--sp-3); border-bottom: 1px solid var(--line);
-  text-align: left; vertical-align: top; background: none;
-}
-.container .data-table thead th { background: var(--surface-2); }
-.container .data-table tbody th { font-weight: 600; }
-.container .data-table caption {
-  caption-side: top; text-align: left; font-weight: 700; font-size: var(--step-1);
-  color: var(--ink); padding-bottom: var(--sp-2);
-}
-
 .container button[style] {
   height: auto !important;
   width: 100% !important;
