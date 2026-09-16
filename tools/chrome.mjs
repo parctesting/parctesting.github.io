@@ -32,12 +32,23 @@ export function relPrefix(rel) {
 /** Turn a site-absolute path ("/pages/faq.html") into one relative to `rel`. */
 export function link(rel, path) {
   if (!path || !path.startsWith('/')) return path;
-  return relPrefix(rel) + path.slice(1);
+  /* GitHub Pages serves 404.html at whatever address was missing, often inside
+     /pages/, where relative links point one level too deep: the page lost its
+     styles and linked to /pages/pages/…, which search engines then report as more
+     404s. Its links stay site-absolute. */
+  if (rel.replace(/\\/g, '/') === '404.html') return path;
+  return relPrefix(rel) + path.slice(1) || './';
+}
+
+/** The public address of a page: a folder's index.html is the folder itself, so
+ *  the home page is https://parcradio.org/, not /index.html. */
+export function pagePath(rel) {
+  return rel.replace(/\\/g, '/').replace(/(^|\/)index\.html$/, '$1');
 }
 
 /* ---------- head ---------------------------------------------------------- */
 export function buildHead(rel, meta) {
-  const url = SITE.canonicalOrigin + '/' + rel.replace(/\\/g, '/');
+  const url = SITE.canonicalOrigin + '/' + pagePath(rel);
   const title = `${meta.title} | ${SITE.short}`;
   const noindex = !!meta.noindex;
   /* A whole host can be kept out of search - the test site - without touching the
@@ -49,7 +60,9 @@ export function buildHead(rel, meta) {
   L.push('<meta name="viewport" content="width=device-width, initial-scale=1">');
   L.push(`<title>${esc(title)}</title>`);
   if (meta.desc) L.push(`<meta name="description" content="${esc(meta.desc)}">`);
-  L.push(`<link rel="canonical" href="${esc(url)}">`);
+  /* A canonical on a noindex page says "index this address" and "do not index it"
+     at once, so it is left off. */
+  if (!noindex) L.push(`<link rel="canonical" href="${esc(url)}">`);
   if (noindex) {
     L.push('<meta name="robots" content="noindex, nofollow">');
   } else {
@@ -111,7 +124,7 @@ export function buildHead(rel, meta) {
 
 /* ---------- header + nav -------------------------------------------------- */
 export function navHtml(rel) {
-  const here = '/' + rel.replace(/\\/g, '/');
+  const here = '/' + pagePath(rel);
   const item = (n) => {
     if (!n.children) {
       const cur = n.href === here ? ' aria-current="page"' : '';
@@ -137,7 +150,7 @@ export function buildHeader(rel) {
   return `<a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header">
-  <a class="site-banner" href="${link(rel, '/index.html')}" aria-label="${esc(SITE.name)} home">
+  <a class="site-banner" href="${link(rel, '/')}" aria-label="${esc(SITE.name)} home">
     <picture>
       <source media="(max-width: 700px)" sizes="100vw"
               srcset="${link(rel, SITE.bannerMobile)} 900w, ${link(rel, SITE.bannerMobileLarge)} 1200w">

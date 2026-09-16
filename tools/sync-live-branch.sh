@@ -171,6 +171,7 @@ if [ "$(cat CNAME)" = "$DOMAIN" ]; then ok "CNAME $DOMAIN"; else bad "CNAME is $
 wrong=""
 for f in index.html pages/*.html; do
   if grep -q 'name="robots"[^>]*noindex' "$f"; then continue; fi
+  if grep -q 'http-equiv="refresh"' "$f"; then continue; fi   # a redirect page: see REDIRECTS
   t=$(grep -ho '"token": "[a-f0-9]*"' "$f" | head -1 | sed 's/.*: "//;s/"//' || true)
   c=$(grep -o 'rel="canonical" href="[^"]*"' "$f" | head -1 || true)
   case "$c" in *"$CANON/"*) ;; *) wrong="$wrong $f" ;; esac
