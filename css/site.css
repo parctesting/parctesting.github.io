@@ -46,6 +46,11 @@
   --page:       #F1F3F5;
   --line:       #DFE4E9;
   --line-2:     #C9D1D8;
+  /* The outline of anything a candidate can operate: buttons, inputs, selects, chips,
+     time slots and the calendar key. 3.5:1 on the panel and 3.2:1 on the page ground,
+     which clears the 3:1 WCAG 2.1 asks of a control's boundary. --line-2 (1.5:1) stays
+     for rules and decorative edges. */
+  --control-border: #7F8891;
   /* An unfilled rating star. It is still part of the rating, so it needs 3:1
      like any meaningful graphic: 3.3-3.5:1 on page, card and surface. --line-2
      was 1.5:1, and the empty stars all but vanished. */
@@ -542,7 +547,7 @@ button, .btn, .page-link {
   font: inherit; font-weight: 600; cursor: pointer; text-align: center;
   display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2);
   padding: var(--sp-3) var(--sp-5);
-  border-radius: var(--radius-sm); border: 1px solid var(--line-2);
+  border-radius: var(--radius-sm); border: 1px solid var(--control-border);
   background: var(--surface); color: var(--ink); text-decoration: none;
   transition: background-color .15s ease, border-color .15s ease, transform .05s ease;
 }
@@ -799,7 +804,7 @@ a.dropbtn--team:focus-visible {
 .ve-lock__label { font-weight: 600; font-size: var(--step--1); }
 .ve-lock__input {
   font: inherit; padding: var(--sp-3); width: 100%;
-  border: 1px solid var(--line-2); border-radius: var(--radius-sm); background: var(--surface);
+  border: 1px solid var(--control-border); border-radius: var(--radius-sm); background: var(--surface);
 }
 .ve-lock__remember { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--step--1); color: var(--ink-2); }
 .ve-lock__status { min-height: 1.5em; margin: 0; font-size: var(--step--1); color: var(--ink-2); }
@@ -827,7 +832,7 @@ a.dropbtn--team:focus-visible {
 .age-gate__field label { font-size: var(--step--1); font-weight: 600; color: var(--ink-2); }
 .age-gate__field select {
   font: inherit; padding: var(--sp-2) var(--sp-3);
-  border: 1px solid var(--line-2); border-radius: var(--radius-sm); background: var(--surface);
+  border: 1px solid var(--control-border); border-radius: var(--radius-sm); background: var(--surface);
 }
 .age-gate__why { margin: 0 0 var(--sp-3); }
 .age-gate__safe {
@@ -859,7 +864,7 @@ a.dropbtn--team:focus-visible {
 .avail-slot a {
   display: flex; flex-direction: column; gap: 1px;
   padding: var(--sp-2) var(--sp-3); text-decoration: none;
-  background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+  background: var(--surface); border: 1px solid var(--control-border); border-radius: var(--radius-sm);
 }
 .avail-slot a:hover { border-color: #0F6B62; background: #E8F4F3; }
 .avail-slot__time { font-weight: 700; color: var(--ink); }
@@ -897,6 +902,27 @@ a.dropbtn--team:focus-visible {
   flex: 1 1 9rem; max-width: 16rem;
 }
 .container th > a, .container td > a { display: block; height: 100%; text-decoration: none; }
+
+/* A real data table, as opposed to the old sites' button grids above. It keeps
+   table semantics, which the rules above take away: a table set to display:block
+   is no longer announced as a table, and its rows and cells lose their meaning.
+   Wrap one in .scroll-x so a narrow screen scrolls the table, not the page. */
+.container table.data-table { display: table; table-layout: auto; border-collapse: collapse; font-size: var(--step--1); min-width: 34rem; }
+.container .data-table thead { display: table-header-group; }
+.container .data-table tbody { display: table-row-group; }
+.container .data-table tr { display: table-row; gap: 0; }
+.container .data-table th,
+.container .data-table td {
+  display: table-cell; flex: none; max-width: none;
+  padding: var(--sp-3); border-bottom: 1px solid var(--line);
+  text-align: left; vertical-align: top; background: none;
+}
+.container .data-table thead th { background: var(--surface-2); }
+.container .data-table tbody th { font-weight: 600; }
+.container .data-table caption {
+  caption-side: top; text-align: left; font-weight: 700; font-size: var(--step-1);
+  color: var(--ink); padding-bottom: var(--sp-2);
+}
 
 .container button[style] {
   height: auto !important;
@@ -956,13 +982,13 @@ a.dropbtn--team:focus-visible {
 }
 .cal-filter select {
   font: inherit; padding: var(--sp-2) var(--sp-3); max-width: 11rem;
-  border: 1px solid var(--line-2); border-radius: var(--radius-sm); background: var(--surface);
+  border: 1px solid var(--control-border); border-radius: var(--radius-sm); background: var(--surface);
 }
 .chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
 .chip {
   padding: var(--sp-2) var(--sp-3); border-radius: 999px;
   font-size: var(--step--1); font-weight: 600;
-  background: var(--surface); border: 1px solid var(--line-2); color: var(--muted);
+  background: var(--surface); border: 1px solid var(--control-border); color: var(--muted);
 }
 /* Matched to the calendar they filter, rather than a row of black pills. */
 .chip.is-on { background: #0F6B62; border-color: #0F6B62; color: #fff; }
@@ -1019,7 +1045,7 @@ a.dropbtn--team:focus-visible {
 
 .cal-legend { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap;
   font-size: var(--step--1); color: var(--muted); margin-top: var(--sp-3); }
-.cal-key { width: 14px; height: 14px; border-radius: 3px; display: inline-block; border: 1px solid var(--line-2); }
+.cal-key { width: 14px; height: 14px; border-radius: 3px; display: inline-block; border: 1px solid var(--control-border); }
 .cal-key.lvl-1 { background: #E8F4F3; } .cal-key.lvl-2 { background: #8FCBC6; }
 .cal-key.lvl-3 { background: #0F6B62; }
 
@@ -1042,7 +1068,7 @@ a.dropbtn--team:focus-visible {
   display: flex; align-items: center; justify-content: center;
   text-decoration: none;
   padding: var(--sp-3) var(--sp-3);
-  background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+  background: var(--surface); border: 1px solid var(--control-border); border-radius: var(--radius-sm);
 }
 .slot:hover { border-color: #0F6B62; background: #E8F4F3; }
 .slot__time { font-weight: 700; color: var(--ink); }
@@ -1243,7 +1269,7 @@ a.dropbtn--team:focus-visible {
 .review-input {
   font: inherit; width: 100%; padding: var(--sp-3);
   margin-bottom: var(--sp-3);
-  border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+  border: 1px solid var(--control-border); border-radius: var(--radius-sm);
   background: var(--surface); color: var(--ink);
 }
 .review-input:focus { border-color: var(--parc-red); outline-offset: 1px; }
@@ -1347,7 +1373,7 @@ textarea.review-input { resize: vertical; min-height: 7rem; }
 .review-file::file-selector-button {
   font: inherit; font-weight: 600;
   margin-right: var(--sp-3); padding: var(--sp-2) var(--sp-4);
-  border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+  border: 1px solid var(--control-border); border-radius: var(--radius-sm);
   background: var(--surface); color: var(--ink); cursor: pointer;
 }
 .review-file::file-selector-button:hover { background: var(--surface-2); }

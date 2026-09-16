@@ -336,6 +336,11 @@ export const PAGES = {
     desc: 'The Volunteer Examiners who administer PARC examination sessions on nearly every day of the week.',
     h1: 'Our Team',
   },
+  'pages/accessibility.html': {
+    title: 'Website Accessibility Conformance Report',
+    desc: 'How the PARC website measures against Section 508 and WCAG 2.0 Level AA, what was tested, and how to report a problem.',
+    h1: 'Accessibility Conformance Report',
+  },
   'pages/donations.html': {
     title: 'Support PARC',
     desc: 'PARC is an all-volunteer organization. Donations fund examination materials, equipment and community outreach.',

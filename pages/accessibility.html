@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Website Accessibility Conformance Report | PARC</title>
+<meta name="description" content="How the PARC website measures against Section 508 and WCAG 2.0 Level AA, what was tested, and how to report a problem.">
+<link rel="canonical" href="https://parcradio.org/pages/accessibility.html">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="google-site-verification" content="Qgf_7BEJyxvtJa5wpbbwUiHJSL-rnJdlhxHs4_h0uow">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PARC Radio &amp; Technology">
+<meta property="og:title" content="Website Accessibility Conformance Report">
+<meta property="og:description" content="How the PARC website measures against Section 508 and WCAG 2.0 Level AA, what was tested, and how to report a problem.">
+<meta property="og:url" content="https://parcradio.org/pages/accessibility.html">
+<meta property="og:image" content="https://parcradio.org/images/og-parc.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<meta name="theme-color" content="#BA0005">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="preload" as="image" media="(min-width: 701px)" href="../images/banner-1600.jpg" imagesrcset="../images/banner-1600.jpg 1600w, ../images/banner-2400.jpg 2400w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" as="image" media="(max-width: 700px)" href="../images/banner-900.jpg" imagesrcset="../images/banner-900.jpg 900w, ../images/banner-1200.jpg 1200w" imagesizes="100vw" fetchpriority="high">
+
+<!-- Cloudflare Web Analytics -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "86375f5cd0ea45a9a9083404b92011b6"}'></script>
+<!-- End Cloudflare Web Analytics -->
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <a class="site-banner" href="../index.html" aria-label="PARC Radio &amp; Technology home">
+    <picture>
+      <source media="(max-width: 700px)" sizes="100vw"
+              srcset="../images/banner-900.jpg 900w, ../images/banner-1200.jpg 1200w">
+      <img src="../images/banner-1600.jpg" sizes="100vw"
+           srcset="../images/banner-1600.jpg 1600w, ../images/banner-2400.jpg 2400w"
+           width="1600" height="192" fetchpriority="high" alt="PARC Radio &amp; Technology">
+    </picture>
+  </a>
+
+  <nav class="site-nav" id="menu" aria-label="Main">
+    <div class="site-nav__inner">
+      <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">
+        <span class="nav-toggle__bars" aria-hidden="true"></span> Menu
+      </button>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../pages/online.html">Online Testing</a></li>
+        <li><a href="../pages/inperson.html">In-Person Testing</a></li>
+        <li><a href="../pages/calendar.html">Schedule</a></li>
+        <li><a href="../pages/faq.html">FAQ</a></li>
+        <li class="has-sub">
+          <button type="button" class="nav-sub-toggle" aria-expanded="false">Helpful Links</button>
+          <ul class="nav-sub">
+            <li><a href="../pages/whatnext.html">After the Exam</a></li>
+            <li><a href="../pages/handiham.html">Accessible Testing / HandiHam</a></li>
+            <li><a href="../pages/troubleshooting.html">Troubleshooting</a></li>
+            <li><a href="https://www.arrl.org" target="_blank" rel="noopener">ARRL<span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://www.eham.net" target="_blank" rel="noopener">eHam<span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://wireless2.fcc.gov" target="_blank" rel="noopener">FCC License Search<span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://hamradioprep.com" target="_blank" rel="noopener">Ham Radio Prep<span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://www.handiham.org" target="_blank" rel="noopener">HandiHam.org<span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://www.qrz.com" target="_blank" rel="noopener">QRZ<span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://www.ylrl.net" target="_blank" rel="noopener">Young Ladies Radio League<span class="sr-only"> (opens in a new tab)</span></a></li>
+          </ul>
+        </li>
+        <li><a href="../pages/reviews.html">Reviews</a></li>
+        <li><a href="../pages/team.html">Our Team</a></li>
+      </ul>
+      <button type="button" class="nav-search-toggle" id="site-search-toggle"
+              aria-expanded="false" aria-controls="site-search-panel" aria-label="Search this site">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" focusable="false">
+          <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/>
+          <line x1="12.8" y1="12.8" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-search-toggle__label">Search</span>
+      </button>
+
+      <form class="nav-donate-form" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="hosted_button_id" value="FG837WNAHF4P4">
+        <button type="submit" class="nav-donate">Donate</button>
+      </form>
+    </div>
+
+    <div class="search-panel" id="site-search-panel" hidden>
+      <form class="search-panel__inner" id="site-search" role="search" autocomplete="off">
+        <label class="sr-only" for="site-search-input">Search this site</label>
+        <input id="site-search-input" type="search" name="q"
+               placeholder="Search for fees, ID, scheduling, what to expect…"
+               aria-controls="site-search-results" aria-expanded="false"
+               aria-autocomplete="list" role="combobox">
+        <button type="button" class="search-panel__close" id="site-search-close"
+                aria-label="Close search">&times;</button>
+        <div class="nav-search__results" id="site-search-results" hidden></div>
+      </form>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+
+<div class="container">
+<section>
+
+<h1>Accessibility Conformance Report</h1>
+
+<p class="lede">How the PARC website measures against Section 508 of the Rehabilitation Act,
+which adopts the Web Content Accessibility Guidelines (WCAG) 2.0 Level AA.</p>
+
+<ul>
+  <li><strong>Report date:</strong> 15 September 2026</li>
+  <li><strong>Product:</strong> the PARC examination website, parcradio.org</li>
+  <li><strong>Standards applied:</strong> Revised Section 508 (36 CFR Part 1194, Appendix A)
+    and WCAG 2.0 Level AA</li>
+  <li><strong>Contact:</strong> <a href="mailto:vetesting@yahoo.com?subject=Website%20accessibility">vetesting@yahoo.com</a></li>
+</ul>
+
+<p class="booking-alert"><strong>This is a self-assessment, not a certification.</strong> It
+reports what PARC has tested. It has not yet been reviewed by an independent auditor, and it
+has not been tested with screen reader software such as NVDA, JAWS or VoiceOver.</p>
+
+<h2>Terms Used</h2>
+<ul>
+  <li><strong>Supports:</strong> the criterion is met.</li>
+  <li><strong>Partially supports:</strong> some part of the website does not meet it.</li>
+  <li><strong>Does not support:</strong> the criterion is not met.</li>
+  <li><strong>Not applicable:</strong> the criterion does not apply to this website.</li>
+</ul>
+
+<h2>WCAG 2.0 Report</h2>
+<div class="scroll-x">
+<table class="data-table">
+  <caption>Table 1: Level A</caption>
+  <thead><tr><th scope="col">Criterion</th><th scope="col">Conformance level</th><th scope="col">Remarks and explanations</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">1.1.1 Non-text Content</th><td>Supports</td><td>Every image carries a text alternative. Diagrams repeat their content in the caption beneath them, as text.</td></tr>
+    <tr><th scope="row">1.2.1 Audio-only and Video-only</th><td>Not applicable</td><td>The website contains no audio or video.</td></tr>
+    <tr><th scope="row">1.2.2 Captions (Prerecorded)</th><td>Not applicable</td><td>No prerecorded media.</td></tr>
+    <tr><th scope="row">1.2.3 Audio Description or Media Alternative</th><td>Not applicable</td><td>No prerecorded media.</td></tr>
+    <tr><th scope="row">1.3.1 Info and Relationships</th><td>Supports</td><td>Headings, lists, tables, form labels and grouped controls are marked up as such.</td></tr>
+    <tr><th scope="row">1.3.2 Meaningful Sequence</th><td>Supports</td><td>Reading order follows the visual order, including when the page reflows on a phone.</td></tr>
+    <tr><th scope="row">1.3.3 Sensory Characteristics</th><td>Supports</td><td>Instructions name controls by their label, not by shape or position alone.</td></tr>
+    <tr><th scope="row">1.4.1 Use of Color</th><td>Supports</td><td>The schedule shows the number of available times in each day, not colour alone.</td></tr>
+    <tr><th scope="row">1.4.2 Audio Control</th><td>Not applicable</td><td>Nothing plays automatically.</td></tr>
+    <tr><th scope="row">2.1.1 Keyboard</th><td>Supports</td><td>Menu, search, schedule, star rating and every form were operated by keyboard in Chromium, Firefox and WebKit.</td></tr>
+    <tr><th scope="row">2.1.2 No Keyboard Trap</th><td>Supports</td><td>Escape closes the menu and the search panel and returns focus to the control that opened it.</td></tr>
+    <tr><th scope="row">2.2.1 Timing Adjustable</th><td>Not applicable</td><td>No time limit is set by this website. The booking form and the examination platform are operated by other providers.</td></tr>
+    <tr><th scope="row">2.2.2 Pause, Stop, Hide</th><td>Not applicable</td><td>No moving, blinking or auto-updating content. Animation is disabled for readers who ask their system to reduce motion.</td></tr>
+    <tr><th scope="row">2.3.1 Three Flashes or Below Threshold</th><td>Supports</td><td>Nothing flashes.</td></tr>
+    <tr><th scope="row">2.4.1 Bypass Blocks</th><td>Supports</td><td>A skip link precedes the banner; each page has one main landmark.</td></tr>
+    <tr><th scope="row">2.4.2 Page Titled</th><td>Supports</td><td>Every page has a unique, descriptive title.</td></tr>
+    <tr><th scope="row">2.4.3 Focus Order</th><td>Supports</td><td>Focus follows the reading order. Choosing a day on the schedule with the keyboard moves focus to that day's times.</td></tr>
+    <tr><th scope="row">2.4.4 Link Purpose (In Context)</th><td>Supports</td><td>Back and Next buttons name the page they open. Links that open a new tab say so.</td></tr>
+    <tr><th scope="row">3.1.1 Language of Page</th><td>Supports</td><td>Every page declares English.</td></tr>
+    <tr><th scope="row">3.2.1 On Focus</th><td>Supports</td><td>Focus alone changes nothing.</td></tr>
+    <tr><th scope="row">3.2.2 On Input</th><td>Supports</td><td>Filters and the time zone selector change the times listed, not the page or the focus.</td></tr>
+    <tr><th scope="row">3.3.1 Error Identification</th><td>Supports</td><td>An invalid field is marked, described by the message and given focus.</td></tr>
+    <tr><th scope="row">3.3.2 Labels or Instructions</th><td>Supports</td><td>Every field has a visible label. Optional fields say so.</td></tr>
+    <tr><th scope="row">4.1.1 Parsing</th><td>Supports</td><td>Pages are generated from one template. Identifiers are unique on every page; this is checked before each release.</td></tr>
+    <tr><th scope="row">4.1.2 Name, Role, Value</th><td>Supports</td><td>Checked in the browser's accessibility tree, including the schedule's day buttons and pressed state, the star rating and the menu.</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="scroll-x">
+<table class="data-table">
+  <caption>Table 2: Level AA</caption>
+  <thead><tr><th scope="col">Criterion</th><th scope="col">Conformance level</th><th scope="col">Remarks and explanations</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">1.2.4 Captions (Live)</th><td>Not applicable</td><td>No live media.</td></tr>
+    <tr><th scope="row">1.2.5 Audio Description</th><td>Not applicable</td><td>No prerecorded media.</td></tr>
+    <tr><th scope="row">1.4.3 Contrast (Minimum)</th><td>Supports</td><td>Body text 15:1, secondary text 6.4:1, buttons 6.8:1. All text is at or above 4.5:1.</td></tr>
+    <tr><th scope="row">1.4.4 Resize text</th><td>Supports</td><td>Text can be enlarged to 200 per cent, and the page reflows to a single column at 400 per cent.</td></tr>
+    <tr><th scope="row">1.4.5 Images of Text</th><td>Supports</td><td>Text is real text. Diagrams carry short labels inside the picture, and the same information is in the caption.</td></tr>
+    <tr><th scope="row">2.4.5 Multiple Ways</th><td>Supports</td><td>A menu, a search box, links between related pages, and a full contents list of the instructions.</td></tr>
+    <tr><th scope="row">2.4.6 Headings and Labels</th><td>Supports</td><td>Headings describe their section; labels describe their field.</td></tr>
+    <tr><th scope="row">2.4.7 Focus Visible</th><td>Supports</td><td>A 3px focus ring at 5.9:1 against the page.</td></tr>
+    <tr><th scope="row">3.1.2 Language of Parts</th><td>Not applicable</td><td>No passages in another language.</td></tr>
+    <tr><th scope="row">3.2.3 Consistent Navigation</th><td>Supports</td><td>The same menu and footer, in the same order, on every page.</td></tr>
+    <tr><th scope="row">3.2.4 Consistent Identification</th><td>Supports</td><td>Buttons and controls that do the same thing are named the same throughout.</td></tr>
+    <tr><th scope="row">3.3.3 Error Suggestion</th><td>Supports</td><td>Messages say what to correct, for example “Select a rating”.</td></tr>
+    <tr><th scope="row">3.3.4 Error Prevention (Legal, Financial, Data)</th><td>Not applicable</td><td>No payment or legal transaction takes place on this website. Booking and payment are completed on Calendly.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Functional Performance Criteria (Chapter 3)</h2>
+<div class="scroll-x">
+<table class="data-table">
+  <caption>Table 3: Section 302</caption>
+  <thead><tr><th scope="col">Criterion</th><th scope="col">Conformance level</th><th scope="col">Remarks and explanations</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">302.1 Without vision</th><td>Supports</td><td>Operable by keyboard with a screen reader. Names, roles and states were checked in the accessibility tree.</td></tr>
+    <tr><th scope="row">302.2 With limited vision</th><td>Supports</td><td>Zoom to 400 per cent without sideways scrolling, text at or above 4.5:1, control outlines at or above 3:1.</td></tr>
+    <tr><th scope="row">302.3 Without perception of colour</th><td>Supports</td><td>No information is given by colour alone.</td></tr>
+    <tr><th scope="row">302.4 Without hearing</th><td>Supports</td><td>The website has no audio.</td></tr>
+    <tr><th scope="row">302.5 With limited hearing</th><td>Supports</td><td>Nothing on the website has to be heard.</td></tr>
+    <tr><th scope="row">302.6 Without speech</th><td>Supports</td><td>Nothing requires speech.</td></tr>
+    <tr><th scope="row">302.7 With limited manipulation</th><td>Supports</td><td>Everything is reachable by keyboard. Controls are at least 24 by 24 pixels.</td></tr>
+    <tr><th scope="row">302.8 With limited reach and strength</th><td>Supports</td><td>No dragging, and no action needs to be held down.</td></tr>
+    <tr><th scope="row">302.9 With limited language, cognitive and learning ability</th><td>Supports</td><td>Instructions read at about a ninth-grade level, one step per page, with the stage shown and the next page named.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Documents (Chapter 6)</h2>
+<p>The Pre-Exam Checklist is a tagged PDF with a declared language and described images.
+The New-Ham FAQ is a document published by another volunteer examiner group in 2013 and is
+offered as it was written; its text is readable by screen readers.</p>
+<p class="btn-row">
+  <a class="btn" href="../Documents/Checklist.pdf">Pre-Exam Checklist (PDF)</a>
+  <a class="btn" href="handiham.html">Accessible Testing and HandiHam</a>
+</p>
+
+<h2>Parts Outside PARC&rsquo;s Control</h2>
+<p>Examinations depend on services that PARC does not build or operate. Their accessibility
+is set by their own providers:</p>
+<ul>
+  <li><strong>Calendly</strong>, where a time is booked and the fee is paid.</li>
+  <li><strong>Zoom</strong>, which carries the session.</li>
+  <li><strong>ExamTools</strong>, where the examination itself is taken.</li>
+  <li>Study material and forms published by other organisations, such as the ARRL and HamStudy.</li>
+</ul>
+<p>A candidate who cannot use one of these should request an accommodation before booking.
+An examiner can read each question aloud, and other arrangements are listed under
+Accommodations.</p>
+<p class="btn-row"><a class="btn" href="Online_Handicapped.html">Accommodations</a></p>
+
+<h2>How This Was Tested</h2>
+<ul>
+  <li>Every public page, in Chromium, Firefox and WebKit, at 1280, 768, 390 and 320 pixels
+    wide.</li>
+  <li>Keyboard operation of the menu, search, schedule, forms and the star rating.</li>
+  <li>The browser&rsquo;s accessibility tree, for the name, role and state of each
+    control.</li>
+  <li>Contrast calculated from the colour values in the stylesheet.</li>
+  <li>Windows High Contrast mode, emulated in the browser.</li>
+  <li>Automated checks that run before every release: broken links, missing new-tab notices,
+    image descriptions, and duplicate identifiers.</li>
+</ul>
+
+<h2>Known Limitations</h2>
+<ul>
+  <li>No testing with screen reader software has taken place yet.</li>
+  <li>On the schedule, days are shaded to show how many times are open. The shading of a
+    day with few times is close to the page colour, although the number of times is printed
+    in every day.</li>
+  <li>WCAG 2.1 and 2.2, which some state and local government rules now require, have not
+    been assessed in full.</li>
+</ul>
+
+<h2>Reporting a Problem</h2>
+<p>Email a description of the page and the difficulty, with the subject &ldquo;Website
+accessibility.&rdquo; PARC examiners are unpaid volunteers; allow up to 24 hours for a
+reply.</p>
+<p class="btn-row"><a class="btn btn--primary" href="mailto:vetesting@yahoo.com?subject=Website%20accessibility">Report an Accessibility Problem</a></p>
+
+</section>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <aside class="study-band" aria-label="Ham Radio Prep offer">
+    <img class="study-band__logo" src="../images/hamradioprep-logo-white.png" alt="" width="1080" height="209">
+    <p><strong>Ham Radio Prep courses:</strong>
+      <strong>20% off</strong> with code <span class="coupon">PARC</span> &mdash; <a href="https://study.hamradioprep.com/enroll/1972787?price_id=2681038&amp;coupon=parc" target="_blank" rel="noopener">Technician<span class="sr-only"> (opens in a new tab)</span></a>, <a href="https://study.hamradioprep.com/enroll/2432887?price_id=3224428&amp;coupon=parc" target="_blank" rel="noopener">General<span class="sr-only"> (opens in a new tab)</span></a>, <a href="https://study.hamradioprep.com/enroll/2935944?price_id=3784628&amp;coupon=parc" target="_blank" rel="noopener">Amateur Extra<span class="sr-only"> (opens in a new tab)</span></a>, <a href="https://study.hamradioprep.com/enroll/405063?price_id=422572&amp;coupon=parc" target="_blank" rel="noopener">Tech + General<span class="sr-only"> (opens in a new tab)</span></a>, <a href="https://study.hamradioprep.com/enroll/1701522?price_id=3096155&amp;coupon=parc" target="_blank" rel="noopener">All Access<span class="sr-only"> (opens in a new tab)</span></a>.</p>
+  </aside>
+  <div class="site-footer__inner">
+    <div>
+      <h2>Contact Us</h2>
+      <p>PARC Radio &amp; Technology<br>
+         PO Box 926<br>
+         Roanoke, AL 36274-0926<br>
+         USA</p>
+      <p><a href="mailto:vetesting@yahoo.com">vetesting@yahoo.com</a></p>
+      <p>Our examiners are volunteers. Please allow up to 24 hours for a reply.</p>
+    </div>
+    <div>
+      <h2>Exams</h2>
+      <ul>
+        <li><a href="../pages/calendar.html">Schedule an exam</a></li>
+        <li><a href="../pages/online.html">Online testing</a></li>
+        <li><a href="../pages/inperson.html">In-person testing</a></li>
+        <li><a href="../pages/faq.html">FAQ</a></li>
+        <li><a href="../pages/troubleshooting.html">Troubleshooting</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>More</h2>
+      <ul>
+        <li><a href="../pages/whatnext.html">After passing the exam</a></li>
+        <li><a href="../pages/handiham.html">Accessible testing</a></li>
+        <li><a href="../pages/accessibility.html">Accessibility of this site</a></li>
+        <li><a href="../pages/donations.html">Support PARC</a></li>
+        <li><a href="https://www.facebook.com/groups/833919518104689" target="_blank" rel="noopener">Facebook group<span class="sr-only"> (opens in a new tab)</span></a></li>
+        <li><a href="https://t.me/+d32UCpaXRLhiNjJh" target="_blank" rel="noopener">Telegram group<span class="sr-only"> (opens in a new tab)</span></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="site-footer__bottom">
+    <span>&copy; 2020&ndash;2026 PARC Radio &amp; Technology</span>
+    <a class="site-footer__ve" href="../pages/script.html" rel="nofollow">VE Access</a>
+  </div>
+</footer>
+
+<script src="../js/site.js" defer></script>
+<script src="../js/search.js" defer></script>
+
+</body>
+</html>
