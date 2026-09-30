@@ -104,6 +104,28 @@ LAST_SYNC=$(git -C "$TMP/prod" log --format='%H' --grep='current build' -1 2>/de
 if [ -n "$LAST_SYNC" ]; then RANGE="$LAST_SYNC..HEAD"; else RANGE="HEAD~20..HEAD"; fi
 FOREIGN=$(git -C "$TMP/prod" log --format='%h %an %ad %s' --date=short "$RANGE" 2>/dev/null \
           | grep -vE 'Refresh schedule availability|Update VE scripts \(encrypted\)' || true)
+
+# A production commit is already reconciled when every file it touched is, in
+# production today, exactly what this build would publish - typically a change
+# merged into both repos, as the team banners were on 2026-09-23. Publishing
+# over it reverts nothing, so it should not need FORCE_OVER_EDITS.
+if [ -n "$FOREIGN" ]; then
+  STILL=""
+  while read -r sha rest; do
+    [ -z "$sha" ] && continue
+    same=1
+    while read -r f; do
+      [ -z "$f" ] && continue
+      if git -C "$TMP/prod" cat-file -e "HEAD:$f" 2>/dev/null; then
+        [ -f "$BUILD/$f" ] && cmp -s <(git -C "$TMP/prod" show "HEAD:$f") "$BUILD/$f" || { same=0; break; }
+      else
+        [ -e "$BUILD/$f" ] && { same=0; break; }
+      fi
+    done < <(git -C "$TMP/prod" show --name-only --format= "$sha")
+    if [ "$same" = 1 ]; then echo "  ok  production commit $sha already matches this build"; else STILL="$STILL$sha $rest"$'\n'; fi
+  done <<< "$FOREIGN"
+  FOREIGN=$(printf '%s' "$STILL" | sed '/^$/d')
+fi
 if [ -n "$FOREIGN" ]; then
   echo
   echo "  STOP. production has commits this build has not reconciled:"
