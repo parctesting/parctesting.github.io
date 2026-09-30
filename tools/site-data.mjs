@@ -204,14 +204,14 @@ export const PAGES = {
     // retheme regenerates it — which is exactly how schedule.js went missing
     // and broke the whole schedule page.
     scripts: ['/js/schedule.js'],
-    title: 'Schedule a Ham Radio License Exam',
-    desc: 'Book an amateur radio license exam with PARC. Sessions are available throughout the day and night and are reserved online.',
+    title: 'Schedule an Online Ham Radio License Exam',
+    desc: 'Book an online ham radio (amateur radio) license exam with PARC. Sessions run throughout the day and night, and the $15 fee is paid when booking.',
     h1: 'Schedule Your Exam',
     schema: 'events',
   },
   'pages/faq.html': {
     title: 'Ham Radio Exam Frequently Asked Questions',
-    desc: 'Answers to the questions candidates ask most about online and in-person amateur radio license exams: fees, ID, equipment, rules, and results.',
+    desc: 'Answers about taking the ham radio (amateur radio) license exam online or in person: cost, validity, identification, equipment, rules and results.',
     h1: 'Frequently Asked Questions',
     schema: 'faq',
   },
@@ -221,13 +221,13 @@ export const PAGES = {
     h1: 'In-Person Exam Sessions',
   },
   'pages/online.html': {
-    title: 'Online Ham Radio Exams',
-    desc: 'Everything required for a remote video amateur radio exam with PARC. Read all instructions and requirements before paying or registering.',
-    h1: 'Ham Exam — Online',
+    title: 'Online Ham Radio License Exams from Home',
+    desc: 'Take your ham radio (amateur radio) license exam online from home over Zoom: Technician, General and Amateur Extra, with ARRL VEC volunteer examiners nearly every day.',
+    h1: 'Online Ham Radio Exams',
   },
   'pages/Online_InstructionSeparation.html': {
-    title: 'Online Amateur Radio Exam Instructions',
-    desc: 'Step-by-step instructions for taking your amateur radio license exam online with PARC: scheduling, preparation, rules, ID, and exam day.',
+    title: 'Online Ham Radio Exam Instructions and Requirements',
+    desc: 'Complete instructions for taking the ham radio license exam online with PARC: booking, registration, the room, computer, webcam, second camera, rules and exam day.',
     h1: 'Online Testing Instructions',
   },
   'pages/whatnext.html': {
@@ -256,13 +256,13 @@ export const PAGES = {
     h1: 'Before You Book an Online Exam',
   },
   'pages/Online_HowtoScheduleandRegister.html': {
-    title: 'How to Schedule and Register for Your Exam',
-    desc: 'How to book an amateur radio exam session with PARC and complete registration, for single candidates, multiple exams, and groups.',
+    title: 'How to Book and Register for an Online Ham Radio Exam',
+    desc: 'How to book an online ham radio license exam with PARC, pay the $15 fee, and complete the registration that becomes the FCC license application.',
     h1: 'How to Schedule and Register',
   },
   'pages/Online_WhereandHowtoStudy.html': {
-    title: 'Where and How to Study for Your Ham Radio Exam',
-    desc: 'Free and paid study resources for the Technician, General, and Extra amateur radio exams, plus practice tests and how to use them well.',
+    title: 'Ham Radio Exam Practice Tests and Study Resources',
+    desc: 'Free ham radio practice tests and study resources for the Technician, General and Amateur Extra exams, and the practice score to reach before booking.',
     h1: 'Where and How to Study',
   },
   'pages/Online_Preparation.html': {
@@ -271,23 +271,23 @@ export const PAGES = {
     h1: 'Preparation',
   },
   'pages/Online_Prep_Room.html': {
-    title: 'Exam Room Requirements for Online Testing',
-    desc: 'Room requirements for a remote amateur radio exam: room selection, the items that must be cleared, and who may be present.',
+    title: 'Room Requirements for an Online Ham Radio Exam',
+    desc: 'Room requirements for an online ham radio license exam: a private room, a clear desk, the items that must be removed, and who may be present.',
     h1: 'Preparing Your Room',
   },
   'pages/Online_Prep_Computer.html': {
-    title: 'Computer Setup for Your Online Ham Radio Exam',
-    desc: 'How to prepare your computer for a remote amateur radio exam: Zoom, screen sharing, closing programs, and testing your camera and microphone.',
+    title: 'Computer and Webcam Setup for an Online Ham Radio Exam',
+    desc: 'Computer requirements for an online ham radio exam: a Windows or Mac computer with a webcam, the Zoom application, screen sharing and the exam browser window.',
     h1: 'Preparing Your Computer',
   },
   'pages/Online_Prep_2ndDevice.html': {
-    title: 'Second Device Setup for Online Exams',
-    desc: 'Your remote amateur radio exam needs a second camera device. How to position a phone or tablet so examiners can see your whole workspace.',
+    title: 'Second Camera Setup for an Online Ham Radio Exam',
+    desc: 'An online ham radio exam needs a second camera: how to place a phone or tablet so the examiners can see the candidate, both hands and the screen.',
     h1: 'Preparing Your Second Device',
   },
   'pages/Online_Protocol.html': {
-    title: 'Online Exam Protocol and Procedures',
-    desc: 'The protocol PARC volunteer examiners follow during a remote amateur radio exam, and what candidates are expected to do at each step.',
+    title: 'Online Ham Radio Exam Day Procedure on Zoom',
+    desc: 'What happens during an online ham radio exam on Zoom: check-in, identification, the room scan, screen sharing and the examination itself.',
     h1: 'Exam Protocol',
   },
   'pages/Online_Rules_IR.html': {
