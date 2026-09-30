@@ -17,6 +17,7 @@ const ROOT = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
 const PRIORITY = {
   'index.html': '1.0',
   'pages/calendar.html': '0.9',
+  'pages/online.html': '0.9',
   'pages/Online_InstructionSeparation.html': '0.9',
   'pages/inperson.html': '0.8',
   'pages/faq.html': '0.8',
