@@ -51,7 +51,11 @@ const ALT = {
   'dnd.png':
     'Do Not Disturb moon symbol',
   'PAUSE_BANNER.png':
-    'Notice banner announcing that exam sessions are temporarily paused.',
+    'Pause for Integrity Check. 1. Check Telegram. 2. Are all VEs in agreement? ' +
+    '3. Thumbs-up check from the team. 4. Any thumbs down? ' +
+    'All thumbs up: No issues noted, we are continuing. ' +
+    'Any thumbs down: [Applicant], please give us a moment. VEs, please connect on the bridge. ' +
+    'The team will discuss and reach a unanimous decision to proceed or refer in person. No abstentions.',
   'Handiham_Logo.png': 'HandiHam logo',
   'letter.png': 'Auburn University Amateur Radio Club K4RY call sign plate',
   'PARC3.jpeg': 'PARC Radio & Technology club logo',
