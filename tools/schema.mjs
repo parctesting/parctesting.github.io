@@ -106,12 +106,14 @@ export function faqSchema(faqPath) {
   return { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: items };
 }
 
+/** Where a page sits, for search results: Home › Online Ham Radio Exams › Room.
+ *  Items name the canonical addresses, the same ones the canonical tags use. */
 export function breadcrumb(trail) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: trail.map((t, i) => ({
-      '@type': 'ListItem', position: i + 1, name: t.name, item: SITE.origin + t.href,
+      '@type': 'ListItem', position: i + 1, name: t.name, item: SITE.canonicalOrigin + t.href,
     })),
   };
 }

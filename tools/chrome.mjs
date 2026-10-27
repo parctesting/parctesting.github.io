@@ -113,10 +113,10 @@ export function buildHead(rel, meta) {
            `data-cf-beacon='{"token": "${esc(SITE.analyticsToken)}"}'></script>`);
     L.push('<!-- End Cloudflare Web Analytics -->');
   }
-  if (meta.schemaJson) {
+  for (const schema of [].concat(meta.schemaJson || [])) {
     L.push('');
     L.push('<script type="application/ld+json">');
-    L.push(JSON.stringify(meta.schemaJson, null, 2));
+    L.push(JSON.stringify(schema, null, 2));
     L.push('</script>');
   }
   return L.join('\n');
