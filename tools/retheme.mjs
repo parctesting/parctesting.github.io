@@ -15,8 +15,8 @@
 import { readFileSync, writeFileSync, readdirSync, statSync, rmSync, existsSync } from 'node:fs';
 import { join, relative, dirname } from 'node:path';
 import { PAGES, VE_PAGES, DELETE_PAGES } from './site-data.mjs';
-import { organizationSchema, faqSchema } from './schema.mjs';
-import { buildHead, buildHeader, buildFooter, link } from './chrome.mjs';
+import { organizationSchema, faqSchema, breadcrumb } from './schema.mjs';
+import { buildHead, buildHeader, buildFooter, link, pagePath } from './chrome.mjs';
 
 const esc = (v) => String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;')
   .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -71,9 +71,32 @@ function metaFor(rel) {
   if (VE.has(rel)) return null;
   const meta = PAGES[rel];
   if (!meta) return null;
+  meta.schemaJson = undefined;
   if (meta.schema === 'organization') meta.schemaJson = organizationSchema();
   if (meta.schema === 'faq') meta.schemaJson = faqSchema(join(ROOT, rel));
   return meta;
+}
+
+/* The page's own visible heading, as plain text. */
+function headingText(content) {
+  const m = content.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i);
+  if (!m) return '';
+  return m[1].replace(/<[^>]+>/g, '').replace(/&rsquo;/g, '\u2019').replace(/&amp;/g, '&')
+    .replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+/* Home › [Online Ham Radio Exams ›] this page. The online instruction pages and
+   Acceptable Identification sit under the online overview; everything else sits
+   directly under Home. The home page and noindex pages get none. */
+function breadcrumbTrail(rel, content, meta) {
+  if (rel === 'index.html' || meta.noindex) return null;
+  const name = headingText(content) || meta.h1 || meta.title;
+  const trail = [{ name: 'Home', href: '/' }];
+  if (/^pages\/(Online_[A-Za-z0-9_]+|ID)\.html$/.test(rel)) {
+    trail.push({ name: PAGES['pages/online.html'].h1, href: '/pages/online.html' });
+  }
+  trail.push({ name, href: '/' + pagePath(rel) });
+  return trail;
 }
 
 function retheme(rel, dry) {
@@ -91,6 +114,9 @@ function retheme(rel, dry) {
       (m, attr, path) => `${attr}="${link(rel, path)}"`);
   }
   if (!content) return { rel, status: 'SKIPPED — no <div class="container"> / <footer> markers' };
+
+  const trail = breadcrumbTrail(rel, content, meta);
+  if (trail) meta.schemaJson = [].concat(meta.schemaJson || [], breadcrumb(trail));
 
   // Exactly one <h1> per page, carrying the page's real subject. Rendered
   // visually hidden where the page body already shows its own title, so this
