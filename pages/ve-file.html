@@ -107,11 +107,12 @@
     </form>
   </div>
   <div id="ve-viewer" hidden>
-    <p class="ve-file__actions">
-      <a class="btn btn--primary" id="ve-open" href="#" target="_blank" rel="noopener">Open in a new tab</a>
+    <div class="ve-file__actions">
+      <h1 class="ve-file__name" id="ve-viewer-title">VE Training Material</h1>
       <button type="button" class="btn" id="ve-relock">Lock</button>
-    </p>
-    <iframe id="ve-frame" class="ve-file__frame" title="VE training material"></iframe>
+    </div>
+    <p class="ve-lock__status" id="ve-pages-status" role="status" aria-live="polite"></p>
+    <div class="ve-file__pages" id="ve-pages"></div>
   </div>
 </section>
 </div>
@@ -164,5 +165,6 @@
 <script src="../js/site.js" defer></script>
 <script src="../js/search.js" defer></script>
 <script src="../js/ve-file.js" defer></script>
+<script src="../js/ve-protect.js" defer></script>
 </body>
 </html>

@@ -43,11 +43,12 @@
   var submit = document.getElementById('ve-submit');
   var lockBox = document.getElementById('ve-file');
   var viewer = document.getElementById('ve-viewer');
-  var frame = document.getElementById('ve-frame');
-  var openLink = document.getElementById('ve-open');
+  var pagesEl = document.getElementById('ve-pages');
+  var pagesStatus = document.getElementById('ve-pages-status');
   var titleEl = document.getElementById('ve-file-title');
+  var viewerTitle = document.getElementById('ve-viewer-title');
 
-  var M = null, CACHE_KEY = null, blobUrl = null;
+  var M = null, CACHE_KEY = null;
 
   function say(msg, isError) {
     if (!status) return;
@@ -77,7 +78,8 @@
       M = m;
       CACHE_KEY = 've-key:' + M.salt;
       if (!M.files || !M.files[slug]) { say('Unknown file.', true); return; }
-      if (titleEl) titleEl.textContent = M.files[slug].name;
+      if (titleEl) titleEl.textContent = displayName();
+      if (viewerTitle) viewerTitle.textContent = displayName();
       var cached = readCached();
       if (cached) {
         say('Opening…');
@@ -106,18 +108,125 @@
    *  passphrase doesn't cost a 3 MB download first. */
   function verify(key) { return decrypt(key, M.verify); }
 
+  /**
+   * Show the decrypted PDF as page images instead of handing it to the
+   * browser's PDF viewer, which offers Download and Print buttons and a
+   * blob: address that can be saved. PDF.js (js/vendor/pdfjs, Apache-2.0)
+   * draws each page on a canvas when it scrolls near the screen. Each page's
+   * text goes in a visually hidden block for screen readers; it cannot be
+   * selected (js/ve-protect.js).
+   */
+  var pdfjsReady = null;
+  function loadPdfjs() {
+    if (pdfjsReady) return pdfjsReady;
+    pdfjsReady = new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = BASE + 'js/vendor/pdfjs/pdf.min.js';
+      s.onload = function () {
+        var lib = window.pdfjsLib;
+        if (!lib) { reject(new Error('PDF.js missing')); return; }
+        lib.GlobalWorkerOptions.workerSrc = BASE + 'js/vendor/pdfjs/pdf.worker.min.js';
+        resolve(lib);
+      };
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+    return pdfjsReady;
+  }
+
+  // The manifest stores the original file name; show it without ".pdf".
+  function displayName() { return M.files[slug].name.replace(/\.pdf$/i, ''); }
+
+  function pagesSay(msg, isError) {
+    if (!pagesStatus) return;
+    pagesStatus.textContent = msg || '';
+    pagesStatus.className = 've-lock__status' + (isError ? ' is-error' : '');
+  }
+
+  function showPdf(buf) {
+    return loadPdfjs().then(function (lib) {
+      // isEvalSupported: false is the hardening advised for PDF.js 3.x.
+      return lib.getDocument({ data: new Uint8Array(buf), isEvalSupported: false }).promise;
+    }).then(function (pdf) {
+      var n = pdf.numPages, pending = [], i;
+      pagesEl.innerHTML = '';
+      pagesSay(n + (n === 1 ? ' page.' : ' pages.'));
+
+      function makePage(num) {
+        var box = document.createElement('section');
+        box.className = 've-file__page';
+        box.setAttribute('aria-label', 'Page ' + num + ' of ' + n);
+        var canvas = document.createElement('canvas');
+        canvas.setAttribute('aria-hidden', 'true');
+        var text = document.createElement('div');
+        text.className = 'sr-only';
+        box.appendChild(canvas); box.appendChild(text);
+        pagesEl.appendChild(box);
+        return { num: num, box: box, canvas: canvas, text: text, drawn: false };
+      }
+
+      function draw(p) {
+        if (p.drawn) return;
+        p.drawn = true;
+        pdf.getPage(p.num).then(function (page) {
+          var base = page.getViewport({ scale: 1 });
+          var width = Math.max(pagesEl.clientWidth, 320);
+          var ratio = Math.min(window.devicePixelRatio || 1, 2);
+          var scale = Math.min(width * ratio * 1.25 / base.width, 4);
+          var vp = page.getViewport({ scale: scale });
+          p.canvas.width = Math.floor(vp.width);
+          p.canvas.height = Math.floor(vp.height);
+          p.box.style.aspectRatio = base.width + ' / ' + base.height;
+          return page.render({ canvasContext: p.canvas.getContext('2d'), viewport: vp }).promise;
+        }).catch(function () { p.drawn = false; });
+      }
+
+      for (i = 1; i <= n; i++) pending.push(makePage(i));
+
+      // Page size from page 1, so the placeholders hold their space.
+      pdf.getPage(1).then(function (page) {
+        var v = page.getViewport({ scale: 1 });
+        pending.forEach(function (p) { p.box.style.aspectRatio = v.width + ' / ' + v.height; });
+      });
+
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (!en.isIntersecting) return;
+            var idx = Number(en.target.getAttribute('data-page')) - 1;
+            draw(pending[idx]);
+            io.unobserve(en.target);
+          });
+        }, { rootMargin: '800px 0px' });
+        pending.forEach(function (p) { p.box.setAttribute('data-page', p.num); io.observe(p.box); });
+      } else {
+        pending.forEach(draw);
+      }
+
+      // Text for screen readers, one page after another.
+      pending.reduce(function (chain, p) {
+        return chain.then(function () {
+          return pdf.getPage(p.num).then(function (page) { return page.getTextContent(); })
+            .then(function (tc) {
+              p.text.textContent = tc.items.map(function (it) { return it.str; }).join(' ');
+            }, function () {});
+        });
+      }, Promise.resolve());
+    });
+  }
+
   function openFile(key) {
     return fetch(BASE + 've/files/' + slug + '.enc')
       .then(function (r) { return r.json(); })
       .then(function (blob) { return decrypt(key, blob); })
       .then(function (buf) {
-        if (blobUrl) URL.revokeObjectURL(blobUrl);
-        blobUrl = URL.createObjectURL(new Blob([buf], { type: M.files[slug].type }));
-        if (frame) frame.src = blobUrl;
-        if (openLink) openLink.href = blobUrl;
         if (lockBox) lockBox.hidden = true;
         if (viewer) viewer.hidden = false;
-        document.title = M.files[slug].name + ' | PARC';
+        document.title = displayName() + ' | PARC';
+        pagesSay('Opening\u2026');
+        return showPdf(buf).catch(function () {
+          pagesSay('The document could not be displayed. Reload the page to try again.', true);
+        });
       });
   }
 

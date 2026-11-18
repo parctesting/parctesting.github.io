@@ -366,7 +366,7 @@ export const PAGES = {
     noindex: true,
   },
   'pages/ve-file.html': {
-    scripts: ['/js/ve-file.js'],
+    scripts: ['/js/ve-file.js', '/js/ve-protect.js'],
     title: 'Volunteer Examiner Access',
     desc: '',
     noindex: true,

@@ -811,14 +811,78 @@ a.dropbtn--team:focus-visible {
 .ve-lock__status.is-error { color: var(--parc-red); font-weight: 600; }
 .ve-lock__foot { margin-top: var(--sp-6); font-size: var(--step--1); color: var(--muted); }
 
+/* The VE bar sits above the banner on every unlocked VE page. It uses the
+   main navigation's type (uppercase, letterspaced, square-cornered controls)
+   so it reads as part of the site header rather than an add-on, and its
+   content lines up with the nav's content column. */
 .ve-bar {
-  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4);
-  background: var(--ink); color: #fff; padding: var(--sp-2) var(--sp-4); font-size: var(--step--1);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: var(--sp-1) var(--sp-4);
+  /* Fixed, not var(--ink): the dashboard's dark mode redefines --ink as a
+     light colour, which turned this bar pale. */
+  background: #1F2328; color: #fff;
+  border-bottom: 3px solid var(--parc-red);
+  padding-block: var(--sp-1);
+  padding-inline: max(var(--sp-4), calc((100% - var(--wrap)) / 2 + var(--sp-4)));
+  font-size: var(--step--1); line-height: 1.4;
 }
-.ve-bar__label { letter-spacing: .04em; text-transform: uppercase; font-weight: 600; }
-.ve-bar__lock { padding: var(--sp-1) var(--sp-3); font-size: var(--step--1); }
-.ve-file__actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-bottom: var(--sp-4); }
-.ve-file__frame { width: 100%; height: min(80vh, 900px); border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-2); }
+.ve-bar__label {
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  padding-block: var(--sp-2);
+  color: rgba(255,255,255,.78); font-weight: 600; font-size: .92em;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+.ve-bar__label::before {
+  content: ""; flex: none; width: .55em; height: .55em; border-radius: 50%;
+  background: var(--parc-red); box-shadow: 0 0 0 3px rgba(186,0,5,.28);
+}
+.ve-bar__links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); }
+.ve-bar a.ve-bar__link,
+.ve-bar .ve-bar__lock {
+  /* inline-block, not flex: flex would drop the space in "Session Dashboard". */
+  display: inline-block; vertical-align: middle; text-align: center;
+  padding: calc((2.25rem - 1.2em) / 2 - 1px) var(--sp-3);
+  border-radius: var(--radius-sm); border: 1px solid transparent;
+  font: inherit; font-weight: 600; font-size: 1em; line-height: 1.2;
+  letter-spacing: .04em; text-transform: uppercase; white-space: nowrap;
+  text-decoration: none; cursor: pointer; box-shadow: none;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+.ve-bar a.ve-bar__link:link, .ve-bar a.ve-bar__link:visited { color: #fff; background: transparent; }
+.ve-bar a.ve-bar__link:hover, .ve-bar a.ve-bar__link:focus-visible { color: #fff; background: var(--nav-bg-2); }
+.ve-bar .ve-bar__lock { color: #fff; background: transparent; border-color: rgba(255,255,255,.6); }
+.ve-bar .ve-bar__lock:hover, .ve-bar .ve-bar__lock:focus-visible { color: #1F2328; background: #fff; border-color: #fff; }
+.ve-bar a.ve-bar__link:focus-visible, .ve-bar .ve-bar__lock:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+/* Below the nav's own breakpoint: the notice on one line, the controls centred
+   on the next. "Session" is dropped from the dashboard link on phones so the
+   three controls stay on one row. */
+@media (max-width: 900px) {
+  .ve-bar { justify-content: center; text-align: center; padding-bottom: var(--sp-2); row-gap: 0; }
+  .ve-bar__label { display: block; padding-bottom: var(--sp-1); }
+  .ve-bar__label::before { display: inline-block; vertical-align: .08em; margin-right: var(--sp-2); }
+  .ve-bar__links { justify-content: center; gap: var(--sp-1); }
+}
+@media (max-width: 600px) {
+  .ve-bar__label { font-size: .82em; letter-spacing: .03em; }
+  .ve-bar a.ve-bar__link, .ve-bar .ve-bar__lock { padding-inline: var(--sp-2); letter-spacing: .02em; }
+  .ve-bar__long { display: none; }
+}
+@media (max-width: 360px) {
+  .ve-bar a.ve-bar__link, .ve-bar .ve-bar__lock { padding-inline: 6px; letter-spacing: 0; }
+}
+.ve-file__actions {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: var(--sp-3); margin-bottom: var(--sp-2);
+}
+.ve-file__name { margin: 0; }
+/* Training documents drawn as page images by js/ve-file.js (PDF.js). */
+.ve-file__pages { display: grid; gap: var(--sp-4); margin-top: var(--sp-3); }
+.ve-file__page {
+  position: relative; width: 100%; aspect-ratio: 8.5 / 11;
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-1); overflow: hidden;
+}
+.ve-file__page canvas { display: block; width: 100%; height: 100%; }
 
 /* ---------- schedule page ------------------------------------------------ */
 .age-gate {
@@ -2222,7 +2286,37 @@ html.ve-framed .ve-bar,
 html.ve-framed .site-header, html.ve-framed .site-banner, html.ve-framed .site-nav,
 html.ve-framed .site-footer, html.ve-framed .study-band, html.ve-framed .skip-link { display: none; }
 html.ve-framed .container { margin-block: 0; }
-.ve-bar { flex-wrap: wrap; row-gap: var(--sp-1); }
-.ve-bar__links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-1) var(--sp-4); }
-.ve-bar a.ve-bar__link { display: inline-block; padding: var(--sp-1) 0; }
-.ve-bar a.ve-bar__link:link, .ve-bar a.ve-bar__link:visited, .ve-bar a.ve-bar__link:hover { color: #fff; }
+
+/* ---------- VE copy deterrents (js/ve-protect.js) ------------------------ */
+/* Unlocked VE material: no selecting, long-press callout or dragging, except
+   in form fields, which the dashboard needs. */
+html.ve-protected body {
+  -webkit-user-select: none; user-select: none;
+  -webkit-touch-callout: none;
+}
+html.ve-protected img, html.ve-protected canvas { -webkit-user-drag: none; }
+html.ve-protected input, html.ve-protected textarea, html.ve-protected select,
+html.ve-protected [contenteditable="true"], html.ve-protected .ve-allow-copy {
+  -webkit-user-select: text; user-select: text;
+  -webkit-touch-callout: default;
+}
+.ve-protect-notice {
+  position: fixed; left: 50%; bottom: var(--sp-5); z-index: 1000;
+  transform: translate(-50%, 1rem); opacity: 0; pointer-events: none;
+  max-width: calc(100vw - 2 * var(--sp-4)); margin: 0;
+  padding: var(--sp-3) var(--sp-4); border-radius: var(--radius-sm);
+  background: #1F2328; color: #fff; box-shadow: var(--shadow-3);
+  font-size: var(--step--1); font-weight: 600; text-align: center;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.ve-protect-notice.is-shown { opacity: 1; transform: translate(-50%, 0); }
+@media (prefers-reduced-motion: reduce) { .ve-protect-notice { transition: none; } }
+/* Printing from the browser menu prints a notice instead of the material. */
+@media print {
+  html.ve-protected body > * { display: none !important; }
+  html.ve-protected body::before {
+    content: "VE material may not be printed.";
+    display: block; padding: 2rem; font: 600 14pt/1.4 sans-serif; color: #000;
+  }
+}
+

@@ -16,6 +16,8 @@
 
   var payloadEl = document.getElementById('ve-payload');
   if (!payloadEl) return;
+  // Where this file was loaded from, to load js/ve-protect.js beside it.
+  var SELF = (document.currentScript && document.currentScript.src) || '';
 
   var P;
   try { P = JSON.parse(payloadEl.textContent); } catch (e) { return; }
@@ -108,8 +110,42 @@
    *  Trade-off: nodes created by DOMParser are inert, so any <script> in the
    *  decrypted page has to be re-created by hand to run. See rerunScripts().
    */
+  /** Put the shell's site header and footer into the decrypted page.
+   *
+   *  The shell is built by tools/parc-lock.mjs from tools/chrome.mjs, so its
+   *  header and footer are the site's current ones. The scripts in VE_Scripts
+   *  carry copies made years ago (an older menu with no Search, Reviews or
+   *  Our Team), and the dashboard carries none. Swapping them here keeps every
+   *  VE page in step with the site without editing the scripts.
+   */
+  function useCurrentChrome(doc) {
+    var main = doc.querySelector('main') || doc.body.firstChild;
+    var parts = [['.site-header', 'before'], ['.site-footer', 'after']];
+    for (var i = 0; i < parts.length; i++) {
+      var current = document.querySelector(parts[i][0]);
+      if (!current) continue;
+      var fresh = doc.importNode(current, true);
+      var old = doc.querySelector(parts[i][0]);
+      if (old) old.parentNode.replaceChild(fresh, old);
+      else if (parts[i][1] === 'before') main.parentNode.insertBefore(fresh, main);
+      else main.parentNode.insertBefore(fresh, main.nextSibling);
+    }
+    // The current header needs the shell's scripts too (search.js for Search).
+    var have = {}, olds = doc.querySelectorAll('script[src]'), j;
+    for (j = 0; j < olds.length; j++) have[olds[j].getAttribute('src').split('/').pop()] = true;
+    var shellScripts = document.querySelectorAll('script[src]');
+    for (j = 0; j < shellScripts.length; j++) {
+      var src = shellScripts[j].getAttribute('src'), name = src.split('/').pop();
+      if (have[name] || name === 've-lock.js') continue;
+      var add = doc.createElement('script');
+      add.src = src;
+      doc.body.appendChild(add);
+    }
+  }
+
   function render(html) {
     var doc = new DOMParser().parseFromString(html, 'text/html');
+    useCurrentChrome(doc);
 
     /* Inside the dashboard's reader frame the dashboard carries the bar, so the
        framed page hides its own (css: html.ve-framed .ve-bar). */
@@ -133,7 +169,7 @@
       '<span class="ve-bar__label">VE material \u2014 not for public distribution</span>' +
       '<span class="ve-bar__links">' +
       '<a class="ve-bar__link" href="../index.html">Main Website</a>' +
-      (onDash || framed ? '' : '<a class="ve-bar__link" href="ve-dashboard.html">Session Dashboard</a>') +
+      (onDash || framed ? '' : '<a class="ve-bar__link" href="ve-dashboard.html"><span class="ve-bar__long">Session </span>Dashboard</a>') +
       '<button type="button" class="ve-bar__lock" id="ve-relock">Lock</button></span>';
     doc.body.insertBefore(bar, doc.body.firstChild);
 
@@ -144,6 +180,13 @@
 
     if (P.t) document.title = P.t + ' | PARC';
     rerunScripts();
+
+    // Copy, save and print deterrents for the unlocked material.
+    if (SELF) {
+      var guard = document.createElement('script');
+      guard.src = SELF.replace(/ve-lock\.js(\?.*)?$/, 've-protect.js');
+      document.body.appendChild(guard);
+    }
 
     var btn = document.getElementById('ve-relock');
     if (btn) btn.addEventListener('click', function () { clearCached(); location.reload(); });
