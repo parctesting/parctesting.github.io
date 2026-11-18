@@ -159,18 +159,13 @@
       for (var d = 0; d < dl.length; d++) dl[d].parentNode.removeChild(dl[d]);
     }
 
-    /* Every VE page links to the public site (the dashboard has no site menu,
-       and a phone had no other way back), and every other VE page links to
-       the session dashboard. */
-    var onDash = /(^|\/)ve-dashboard\.html$/.test(location.pathname);
+    /* The notice and the Lock button. Navigation is the site menu below it;
+       the dashboard is reached from the scripts' own button row. */
     var bar = doc.createElement('div');
     bar.className = 've-bar no-print';
     bar.innerHTML =
       '<span class="ve-bar__label">VE material \u2014 not for public distribution</span>' +
-      '<span class="ve-bar__links">' +
-      '<a class="ve-bar__link" href="../index.html">Main Website</a>' +
-      (onDash || framed ? '' : '<a class="ve-bar__link" href="ve-dashboard.html"><span class="ve-bar__long">Session </span>Dashboard</a>') +
-      '<button type="button" class="ve-bar__lock" id="ve-relock">Lock</button></span>';
+      '<button type="button" class="ve-bar__lock" id="ve-relock">Lock</button>';
     doc.body.insertBefore(bar, doc.body.firstChild);
 
     document.replaceChild(

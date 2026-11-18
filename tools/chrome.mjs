@@ -15,6 +15,11 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
    fails the build if a new-tab link lacks this text. */
 const NEW_TAB = '<span class="sr-only"> (opens in a new tab)</span>';
 
+/* Kept to one line of ES5: it runs in the <head> of every page, including the
+   locked VE shells. Storage can throw in private modes, hence the try. */
+export const THEME_SCRIPT = '<script>(function(){try{var t=localStorage.getItem(\'parc-theme\');' +
+  'if(t===\'dark\'||t===\'light\')document.documentElement.setAttribute(\'data-theme\',t);}catch(e){}})();</script>';
+
 /**
  * Relative-path prefix for a page, so a build works at ANY mount point.
  *
@@ -86,9 +91,14 @@ export function buildHead(rel, meta) {
   /* Chrome on Android auto-darkens pages that state no preference, inverting
      colours in the compositor after CSS has run. It gets menus wrong — a light
      dropdown panel keeps light text and becomes unreadable. Declaring a scheme
-     opts the page out. This site is light by design; if a dark palette is ever
-     added, change this to "light dark" rather than removing it. */
-  L.push('<meta name="color-scheme" content="light">');
+     opts the page out. The site has its own dark theme (css/site.css), so both
+     are declared; never remove the tag. */
+  L.push('<meta name="color-scheme" content="light dark">');
+  /* A theme chosen with the switch in the nav is applied before the first
+     paint, so a dark page never flashes white. Without a stored choice the
+     stylesheet follows the device. js/site.js owns the switch; THEME_KEY there
+     must match. */
+  L.push(THEME_SCRIPT);
   L.push(`<link rel="icon" href="${link(rel, '/favicon.ico')}" sizes="any">`);
   L.push(`<link rel="stylesheet" href="${link(rel, '/css/site.css')}">`);
   /* One preload per layout, matching the <picture> in the header. Unscoped, phones
@@ -167,12 +177,21 @@ export function buildHeader(rel) {
       </button>
 ${navHtml(rel)}
       <button type="button" class="nav-search-toggle" id="site-search-toggle"
-              aria-expanded="false" aria-controls="site-search-panel" aria-label="Search this site">
+              aria-expanded="false" aria-controls="site-search-panel" aria-label="Search this site"
+              title="Search this site">
         <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" focusable="false">
           <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/>
           <line x1="12.8" y1="12.8" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
         <span class="nav-search-toggle__label">Search</span>
+      </button>
+
+      <button type="button" class="nav-theme-toggle" id="site-theme-toggle"
+              aria-pressed="false" aria-label="Dark Mode" title="Dark Mode">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" focusable="false">
+          <path d="M15.5 12.6A6.5 6.5 0 0 1 7.4 4.5a6.5 6.5 0 1 0 8.1 8.1z" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
       </button>
 
       <form class="nav-donate-form" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">

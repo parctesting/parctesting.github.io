@@ -31,7 +31,8 @@
     delta:   { label: 'D · Delta', page: 'Online_ScriptD.html' },
     easy:    { label: 'Easy Read', page: 'easyread.html' },
     compact: { label: 'No-Space Version', page: 'scriptnospace.html' },
-    w5yi:    { label: 'W5YI Version', page: 'Online_ScriptW5YI.html' }
+    w5yi:    { label: 'W5YI Version', page: 'Online_ScriptW5YI.html' },
+    old:     { label: 'Old Script', page: 'oldscript.html' }
   };
   var COMMON = ['current', 'full', 'id', 'scan'];
   var DEFAULT_ZOOM = root.getAttribute('data-zoom') || '';
@@ -98,7 +99,6 @@
         startedAtEpoch: isFinite(t.startedAtEpoch) ? t.startedAtEpoch : 0
       },
       preferences: {
-        theme: p.theme === 'dark' ? 'dark' : 'light',
         remember: p.remember !== false,
         telegram: telegramUser(p.telegram || ''),
         zoom: validZoom(p.zoom) ? p.zoom : DEFAULT_ZOOM,
@@ -127,6 +127,39 @@
 
   var saved = decode(read('sessionStorage', TAB_STORE)) || decode(read('localStorage', STORE));
   var state = cleanState(saved);
+
+  /* ---------- theme ------------------------------------------------------ */
+  /* The dashboard uses the site-wide theme: the same key and rules as js/site.js,
+     repeated here because the two scripts are re-run in no fixed order when the
+     page is unlocked. Without a stored choice the device setting applies;
+     choosing the theme the device already uses clears the stored choice. */
+  var THEME_KEY = 'parc-theme';
+  var themeMq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var themeMemory = null, themeUseMemory = false;
+  function storedTheme() {
+    var t = themeMemory;
+    if (!themeUseMemory) {
+      try { t = localStorage.getItem(THEME_KEY); } catch (e) { t = themeMemory; }
+    }
+    return t === 'dark' || t === 'light' ? t : null;
+  }
+  function deviceDark() { return !!(themeMq && themeMq.matches); }
+  function siteDark() { var t = storedTheme(); return t ? t === 'dark' : deviceDark(); }
+  function setSiteDark(dark) {
+    var t = dark === deviceDark() ? null : (dark ? 'dark' : 'light');
+    themeMemory = t;
+    try {
+      if (t) localStorage.setItem(THEME_KEY, t);
+      else localStorage.removeItem(THEME_KEY);
+    } catch (e) { themeUseMemory = true; }
+    /* The nav's theme switch (js/site.js) on this same page listens for this. */
+    var ev = document.createEvent('Event');
+    ev.initEvent('parc-themechange', false, false);
+    document.dispatchEvent(ev);
+  }
+  /* Before the site theme, the dashboard kept its own. A VE who had chosen dark
+     here keeps it, once, unless a site theme has been chosen since. */
+  if (saved && saved.preferences && saved.preferences.theme === 'dark' && !storedTheme()) setSiteDark(true);
   var elapsed = restoreElapsed(state.timer), running = state.timer.running, start = now(), raf = 0;
   var lastSavedAt = 0, copying = false;
 
@@ -332,6 +365,35 @@
   each(root.querySelectorAll('[data-reader]'), function (b) {
     b.addEventListener('click', function () { chooseReader(b.getAttribute('data-reader')); });
   });
+  /* The VE link row (the same menus as the scripts): a script opens in the
+     reader rather than leaving the dashboard. Modified clicks (new tab,
+     new window) are left to the browser. */
+  var pageToReader = {};
+  for (var rk in READERS) {
+    if (Object.prototype.hasOwnProperty.call(READERS, rk) && !pageToReader[READERS[rk].page]) {
+      pageToReader[READERS[rk].page] = rk;
+    }
+  }
+  root.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[data-reader-link]') : null;
+    if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.button) return;
+    var key = pageToReader[a.getAttribute('href')];
+    if (!key) return;
+    e.preventDefault();
+    chooseReader(key);
+    var dd = a.closest('.dropdown');
+    if (dd) {
+      dd.classList.remove('is-open');
+      var b = dd.querySelector('.dropbtn');
+      if (b && b.hasAttribute('aria-expanded')) b.setAttribute('aria-expanded', 'false');
+    }
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+    var card = document.querySelector('.dash-reader');
+    if (card && card.scrollIntoView) card.scrollIntoView({ block: 'start' });
+    var h = $('dash-reader-h');
+    if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+  });
+
   $('dash-reader-more').addEventListener('change', function () { if (this.value) chooseReader(this.value); });
   $('dash-reader-focus').addEventListener('click', function () {
     var on = $('dash-workspace').classList.toggle('is-reader-focus');
@@ -341,8 +403,9 @@
 
   /* ---------- appearance, settings, help --------------------------------- */
   function applyAppearance() {
-    var dark = state.preferences.theme === 'dark';
-    document.documentElement.setAttribute('data-dash-theme', dark ? 'dark' : 'light');
+    var dark = siteDark(), t = storedTheme();
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    else document.documentElement.removeAttribute('data-theme');
     document.documentElement.setAttribute('data-dash-size', state.preferences.textSize);
     $('dash-theme').setAttribute('aria-pressed', String(dark));
     $('dash-zoom').href = state.preferences.zoom;
@@ -351,9 +414,17 @@
       : 'Set a Telegram destination in Settings';
   }
   $('dash-theme').addEventListener('click', function () {
-    state.preferences.theme = state.preferences.theme === 'dark' ? 'light' : 'dark';
-    applyAppearance(); persist();
+    setSiteDark(!siteDark());
+    applyAppearance();
   });
+  window.addEventListener('storage', function (e) {
+    if (e.key === THEME_KEY || e.key === null) applyAppearance();
+  });
+  document.addEventListener('parc-themechange', applyAppearance);
+  if (themeMq) {
+    if (themeMq.addEventListener) themeMq.addEventListener('change', applyAppearance);
+    else if (themeMq.addListener) themeMq.addListener(applyAppearance);
+  }
 
   var settings = $('dash-settings'), help = $('dash-help');
   function openDialog(d) {

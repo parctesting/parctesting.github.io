@@ -106,6 +106,101 @@
 
   --measure: 74ch;
   --wrap: 78rem;
+
+  /* ---- colours that change with the theme ----------------------------------
+     Red has two jobs. --parc-red is red as text, rules and outlines; in the
+     dark theme it lightens so it can be read on a dark ground. --red-fill is
+     red as a solid fill under white text (primary buttons, Donate, the skip
+     link) and is the same in both themes, because white on a light red fails. */
+  --red-fill:      #BA0005;
+  --red-fill-700:  #8E0004;
+  --blue-fill:     #1F5FBF;   /* the Youth badge and filter, under white text */
+  /* A ground that stays dark in both themes: the footer, the Ham Radio Prep
+     logo strip (their logo is white). var(--ink) was used for these and turns
+     light in the dark theme. */
+  --inverse-bg:    #1F2328;
+  --paper:         #FFFFFF;   /* the welcome card and the team form's switch */
+  /* The schedule's availability ramp. --teal stays the same in both themes,
+     because chips carry white text on it. */
+  --teal:          #0F6B62;
+  --teal-line:     #0F6B62;
+  --teal-50:       #E8F4F3;
+  --cal-1: #E8F4F3; --cal-1-line: #C4E2DF;
+  --cal-2: #8FCBC6; --cal-2-line: #6FB5AF;
+  --cal-3: #0F6B62; --cal-3-line: #0B554E; --cal-3-ink: #FFFFFF;
+  --youth-bg:      #F2F7FF;
+  --youth-bg-2:    #E6F0FF;
+  --warn-bg:       #FBF2E0;
+  --warn-soft:     #FFF8E6;
+  --warn-line:     #F0DFAF;
+  --warn-edge:     #8A5A00;
+  --mark:          #FFF1A8;
+  /* Diagrams and screenshots are drawn for a white page. Transparent ones get a
+     light plate behind them in the dark theme. */
+  --img-plate:     transparent;
+  --img-plate-pad: 0;
+  --figure-plate:  #FCFCFB;   /* behind an instruction diagram: --surface in light */
+}
+
+/* ---------- dark theme ----------------------------------------------------
+   Follows the device setting unless the visitor has chosen a theme with the
+   switch in the main navigation. js/site.js and the inline script that
+   tools/chrome.mjs puts in every <head> set html[data-theme] before the first
+   paint. The first block serves a device set to dark (and a visitor with
+   JavaScript off); the second serves the switch. The two lists must stay
+   identical.
+
+   Screen only: printed pages are always the light theme.
+
+   Contrast, measured on --surface, --surface-2 and --page: --ink 11.8-15:1,
+   --muted 7-8.9:1, --parc-red 5.7-7.2:1, --ve-note 5.2-6.5:1, --control-border
+   4.6-5.9:1. The exam-script colour code keeps its hues (red, blue, green) and
+   only lightens; red and green stay as far apart as they are on paper. */
+@media screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --parc-red: #FF7A80; --parc-700: #FFA3A7; --parc-600: #FF8C91; --parc-50: #3A1C1F;
+    --ink: #E6EAEE; --ink-2: #C5CCD3; --muted: #AEB7C0;
+    --surface: #1B2026; --surface-2: #242B33; --page: #12161A;
+    --line: #333C46; --line-2: #4A545F; --control-border: #8A949E; --star-empty: #8A949E;
+    --focus: #8AB4F8; --ok: #6CCB84; --warn: #E6B450;
+    --ve-note: #FF6B6B; --ve-blue: #8AB4F8; --ve-green: #6CCB84;
+    --inverse-bg: #0B0E11; --paper: #1B2026;
+    --teal-line: #5FBFB4; --teal-50: #173230;
+    --cal-1: #173230; --cal-1-line: #2A4F4B;
+    --cal-2: #1D5B54; --cal-2-line: #2F7C73;
+    --cal-3: #7FD0C6; --cal-3-line: #A6E0D8; --cal-3-ink: #0B1F1C;
+    --youth-bg: #18243A; --youth-bg-2: #1F2E4A;
+    --warn-bg: #2E2414; --warn-soft: #2B2213; --warn-line: #5A4720; --warn-edge: #C99A3E;
+    --mark: #5C4A00;
+    --img-plate: #F4F5F6; --img-plate-pad: var(--sp-2); --figure-plate: #F4F5F6;
+    --shadow-1: 0 1px 2px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.3);
+    --shadow-2: 0 4px 12px rgba(0,0,0,.45), 0 2px 4px rgba(0,0,0,.3);
+    --shadow-3: 0 12px 32px rgba(0,0,0,.6);
+  }
+}
+@media screen {
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --parc-red: #FF7A80; --parc-700: #FFA3A7; --parc-600: #FF8C91; --parc-50: #3A1C1F;
+    --ink: #E6EAEE; --ink-2: #C5CCD3; --muted: #AEB7C0;
+    --surface: #1B2026; --surface-2: #242B33; --page: #12161A;
+    --line: #333C46; --line-2: #4A545F; --control-border: #8A949E; --star-empty: #8A949E;
+    --focus: #8AB4F8; --ok: #6CCB84; --warn: #E6B450;
+    --ve-note: #FF6B6B; --ve-blue: #8AB4F8; --ve-green: #6CCB84;
+    --inverse-bg: #0B0E11; --paper: #1B2026;
+    --teal-line: #5FBFB4; --teal-50: #173230;
+    --cal-1: #173230; --cal-1-line: #2A4F4B;
+    --cal-2: #1D5B54; --cal-2-line: #2F7C73;
+    --cal-3: #7FD0C6; --cal-3-line: #A6E0D8; --cal-3-ink: #0B1F1C;
+    --youth-bg: #18243A; --youth-bg-2: #1F2E4A;
+    --warn-bg: #2E2414; --warn-soft: #2B2213; --warn-line: #5A4720; --warn-edge: #C99A3E;
+    --mark: #5C4A00;
+    --img-plate: #F4F5F6; --img-plate-pad: var(--sp-2); --figure-plate: #F4F5F6;
+    --shadow-1: 0 1px 2px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.3);
+    --shadow-2: 0 4px 12px rgba(0,0,0,.45), 0 2px 4px rgba(0,0,0,.3);
+    --shadow-3: 0 12px 32px rgba(0,0,0,.6);
+  }
 }
 
 /* ---------- reset -------------------------------------------------------- */
@@ -271,7 +366,7 @@ body { overflow-wrap: break-word; }
      corners and the same type treatment make it part of the bar. */
   align-self: center;
   display: inline-flex; align-items: center; gap: .5em;
-  background: var(--parc-red); color: #fff;
+  background: var(--red-fill); color: #fff;
   padding: var(--sp-2) var(--sp-4);
   border-radius: var(--radius-sm);
   border: 0; cursor: pointer; white-space: nowrap;
@@ -286,7 +381,7 @@ body { overflow-wrap: break-word; }
   content: "\2665"; content: "\2665" / ""; font-size: 1.05em; line-height: 1;
   transform: translateY(-.04em);
 }
-.nav-donate:hover { background: var(--parc-700); }
+.nav-donate:hover { background: var(--red-fill-700); }
 .nav-donate:active { transform: translateY(1px); }
 
 @media (max-width: 900px) {
@@ -413,7 +508,7 @@ main { display: block; }
 .container > section:has(.columns) { display: flex; flex-wrap: wrap; gap: var(--sp-5); }
 .column_half { flex: 1 1 20rem; min-width: 0; }
 .left_half  { background: var(--surface-2); border-radius: var(--radius); padding: var(--sp-5); }
-.right_half { background: var(--ink); color: #fff; border-radius: var(--radius); padding: var(--sp-5); text-align: center; }
+.right_half { background: var(--inverse-bg); color: #fff; border-radius: var(--radius); padding: var(--sp-5); text-align: center; }
 .column_title { padding-block: var(--sp-5); }
 
 .placeholder { width: 100%; height: auto; border-radius: var(--radius); margin-block: var(--sp-4); }
@@ -556,9 +651,9 @@ button:active, .btn:active, .page-link:active { transform: translateY(1px); }
 
 .btn--primary,
 .btn--primary:link,
-.btn--primary:visited { background: var(--parc-red); border-color: var(--parc-red); color: #fff; }
+.btn--primary:visited { background: var(--red-fill); border-color: var(--red-fill); color: #fff; }
 .btn--primary:hover,
-.btn--primary:focus-visible { background: var(--parc-700); border-color: var(--parc-700); color: #fff; }
+.btn--primary:focus-visible { background: var(--red-fill-700); border-color: var(--red-fill-700); color: #fff; }
 
 
 /* ---------- script toolbar (VE pages) ------------------------------------ */
@@ -569,12 +664,12 @@ button:active, .btn:active, .page-link:active { transform: translateY(1px); }
 .dropdown { position: relative; display: inline-block; margin: var(--sp-1); }
 
 .dropbtn {
-  background: var(--parc-red); border-color: var(--parc-red); color: #fff;
+  background: var(--red-fill); border-color: var(--red-fill); color: #fff;
   font-size: var(--step--1); font-weight: 700;
   letter-spacing: .03em; text-transform: uppercase;
   padding: var(--sp-3) var(--sp-4);
 }
-.dropbtn:hover { background: var(--parc-700); border-color: var(--parc-700); }
+.dropbtn:hover { background: var(--red-fill-700); border-color: var(--red-fill-700); }
 
 /* Not a menu — a link straight to the team-profile form, sitting in the same row
    as the four dropdowns. Outlined rather than solid so it does not compete with
@@ -587,7 +682,7 @@ a.dropbtn--team:visited {
 }
 a.dropbtn--team:hover,
 a.dropbtn--team:focus-visible {
-  background: var(--parc-red); color: #fff; border-color: var(--parc-red);
+  background: var(--red-fill); color: #fff; border-color: var(--red-fill);
 }
 
 .dropdown-content {
@@ -612,7 +707,7 @@ a.dropbtn--team:focus-visible {
 
 /* ---------- footer ------------------------------------------------------- */
 .site-footer {
-  background: var(--ink); color: #C9D1D8;
+  background: var(--inverse-bg); color: #C9D1D8;
   padding: var(--sp-7) var(--sp-4) var(--sp-5);
   font-size: var(--step--1);
 }
@@ -633,7 +728,7 @@ a.dropbtn--team:focus-visible {
 .site-footer__ve:hover { color: #fff; }
 
 /* Legacy footer classes, in case any page is missed by the retheme pass. */
-.footer, .copyright { background: var(--ink); color: #C9D1D8; }
+.footer, .copyright { background: var(--inverse-bg); color: #C9D1D8; }
 .copyright { text-align: center; padding: var(--sp-4); letter-spacing: .08em; text-transform: uppercase; }
 
 /* ---------- legacy chrome classes, neutralised --------------------------- */
@@ -728,7 +823,7 @@ a.dropbtn--team:focus-visible {
   max-width: 46rem;
   margin: var(--sp-5) auto var(--sp-6);
   padding: var(--sp-5) var(--sp-6);
-  background: #fff;
+  background: var(--paper);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: 0 1px 2px rgba(20, 23, 26, .04), 0 6px 18px rgba(20, 23, 26, .05);
@@ -752,7 +847,7 @@ a.dropbtn--team:focus-visible {
 /* Ham Radio Prep's logo is white, made for dark backgrounds, so it sits on a dark
    strip across the top of the card rather than being recolored. */
 .partner-card .partner-card__brand {
-  background: var(--ink);
+  background: var(--inverse-bg);
   margin: calc(-1 * var(--sp-5)) calc(-1 * var(--sp-5)) var(--sp-4);
   padding: var(--sp-3) var(--sp-5);
 }
@@ -818,8 +913,7 @@ a.dropbtn--team:focus-visible {
 .ve-bar {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
   gap: var(--sp-1) var(--sp-4);
-  /* Fixed, not var(--ink): the dashboard's dark mode redefines --ink as a
-     light colour, which turned this bar pale. */
+  /* Fixed, not var(--ink): dark mode redefines --ink as a light colour. */
   background: #1F2328; color: #fff;
   border-bottom: 3px solid var(--parc-red);
   padding-block: var(--sp-1);
@@ -836,39 +930,24 @@ a.dropbtn--team:focus-visible {
   content: ""; flex: none; width: .55em; height: .55em; border-radius: 50%;
   background: var(--parc-red); box-shadow: 0 0 0 3px rgba(186,0,5,.28);
 }
-.ve-bar__links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); }
-.ve-bar a.ve-bar__link,
 .ve-bar .ve-bar__lock {
-  /* inline-block, not flex: flex would drop the space in "Session Dashboard". */
-  display: inline-block; vertical-align: middle; text-align: center;
+  flex: none; display: inline-block; vertical-align: middle; text-align: center;
   padding: calc((2.25rem - 1.2em) / 2 - 1px) var(--sp-3);
-  border-radius: var(--radius-sm); border: 1px solid transparent;
+  border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,.6);
+  color: #fff; background: transparent;
   font: inherit; font-weight: 600; font-size: 1em; line-height: 1.2;
   letter-spacing: .04em; text-transform: uppercase; white-space: nowrap;
-  text-decoration: none; cursor: pointer; box-shadow: none;
+  cursor: pointer; box-shadow: none;
   transition: background-color .15s ease, border-color .15s ease, color .15s ease;
 }
-.ve-bar a.ve-bar__link:link, .ve-bar a.ve-bar__link:visited { color: #fff; background: transparent; }
-.ve-bar a.ve-bar__link:hover, .ve-bar a.ve-bar__link:focus-visible { color: #fff; background: var(--nav-bg-2); }
-.ve-bar .ve-bar__lock { color: #fff; background: transparent; border-color: rgba(255,255,255,.6); }
 .ve-bar .ve-bar__lock:hover, .ve-bar .ve-bar__lock:focus-visible { color: #1F2328; background: #fff; border-color: #fff; }
-.ve-bar a.ve-bar__link:focus-visible, .ve-bar .ve-bar__lock:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-/* Below the nav's own breakpoint: the notice on one line, the controls centred
-   on the next. "Session" is dropped from the dashboard link on phones so the
-   three controls stay on one row. */
-@media (max-width: 900px) {
-  .ve-bar { justify-content: center; text-align: center; padding-bottom: var(--sp-2); row-gap: 0; }
-  .ve-bar__label { display: block; padding-bottom: var(--sp-1); }
-  .ve-bar__label::before { display: inline-block; vertical-align: .08em; margin-right: var(--sp-2); }
-  .ve-bar__links { justify-content: center; gap: var(--sp-1); }
-}
+.ve-bar .ve-bar__lock:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+/* Phones: the notice may wrap; Lock stays beside it on the right. */
 @media (max-width: 600px) {
-  .ve-bar__label { font-size: .82em; letter-spacing: .03em; }
-  .ve-bar a.ve-bar__link, .ve-bar .ve-bar__lock { padding-inline: var(--sp-2); letter-spacing: .02em; }
-  .ve-bar__long { display: none; }
-}
-@media (max-width: 360px) {
-  .ve-bar a.ve-bar__link, .ve-bar .ve-bar__lock { padding-inline: 6px; letter-spacing: 0; }
+  .ve-bar { flex-wrap: nowrap; }
+  .ve-bar__label { flex: 1 1 auto; font-size: .82em; letter-spacing: .03em; }
+  .ve-bar__label::before { align-self: flex-start; margin-top: .45em; }
+  .ve-bar .ve-bar__lock { padding-inline: var(--sp-2); letter-spacing: .02em; }
 }
 .ve-file__actions {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
@@ -930,7 +1009,7 @@ a.dropbtn--team:focus-visible {
   padding: var(--sp-2) var(--sp-3); text-decoration: none;
   background: var(--surface); border: 1px solid var(--control-border); border-radius: var(--radius-sm);
 }
-.avail-slot a:hover { border-color: #0F6B62; background: #E8F4F3; }
+.avail-slot a:hover { border-color: var(--teal-line); background: var(--teal-50); }
 .avail-slot__time { font-weight: 700; color: var(--ink); }
 .avail-slot__meta { font-size: var(--step--1); color: var(--muted); }
 
@@ -976,7 +1055,7 @@ a.dropbtn--team:focus-visible {
   background: var(--surface); border: 2px solid var(--parc-red); color: var(--parc-700);
   text-align: center; font-weight: 700;
 }
-.container button[style]:hover { background: var(--parc-red); border-color: var(--parc-red); color: #fff; }
+.container button[style]:hover { background: var(--red-fill); border-color: var(--red-fill); color: #fff; }
 .container button h3, .container button h7, .container button h5 {
   margin: 0; font-size: var(--step--1); color: inherit;
   text-transform: uppercase; letter-spacing: .03em;
@@ -1033,7 +1112,7 @@ a.dropbtn--team:focus-visible {
   background: var(--surface); border: 1px solid var(--control-border); color: var(--muted);
 }
 /* Matched to the calendar they filter, rather than a row of black pills. */
-.chip.is-on { background: #0F6B62; border-color: #0F6B62; color: #fff; }
+.chip.is-on { background: var(--teal); border-color: var(--teal); color: #fff; }
 .chip__hint { font-weight: 400; opacity: .75; font-size: .85em; }
 
 .cal-summary { font-size: var(--step--1); color: var(--ink-2); margin-bottom: var(--sp-4); }
@@ -1078,9 +1157,9 @@ a.dropbtn--team:focus-visible {
    as a warning when it actually means "plenty of room". Single-hue lightness
    ramp, so it stays legible under every colour-vision deficiency. */
 .cal-cell.has-slots { cursor: pointer; color: var(--ink); }
-.cal-cell.lvl-1 { background: #E8F4F3; border-color: #C4E2DF; }
-.cal-cell.lvl-2 { background: #8FCBC6; border-color: #6FB5AF; }
-.cal-cell.lvl-3 { background: #0F6B62; border-color: #0B554E; color: #fff; }
+.cal-cell.lvl-1 { background: var(--cal-1); border-color: var(--cal-1-line); }
+.cal-cell.lvl-2 { background: var(--cal-2); border-color: var(--cal-2-line); }
+.cal-cell.lvl-3 { background: var(--cal-3); border-color: var(--cal-3-line); color: var(--cal-3-ink); }
 .cal-cell.has-slots:hover { outline: 2px solid var(--ink); outline-offset: 1px; }
 .cal-cell.is-today { box-shadow: inset 0 0 0 2px var(--ve-blue); }
 .cal-cell.is-selected { outline: 3px solid var(--ink); outline-offset: 1px; }
@@ -1088,8 +1167,8 @@ a.dropbtn--team:focus-visible {
 .cal-legend { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap;
   font-size: var(--step--1); color: var(--muted); margin-top: var(--sp-3); }
 .cal-key { width: 14px; height: 14px; border-radius: 3px; display: inline-block; border: 1px solid var(--control-border); }
-.cal-key.lvl-1 { background: #E8F4F3; } .cal-key.lvl-2 { background: #8FCBC6; }
-.cal-key.lvl-3 { background: #0F6B62; }
+.cal-key.lvl-1 { background: var(--cal-1); } .cal-key.lvl-2 { background: var(--cal-2); }
+.cal-key.lvl-3 { background: var(--cal-3); }
 
 .cal-daybox {
   padding: var(--sp-4); background: var(--surface-2);
@@ -1112,7 +1191,7 @@ a.dropbtn--team:focus-visible {
   padding: var(--sp-3) var(--sp-3);
   background: var(--surface); border: 1px solid var(--control-border); border-radius: var(--radius-sm);
 }
-.slot:hover { border-color: #0F6B62; background: #E8F4F3; }
+.slot:hover { border-color: var(--teal-line); background: var(--teal-50); }
 .slot__time { font-weight: 700; color: var(--ink); }
 .slot__meta { font-size: .8rem; color: var(--muted); display: flex; align-items: center; gap: 4px; }
 .cal-foot { margin-top: var(--sp-5); font-size: var(--step--1); color: var(--muted); }
@@ -1128,22 +1207,22 @@ a.dropbtn--team:focus-visible {
 .cal-freshness { font-size: var(--step--1); color: var(--muted); margin: calc(-1 * var(--sp-3)) 0 var(--sp-4); }
 .cal-freshness.is-stale {
   color: var(--warn); font-weight: 600;
-  background: #FFF8E6; border: 1px solid #F0DFAF; border-radius: var(--radius-sm);
+  background: var(--warn-soft); border: 1px solid var(--warn-line); border-radius: var(--radius-sm);
   padding: var(--sp-2) var(--sp-3);
 }
 
 /* Youth sessions are a different session and a different fee, so they stay
    visually distinct — unlike the internal A–F session letters, which candidates
    have no reason to think about. */
-.slot--youth { border-color: var(--ve-blue); background: #F2F7FF; }
-.slot--youth:hover { border-color: var(--ve-blue); background: #E6F0FF; }
+.slot--youth { border-color: var(--ve-blue); background: var(--youth-bg); }
+.slot--youth:hover { border-color: var(--ve-blue); background: var(--youth-bg-2); }
 .slot__youth {
   display: inline-block; margin-left: 4px; padding: 0 5px; border-radius: 3px;
-  background: var(--ve-blue); color: #fff;
+  background: var(--blue-fill); color: #fff;
   font-size: .75rem; font-weight: 700; letter-spacing: .04em;
   text-transform: uppercase; vertical-align: middle;
 }
-#filter-youth.is-on { background: var(--ve-blue); border-color: var(--ve-blue); color: #fff; }
+#filter-youth.is-on { background: var(--blue-fill); border-color: var(--blue-fill); color: #fff; }
 .cal-cell.is-today { box-shadow: inset 0 0 0 2px var(--ink-2); }
 
 /* Section headings that used to be <h1> in the old template. Demoted to <h2>
@@ -1189,6 +1268,44 @@ a.dropbtn--team:focus-visible {
   background: var(--nav-bg-2); border-color: rgba(255, 255, 255, .5);
 }
 .nav-search-toggle svg { flex: none; }
+/* Icon only at every width, like the theme switch beside it; the button keeps
+   its aria-label and a tooltip. The bar's content is capped at 1208px, and the
+   eight menu items, "Search", the switch and Donate needed 1244px: the word
+   pushed "Our Team" onto a second row at any desktop width. Icon only, the row
+   holds down to about 1210px. On a phone the word cost a third of the bar. */
+.nav-search-toggle { padding: var(--sp-2); }
+.nav-search-toggle__label {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
+/* The theme switch: an icon button beside Search. Every state is written
+   against .site-nav button.nav-theme-toggle with literal colours, because the
+   site-wide button:hover rule outranks a single class (the white-on-white
+   control history). The nav is dark in both themes, so the colours are too.
+   Pressed means the dark theme is showing. */
+.site-nav button.nav-theme-toggle,
+.site-nav button.nav-theme-toggle:active {
+  align-self: center; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2.375rem; height: 2.375rem; padding: 0; margin-left: 0;
+  background: transparent; color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, .28); border-radius: var(--radius-sm);
+  transform: none;
+}
+.site-nav button.nav-theme-toggle:hover,
+.site-nav button.nav-theme-toggle:focus-visible {
+  background: #313740; color: #FFFFFF; border-color: rgba(255, 255, 255, .5);
+}
+.site-nav button.nav-theme-toggle[aria-pressed="true"] {
+  background: #FFFFFF; color: #23272C; border-color: #FFFFFF;
+}
+.site-nav button.nav-theme-toggle[aria-pressed="true"]:hover,
+.site-nav button.nav-theme-toggle[aria-pressed="true"]:focus-visible {
+  background: #DCE1E6; color: #23272C; border-color: #DCE1E6;
+}
+.site-nav button.nav-theme-toggle:focus-visible { outline: 3px solid #8AB4F8; outline-offset: 2px; }
+.nav-theme-toggle svg { flex: none; }
 
 .search-panel {
   position: absolute; left: 0; right: 0; top: 100%; z-index: 130;
@@ -1238,7 +1355,7 @@ a.dropbtn--team:focus-visible {
 .search-list a:focus-visible { background: var(--surface-2); }
 .search-title { display: block; font-weight: 700; color: var(--parc-700); margin-bottom: 2px; }
 .search-snip { display: block; font-size: var(--step--1); color: var(--ink-2); line-height: 1.45; }
-.search-snip mark { background: #FFF1A8; color: inherit; padding: 0 .1em; border-radius: 2px; }
+.search-snip mark { background: var(--mark); color: inherit; padding: 0 .1em; border-radius: 2px; }
 
 @media (max-width: 900px) {
   /* One place for the mobile order. Adding search introduced a second set of
@@ -1249,19 +1366,22 @@ a.dropbtn--team:focus-visible {
      with align-items:stretch it started 10px higher than they did. */
   .nav-toggle        { order: 1; align-self: center; }
   .nav-search-toggle { order: 2; margin-left: auto; align-self: center; }
-  .nav-donate-form   { order: 3; margin-left: var(--sp-2); align-self: center; }
-  .nav-menu          { order: 4; }
-
-  /* Icon only; the word costs a third of the bar on a phone. */
-  .nav-search-toggle { padding: var(--sp-2); }
-  .nav-search-toggle__label {
-    position: absolute; width: 1px; height: 1px;
-    overflow: hidden; clip-path: inset(50%); white-space: nowrap;
-  }
+  .nav-theme-toggle  { order: 3; }
+  .nav-donate-form   { order: 4; margin-left: var(--sp-2); align-self: center; }
+  .nav-menu          { order: 5; }
 
   .search-panel__inner { padding: var(--sp-3); }
   .search-panel input { font-size: var(--step-0); padding-right: 2.75rem; }
   .search-panel__close { top: calc(var(--sp-3) + 2px); right: calc(var(--sp-3) + 4px); }
+}
+/* At 320px (an iPhone on Larger Text) Menu, Search, the theme switch and Donate
+   only share one row with tighter gaps. */
+@media (max-width: 360px) {
+  .site-nav__inner { padding-right: var(--sp-3); }
+  .site-nav button.nav-theme-toggle { margin-left: 0; width: 2.25rem; height: 2.25rem; }
+  .nav-donate-form { margin-left: 0; }
+  .nav-donate { padding-inline: var(--sp-3); }
+  .site-nav button.nav-toggle { gap: var(--sp-2); }
 }
 
 /* ---------- reviews ------------------------------------------------------- */
@@ -1436,8 +1556,8 @@ textarea.review-input { resize: vertical; min-height: 7rem; }
 .team-mode {
   display: grid; grid-template-columns: 1fr 1fr; gap: 3px;
   max-width: 30rem; margin: 0 0 var(--sp-5); padding: 3px;
-  background: #F6F7F8;
-  border: 1px solid #C9D1D8; border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm);
 }
 .team-mode button.team-mode__btn,
 .team-mode button.team-mode__btn:hover,
@@ -1445,12 +1565,12 @@ textarea.review-input { resize: vertical; min-height: 7rem; }
   min-height: 2.75rem; padding: var(--sp-2) var(--sp-3);
   font-size: var(--step--1); line-height: 1.25;
   border: 1px solid transparent; border-radius: 4px;
-  background: transparent; color: #4A5158; transform: none;
+  background: transparent; color: var(--ink-2); transform: none;
 }
-.team-mode button.team-mode__btn:hover { background: #FFFFFF; color: #1F2328; }
+.team-mode button.team-mode__btn:hover { background: var(--paper); color: var(--ink); }
 .team-mode button.team-mode__btn[aria-pressed="true"] {
-  background: #FFFFFF; border-color: #C9D1D8; color: #1F2328;
-  box-shadow: inset 0 -3px 0 #BA0005;
+  background: var(--paper); border-color: var(--line-2); color: var(--ink);
+  box-shadow: inset 0 -3px 0 var(--parc-red);
 }
 .team-mode button.team-mode__btn:disabled { cursor: progress; }
 
@@ -1465,10 +1585,10 @@ button.team-link-btn:hover,
 button.team-link-btn:active {
   display: inline; padding: 0; min-height: 0;
   border: 0; background: none; transform: none;
-  font: inherit; font-weight: 600; color: #8E0004;
+  font: inherit; font-weight: 600; color: var(--parc-700);
   text-decoration: underline; text-underline-offset: 2px;
 }
-button.team-link-btn:hover { color: #1F2328; }
+button.team-link-btn:hover { color: var(--ink); }
 
 /* The edit code, shown once after a profile is sent. */
 .team-code-box { margin: var(--sp-4) 0 0; }
@@ -1481,7 +1601,7 @@ button.team-link-btn:hover { color: #1F2328; }
 .team-code-box code {
   font-size: var(--step-1); font-weight: 700; letter-spacing: .06em; white-space: nowrap;
   padding: var(--sp-1) var(--sp-3);
-  background: #FFFFFF; color: #1F2328; border-color: #C9D1D8;
+  background: var(--paper); color: var(--ink); border-color: var(--line-2);
 }
 .team-code-box__note { font-size: var(--step--1); color: var(--ink-2); }
 
@@ -1502,7 +1622,7 @@ button.team-link-btn:hover { color: #1F2328; }
   margin-inline: auto;
   border-radius: var(--radius-sm);
   border: 1px solid var(--line);
-  background: var(--surface);
+  background: var(--figure-plate);
 }
 .instruction-figure figcaption {
   margin-top: var(--sp-3);
@@ -1709,7 +1829,7 @@ a.skip-link:focus {
   width: 1.75rem; height: 1.75rem;
   display: grid; place-items: center;
   border-radius: 50%;
-  background: var(--parc-red); color: #fff;
+  background: var(--red-fill); color: #fff;
   font-size: inherit; font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
@@ -1719,7 +1839,7 @@ a.skip-link:focus {
 /* The last step is the one worth reading twice — it is where PARC is quicker
    than the process candidates expect. */
 .timeline__win h3 { color: var(--parc-700); }
-.timeline__win::before { background: var(--parc-700); }
+.timeline__win::before { background: var(--red-fill-700); }
 
 @media (max-width: 560px) {
   .timeline { padding-left: var(--sp-5); }
@@ -1964,8 +2084,8 @@ h2.doc-section {
 .shutdown-notice {
   margin: var(--sp-4) 0 var(--sp-6);
   padding: var(--sp-4) var(--sp-5);
-  background: var(--warn-bg, #FBF2E0);
-  border-left: 4px solid #8A5A00;
+  background: var(--warn-bg);
+  border-left: 4px solid var(--warn-edge);
   border-radius: 0 var(--radius) var(--radius) 0;
 }
 
@@ -2032,7 +2152,7 @@ h2.doc-section {
 .instruction-choice__title { font-size: var(--step-2); text-align: center; }
 .instruction-choice__item p { margin: var(--sp-2) 0 0; font-size: var(--step--1); color: var(--ink-2); }
 .page-link:hover,
-.page-link:focus-visible { background: var(--parc-red); border-color: var(--parc-red); color: #fff; }
+.page-link:focus-visible { background: var(--red-fill); border-color: var(--red-fill); color: #fff; }
 
 /* Back and Next read as direction, so they get arrows and sit at the edges. */
 .page-links--pager { grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); }
@@ -2053,7 +2173,7 @@ h2.doc-section {
 }
 .page-link--back:hover, .page-link--next:hover,
 .page-link--back:focus-visible, .page-link--next:focus-visible {
-  background: var(--ink); border-color: var(--ink); color: #fff;
+  background: var(--ink); border-color: var(--ink); color: var(--surface);
 }
 
 @media (max-width: 480px) {
@@ -2161,6 +2281,12 @@ h2.doc-section {
 /* ---------- a logo at the head of a page ------------------------------------- */
 .page-logo { margin: 0 auto var(--sp-5); text-align: center; }
 .page-logo img { width: min(100%, 300px); height: auto; }
+/* Logos and icons drawn for a white page sit on a light plate in the dark theme
+   (--img-plate is transparent, with no padding, in the light theme). */
+.page-logo img, .icon-list img {
+  background-color: var(--img-plate); padding: var(--img-plate-pad); border-radius: var(--radius-sm);
+}
+.icon-list img { padding: calc(var(--img-plate-pad) / 2); }
 
 /* ---------- the key to a numbered diagram, as real text -----------------------
    Text drawn inside an SVG shrinks with the picture, to 5-8px on a phone, and does
@@ -2172,16 +2298,8 @@ h2.doc-section {
 
 /* ---------- VE session dashboard (pages/ve-dashboard.html, locked) ----------
    Adapted from the QCWA / PARC Exam Observer Dashboard. The page is a VE page,
-   so it carries no site header or footer, only the VE bar. Dark mode is the
-   dashboard's own: VEs run sessions late in the evening. It recolours through
-   the site's custom properties, so every shared component follows. */
-html[data-dash-theme="dark"] {
-  color-scheme: dark;
-  --ink: #E6EAEE; --ink-2: #C5CCD3; --muted: #AEB7C0;
-  --surface: #1B2026; --surface-2: #242B33; --page: #12161A;
-  --line: #333C46; --line-2: #4A545F; --control-border: #8A949E;
-  --focus: #8AB4F8;
-}
+   so it carries no site header or footer, only the VE bar. Its Dark Mode
+   button sets the site-wide theme (see "dark theme" at the top of this file). */
 html[data-dash-size="large"] .dash { font-size: 1.15rem; }
 .dash-body { background: var(--page); color: var(--ink); }
 .dash {
@@ -2189,7 +2307,6 @@ html[data-dash-size="large"] .dash { font-size: 1.15rem; }
   font-size: var(--step-0);
 }
 .dash a:not(.btn) { color: var(--parc-red); }
-html[data-dash-theme="dark"] .dash a:not(.btn) { color: #FF8A8E; }
 a.dash-skip { position: absolute; left: -9999px; top: 0; }
 a.dash-skip:focus { left: var(--sp-4); top: var(--sp-4); z-index: 50; background: var(--surface); color: var(--ink); padding: var(--sp-3) var(--sp-4); }
 
@@ -2217,8 +2334,6 @@ a.dash-skip:focus { left: var(--sp-4); top: var(--sp-4); z-index: 50; background
 .dash-links { margin-bottom: var(--sp-3); }
 .dash-storage { margin: 0 0 var(--sp-4); font-size: var(--step--1); color: var(--ink-2); }
 .dash-storage.is-error, .dash-status.is-error { color: var(--parc-red); font-weight: 600; }
-html[data-dash-theme="dark"] .dash-storage.is-error,
-html[data-dash-theme="dark"] .dash-status.is-error { color: #FF8A8E; }
 .dash-alert { background: var(--surface); border-left: 4px solid var(--parc-red); padding: var(--sp-3) var(--sp-4); }
 
 .dash-grid { display: grid; grid-template-columns: minmax(20rem, 2fr) minmax(0, 3fr); gap: var(--sp-4); align-items: start; }
@@ -2266,7 +2381,7 @@ html[data-dash-theme="dark"] .dash-status.is-error { color: #FF8A8E; }
 .dash-reader__picks, .dash-reader__view { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
 .dash-reader__view { margin-left: auto; }
 .dash-reader__frame { display: block; width: 100%; height: max(32rem, calc(100vh - 12rem));
-  border: 1px solid var(--line); border-radius: var(--radius-sm); background: #fff; }
+  border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--page); }
 
 .dash-credits { margin-top: var(--sp-5); font-size: var(--step--1); color: var(--muted); }
 .dash-credits p { margin: 0; }
@@ -2279,6 +2394,14 @@ html[data-dash-theme="dark"] .dash-status.is-error { color: #FF8A8E; }
 .dash-dialog h3 { font-size: var(--step-1); margin-top: var(--sp-4); }
 .dash-check { display: flex; align-items: center; gap: var(--sp-2); margin-top: var(--sp-4); font-weight: 600; }
 .dash-check input { width: 1.1rem; height: 1.1rem; accent-color: var(--parc-red); }
+
+/* The dashboard's copy of the scripts' VE link row (My Profile and the four
+   menus), centred under the heading like it is in the scripts. */
+.dash-ve-links {
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+  gap: var(--sp-1); margin: 0 0 var(--sp-4);
+}
+.dash-ve-links > a.dropbtn { margin: var(--sp-1); }
 
 /* A VE page shown inside the dashboard's reader: the dashboard already carries
    the VE bar, so the framed copy drops its own. Set by js/ve-lock.js. */

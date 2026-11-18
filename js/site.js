@@ -1,4 +1,77 @@
 /**
+ * Light and dark themes.
+ *
+ * css/site.css follows the device's light or dark setting by default. The
+ * switch in the main navigation overrides it, and the choice is remembered on
+ * this device under THEME_KEY. Choosing the theme the device already uses
+ * clears the stored choice, so the page follows the device again.
+ *
+ * tools/chrome.mjs puts a one-line copy of the "apply" step in every <head>, so
+ * a stored theme is in place before the first paint. This repeats it because a
+ * locked VE page replaces the whole document when it is unlocked, and because
+ * a change made in another tab, or in the dashboard around a framed script,
+ * arrives here as a storage event. js/ve-dashboard.js reads and writes the
+ * same key for the dashboard's own Dark Mode button.
+ */
+(function () {
+  'use strict';
+
+  var THEME_KEY = 'parc-theme';
+  var root = document.documentElement;
+  var mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  /* Where storage is blocked, the choice lasts for this page only. */
+  var memory = null, useMemory = false;
+
+  function stored() {
+    var t = memory;
+    if (!useMemory) {
+      try { t = localStorage.getItem(THEME_KEY); } catch (e) { t = memory; }
+    }
+    return t === 'dark' || t === 'light' ? t : null;
+  }
+  function deviceDark() { return !!(mq && mq.matches); }
+  function isDark() {
+    var t = stored();
+    return t ? t === 'dark' : deviceDark();
+  }
+  function apply() {
+    var t = stored();
+    if (t) root.setAttribute('data-theme', t);
+    else root.removeAttribute('data-theme');
+    var btn = document.getElementById('site-theme-toggle');
+    if (btn) btn.setAttribute('aria-pressed', isDark() ? 'true' : 'false');
+  }
+  function choose(dark) {
+    var t = dark === deviceDark() ? null : (dark ? 'dark' : 'light');
+    memory = t;
+    try {
+      if (t) localStorage.setItem(THEME_KEY, t);
+      else localStorage.removeItem(THEME_KEY);
+    } catch (e) { useMemory = true; }
+    apply();
+    /* Storage events reach other pages only. The dashboard's Dark Mode button,
+       on this page, listens for this one. */
+    var ev = document.createEvent('Event');
+    ev.initEvent('parc-themechange', false, false);
+    document.dispatchEvent(ev);
+  }
+
+  apply();
+
+  var btn = document.getElementById('site-theme-toggle');
+  if (btn) btn.addEventListener('click', function () { choose(!isDark()); });
+
+  window.addEventListener('storage', function (e) {
+    if (e.key === THEME_KEY || e.key === null) apply();
+  });
+  document.addEventListener('parc-themechange', apply);
+  if (mq) {
+    if (mq.addEventListener) mq.addEventListener('change', apply);
+    else if (mq.addListener) mq.addListener(apply);
+  }
+})();
+
+/**
  * Site chrome: mobile menu + dropdown behaviour.
  *
  * Progressive enhancement. css/site.css opens submenus on :hover at >=901px,
