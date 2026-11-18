@@ -115,16 +115,25 @@
        framed page hides its own (css: html.ve-framed .ve-bar). */
     var framed = false;
     try { framed = window.self !== window.top; } catch (e) { framed = true; }
-    if (framed) doc.documentElement.className += ' ve-framed';
+    if (framed) {
+      doc.documentElement.className += ' ve-framed';
+      /* The scripts' Special Links menu points at the dashboard; inside the
+         dashboard's own reader that would nest the dashboard in itself. */
+      var dl = doc.querySelectorAll('a[href="ve-dashboard.html"]');
+      for (var d = 0; d < dl.length; d++) dl[d].parentNode.removeChild(dl[d]);
+    }
 
-    // Every other VE page links back to the session dashboard.
+    /* Every VE page links to the public site (the dashboard has no site menu,
+       and a phone had no other way back), and every other VE page links to
+       the session dashboard. */
     var onDash = /(^|\/)ve-dashboard\.html$/.test(location.pathname);
     var bar = doc.createElement('div');
     bar.className = 've-bar no-print';
     bar.innerHTML =
       '<span class="ve-bar__label">VE material \u2014 not for public distribution</span>' +
       '<span class="ve-bar__links">' +
-      (onDash ? '' : '<a class="ve-bar__link" href="ve-dashboard.html">Session Dashboard</a>') +
+      '<a class="ve-bar__link" href="../index.html">Main Website</a>' +
+      (onDash || framed ? '' : '<a class="ve-bar__link" href="ve-dashboard.html">Session Dashboard</a>') +
       '<button type="button" class="ve-bar__lock" id="ve-relock">Lock</button></span>';
     doc.body.insertBefore(bar, doc.body.firstChild);
 

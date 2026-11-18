@@ -305,11 +305,21 @@
 
   /* ---------- reader ----------------------------------------------------- */
   var frame = $('dash-reader-frame');
+  var framePage = frame.getAttribute('src');
+  /* Changing an iframe's src adds an entry to the tab's history, so a phone's
+     Back button stepped through every script chosen instead of leaving the
+     dashboard. location.replace() swaps the script without adding one. */
+  function showInFrame(page) {
+    if (page === framePage) return;
+    framePage = page;
+    try { frame.contentWindow.location.replace(page); }
+    catch (e) { frame.setAttribute('src', page); }
+  }
   function chooseReader(key, save) {
     if (!READERS[key]) return;
     state.reader = key;
     var r = READERS[key];
-    if (frame.getAttribute('src') !== r.page) frame.setAttribute('src', r.page);
+    showInFrame(r.page);
     frame.title = 'Reader script: ' + r.label;
     $('dash-reader-tab').href = r.page;
     $('dash-reader-name').textContent = r.label;

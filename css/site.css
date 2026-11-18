@@ -2222,5 +2222,7 @@ html.ve-framed .ve-bar,
 html.ve-framed .site-header, html.ve-framed .site-banner, html.ve-framed .site-nav,
 html.ve-framed .site-footer, html.ve-framed .study-band, html.ve-framed .skip-link { display: none; }
 html.ve-framed .container { margin-block: 0; }
-.ve-bar__links { display: flex; align-items: center; gap: var(--sp-3); }
+.ve-bar { flex-wrap: wrap; row-gap: var(--sp-1); }
+.ve-bar__links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-1) var(--sp-4); }
+.ve-bar a.ve-bar__link { display: inline-block; padding: var(--sp-1) 0; }
 .ve-bar a.ve-bar__link:link, .ve-bar a.ve-bar__link:visited, .ve-bar a.ve-bar__link:hover { color: #fff; }

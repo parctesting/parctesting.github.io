@@ -42,6 +42,11 @@ const veMissing = new Set();
 let veChecked = 0;
 const VE_SOURCE = join(ROOT, '_ve-source');
 if (existsSync(VE_SOURCE)) {
+  /* A link to another VE page counts when its plaintext is here: the VE deploy
+     publishes it, even where this checkout has no encrypted copy yet. */
+  const vePublished = new Set(VE_PAGES
+    .filter(r => existsSync(join(VE_SOURCE, r.split('/').pop())))
+    .map(r => join(ROOT, r)));
   for (const rel of VE_PAGES) {
     const src = join(VE_SOURCE, rel.split('/').pop());
     if (!existsSync(src)) continue;
@@ -52,7 +57,7 @@ if (existsSync(VE_SOURCE)) {
       if (!clean) continue;
       veChecked++;
       const target = clean.startsWith('/') ? join(ROOT, clean) : resolve(dirname(join(ROOT, rel)), clean);
-      if (!existsSync(target)) veMissing.add(`${rel} (VE script)  ->  ${url}`);
+      if (!existsSync(target) && !vePublished.has(target)) veMissing.add(`${rel} (VE script)  ->  ${url}`);
     }
   }
   console.log(`checked ${veChecked} links inside the VE scripts`);
