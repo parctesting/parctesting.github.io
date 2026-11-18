@@ -2105,3 +2105,122 @@ h2.doc-section {
 .figure-key { margin: var(--sp-3) 0 0; padding-left: var(--sp-5); columns: 2 14rem; column-gap: var(--sp-6); }
 .figure-key li { margin-bottom: var(--sp-1); break-inside: avoid; }
 
+
+/* ---------- VE session dashboard (pages/ve-dashboard.html, locked) ----------
+   Adapted from the QCWA / PARC Exam Observer Dashboard. The page is a VE page,
+   so it carries no site header or footer, only the VE bar. Dark mode is the
+   dashboard's own: VEs run sessions late in the evening. It recolours through
+   the site's custom properties, so every shared component follows. */
+html[data-dash-theme="dark"] {
+  color-scheme: dark;
+  --ink: #E6EAEE; --ink-2: #C5CCD3; --muted: #AEB7C0;
+  --surface: #1B2026; --surface-2: #242B33; --page: #12161A;
+  --line: #333C46; --line-2: #4A545F; --control-border: #8A949E;
+  --focus: #8AB4F8;
+}
+html[data-dash-size="large"] .dash { font-size: 1.15rem; }
+.dash-body { background: var(--page); color: var(--ink); }
+.dash {
+  max-width: 100rem; margin: 0 auto; padding: var(--sp-4) clamp(var(--sp-4), 2.5vw, var(--sp-6)) var(--sp-6);
+  font-size: var(--step-0);
+}
+.dash a:not(.btn) { color: var(--parc-red); }
+html[data-dash-theme="dark"] .dash a:not(.btn) { color: #FF8A8E; }
+a.dash-skip { position: absolute; left: -9999px; top: 0; }
+a.dash-skip:focus { left: var(--sp-4); top: var(--sp-4); z-index: 50; background: var(--surface); color: var(--ink); padding: var(--sp-3) var(--sp-4); }
+
+.dash-head {
+  display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--sp-4);
+  padding-bottom: var(--sp-4); border-bottom: 3px solid var(--parc-red); margin-bottom: var(--sp-4);
+}
+.dash-head h1 { text-align: left; font-size: var(--step-3); margin: 0 0 var(--sp-1); }
+.dash-eyebrow { margin: 0; font-size: var(--step--1); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+.dash-sub { margin: 0; color: var(--ink-2); font-size: var(--step--1); }
+.dash-head__actions, .dash-links, .dash-row { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.dash .btn, .dash button { padding: var(--sp-2) var(--sp-4); min-height: 2.75rem; }
+.dash button:disabled { opacity: .55; cursor: not-allowed; }
+.dash button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.dash button[aria-pressed="true"]:hover { background: var(--ink-2); border-color: var(--ink-2); color: var(--surface); }
+.dash :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.dash-clocks { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: var(--sp-3); margin-bottom: var(--sp-4); }
+.dash-clock { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp-3) var(--sp-4); }
+.dash-clock p { margin: 0; }
+.dash-clock__label { font-weight: 700; font-size: var(--step--1); color: var(--ink-2); }
+.dash-clock__time { display: block; font-family: var(--font-mono); font-size: var(--step-2); font-weight: 700; font-variant-numeric: tabular-nums; }
+.dash-clock__date { font-size: var(--step--1); color: var(--muted); }
+
+.dash-links { margin-bottom: var(--sp-3); }
+.dash-storage { margin: 0 0 var(--sp-4); font-size: var(--step--1); color: var(--ink-2); }
+.dash-storage.is-error, .dash-status.is-error { color: var(--parc-red); font-weight: 600; }
+html[data-dash-theme="dark"] .dash-storage.is-error,
+html[data-dash-theme="dark"] .dash-status.is-error { color: #FF8A8E; }
+.dash-alert { background: var(--surface); border-left: 4px solid var(--parc-red); padding: var(--sp-3) var(--sp-4); }
+
+.dash-grid { display: grid; grid-template-columns: minmax(20rem, 2fr) minmax(0, 3fr); gap: var(--sp-4); align-items: start; }
+.dash-tools { display: grid; gap: var(--sp-4); min-width: 0; }
+.dash-grid.is-reader-focus { grid-template-columns: minmax(0, 1fr); }
+.dash-grid.is-reader-focus .dash-tools { display: none; }
+@media (max-width: 64rem) { .dash-grid { grid-template-columns: minmax(0, 1fr); } }
+
+.dash-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp-4); min-width: 0; }
+.dash-card:focus { outline: none; }
+.dash-card__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--sp-2); margin-bottom: var(--sp-3); }
+.dash-card h2 { font-size: var(--step-1); margin: 0; }
+.dash-tag { font-size: var(--step--1); color: var(--muted); }
+.dash-label { display: block; font-weight: 700; font-size: var(--step--1); margin: var(--sp-3) 0 var(--sp-1); }
+.dash-input {
+  font: inherit; width: 100%; padding: var(--sp-2) var(--sp-3); min-height: 2.75rem;
+  border: 1px solid var(--control-border); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--ink);
+}
+.dash-input[aria-invalid="true"] { border-color: var(--parc-red); box-shadow: 0 0 0 1px var(--parc-red); }
+.dash-input--short { max-width: 9rem; }
+.dash-select { width: auto; max-width: 100%; }
+.dash-notes { min-height: 12rem; resize: vertical; font-family: var(--font-mono); font-size: var(--step--1); margin-bottom: var(--sp-3); }
+.dash-hint { margin: var(--sp-2) 0 0; font-size: var(--step--1); color: var(--ink-2); }
+.dash-status { min-height: 1.5em; margin: var(--sp-2) 0 0; font-size: var(--step--1); color: var(--ink-2); }
+.dash-row { margin-top: var(--sp-3); align-items: center; }
+.dash-row--fill { margin-top: 0; flex-wrap: nowrap; }
+.dash-row--fill .dash-input { flex: 1 1 auto; min-width: 0; }
+
+.dash-exams { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.dash-exams legend { padding: 0; }
+.dash-exam { flex: 1 1 7rem; display: flex; align-items: center; gap: var(--sp-2); cursor: pointer;
+  border: 1px solid var(--control-border); border-radius: var(--radius-sm); padding: var(--sp-2) var(--sp-3); }
+.dash-exam:has(input:checked) { border-color: var(--parc-red); box-shadow: inset 0 0 0 1px var(--parc-red); }
+.dash-exam input { accent-color: var(--parc-red); width: 1.1rem; height: 1.1rem; margin: 0; }
+
+.dash-watch { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-3);
+  margin-top: var(--sp-4); padding: var(--sp-3) var(--sp-4); background: var(--surface-2); border-radius: var(--radius); }
+.dash-watch__face { display: flex; align-items: baseline; gap: var(--sp-3); }
+.dash-watch__time { font-family: var(--font-mono); font-size: var(--step-4); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.dash-watch__state { font-size: var(--step--1); color: var(--ink-2); font-weight: 600; }
+.dash-watch__actions { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+
+.dash-reader__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-3); }
+.dash-reader__picks, .dash-reader__view { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.dash-reader__view { margin-left: auto; }
+.dash-reader__frame { display: block; width: 100%; height: max(32rem, calc(100vh - 12rem));
+  border: 1px solid var(--line); border-radius: var(--radius-sm); background: #fff; }
+
+.dash-credits { margin-top: var(--sp-5); font-size: var(--step--1); color: var(--muted); }
+.dash-credits p { margin: 0; }
+
+.dash-dialog { width: min(36rem, calc(100vw - 2rem)); max-height: calc(100vh - 2rem); overflow: auto;
+  border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp-5);
+  background: var(--surface); color: var(--ink); }
+.dash-dialog::backdrop { background: rgba(10, 12, 14, .55); }
+.dash-dialog h2 { font-size: var(--step-2); margin: 0 0 var(--sp-3); }
+.dash-dialog h3 { font-size: var(--step-1); margin-top: var(--sp-4); }
+.dash-check { display: flex; align-items: center; gap: var(--sp-2); margin-top: var(--sp-4); font-weight: 600; }
+.dash-check input { width: 1.1rem; height: 1.1rem; accent-color: var(--parc-red); }
+
+/* A VE page shown inside the dashboard's reader: the dashboard already carries
+   the VE bar, so the framed copy drops its own. Set by js/ve-lock.js. */
+html.ve-framed .ve-bar,
+html.ve-framed .site-header, html.ve-framed .site-banner, html.ve-framed .site-nav,
+html.ve-framed .site-footer, html.ve-framed .study-band, html.ve-framed .skip-link { display: none; }
+html.ve-framed .container { margin-block: 0; }
+.ve-bar__links { display: flex; align-items: center; gap: var(--sp-3); }
+.ve-bar a.ve-bar__link:link, .ve-bar a.ve-bar__link:visited, .ve-bar a.ve-bar__link:hover { color: #fff; }

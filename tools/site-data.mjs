@@ -165,6 +165,10 @@ export const VE_PAGES = [
   'pages/Online_ScriptI2.html', 'pages/Online_ScriptR.html', 'pages/Online_ScriptS.html',
   'pages/Online_ScriptS2.html', 'pages/Online_ScriptW5YI.html', 'pages/Online_ScriptZ.html',
   'pages/Online_SetupSheet_IS.html',
+  /* Not an exam script either: the session dashboard (stopwatch, results, notes
+     and the scripts in a reader frame). Locked because it carries the session's
+     Zoom link and is for VEs only. Its code is the public js/ve-dashboard.js. */
+  'pages/ve-dashboard.html',
 ];
 
 /** Deleted by the retheme pass: orphaned duplicates with broken relative paths. */
@@ -392,6 +396,7 @@ export const VE_TITLES = {
   'Online_ScriptW5YI.html': 'W5YI Script',
   'Online_ScriptZ.html': 'Break Out Room Zulu (Z)',
   'Online_SetupSheet_IS.html': 'Setup Sheet',
+  've-dashboard.html': 'VE Session Dashboard',
 };
 
 /** Every VE unlock shell gets this. The real title is restored by js/ve-lock.js

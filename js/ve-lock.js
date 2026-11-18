@@ -111,11 +111,21 @@
   function render(html) {
     var doc = new DOMParser().parseFromString(html, 'text/html');
 
+    /* Inside the dashboard's reader frame the dashboard carries the bar, so the
+       framed page hides its own (css: html.ve-framed .ve-bar). */
+    var framed = false;
+    try { framed = window.self !== window.top; } catch (e) { framed = true; }
+    if (framed) doc.documentElement.className += ' ve-framed';
+
+    // Every other VE page links back to the session dashboard.
+    var onDash = /(^|\/)ve-dashboard\.html$/.test(location.pathname);
     var bar = doc.createElement('div');
     bar.className = 've-bar no-print';
     bar.innerHTML =
       '<span class="ve-bar__label">VE material \u2014 not for public distribution</span>' +
-      '<button type="button" class="ve-bar__lock" id="ve-relock">Lock</button>';
+      '<span class="ve-bar__links">' +
+      (onDash ? '' : '<a class="ve-bar__link" href="ve-dashboard.html">Session Dashboard</a>') +
+      '<button type="button" class="ve-bar__lock" id="ve-relock">Lock</button></span>';
     doc.body.insertBefore(bar, doc.body.firstChild);
 
     document.replaceChild(
@@ -185,6 +195,11 @@
         });
       }, 30);
     });
-    if (input) input.focus();
+    /* Not when framed (the dashboard's reader): focusing inside the frame
+       scrolls the dashboard down to it. Not when a cached key is unlocking the
+       page anyway. */
+    var top = true;
+    try { top = window.self === window.top; } catch (e) { top = false; }
+    if (input && top && !cached) input.focus();
   }
 })();
